@@ -174,6 +174,7 @@ export const updateProfileController = async (req, res) => {
         message: "Profile Updated Successfully",
         updatedUser,
       });
+      
     } catch (error) {
       console.log(error);
       res.status(400).send({

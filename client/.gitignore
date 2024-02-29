@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+client/src/videos/
+
 # production
 /build
 
