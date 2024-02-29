@@ -88,7 +88,7 @@ const BrandProduct = () => {
       setLoading(false);
     }
   };
-//  h
+
   const isProductInWishList = (product) => {
     return wish.some((wishProduct) => wishProduct._id === product._id);
   };
