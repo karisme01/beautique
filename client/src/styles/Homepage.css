@@ -1,0 +1,174 @@
+
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+
+
+body {
+    background-color: #fdfdfd;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Style the banner image */
+  .banner-img {
+    margin-top: 60px;
+  }
+  
+  /* Style the heading */
+  .home-page h1 {
+    color: #eee;
+    font-family: "Playfair Display", serif;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Style the container for products */
+  .home-page {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Style the product cards */
+  .home-page .card {
+    background-color: #333;
+    color: #eee;
+    width: 18rem;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style the product name and price */
+  .home-page .card-name-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 10px;
+  }
+  
+  .home-page .card-price {
+    color: green;
+    font-weight: bold;
+  }
+  
+  /* Style the buttons */
+  .home-page button {
+    border-radius: 0;
+    width: 100%;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #ff6666;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .home-page button:hover {
+    background-color: #dd5555;
+  }
+  
+  /* Style the card text */
+  .home-page .card-text {
+    color: #ccc;
+    padding: 0 10px;
+  }
+  
+  /* Style the card image */
+  .home-page .card img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    filter: brightness(75%); 
+  }
+  
+  /* Make the card image scale on hover */
+  .home-page .card img:hover {
+    /* transform: scale(1.05); */
+    filter: brightness(75%); 
+  }
+  
+  /* Style the filters */
+  .filters {
+    margin-top: 100px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  
+  .filters h4 {
+    color: #eee;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .filters .ant-checkbox-wrapper {
+    margin: 5px;
+  }
+  
+  .filters .ant-radio-wrapper {
+    margin-bottom: 5px;
+    margin-left: 10px;
+  }
+  
+  .filters button {
+    background-color: #ff6666;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filters button:hover {
+    background-color: #dd5555;
+  }
+  
+  /* Style the load more button */
+  .loadmore {
+    color: #eee;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #ff9933;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .loadmore:hover {
+    background-color: #dd8822;
+  }
+   
+
+  .card:hover .card-img-top {
+    transform: scale(1.04); 
+    filter: brightness(75%); 
+  }
+  
+  .card:hover .card-body {
+    transform: scale(1.0); 
+  }
+
+  .card-img-top {
+    transition: transform 0.5s ease, filter 0.5s ease; /* Add filter to the transition for a smooth effect */
+  }
+
+.card-img-top:hover {
+  transform: scale(1.03); 
+  filter: brightness(75%); 
+}
+  
+.carousal-slide {
+  opacity: 1;
+}

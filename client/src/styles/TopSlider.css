@@ -1,0 +1,15 @@
+.top-slider {
+    overflow-x: hidden;
+    width: 100%;
+    display: flex;
+    white-space: nowrap; /* Prevents wrapping of segments */
+    background-color: #2B1100;
+  }
+  
+  .slider-segment {
+    flex: none;
+    width: 100%;
+    transition: transform 0.5s ease; /* Smooth transition for sliding effect */
+    /* Add more styling as needed */
+  }
+  

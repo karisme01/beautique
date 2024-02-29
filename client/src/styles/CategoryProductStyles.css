@@ -1,0 +1,47 @@
+/* CategoryProductStyles.css */
+
+
+.product-image {
+    transition: transform 0.5s ease, filter 0.5s ease; /* Add filter to the transition for a smooth effect */
+  }
+  
+  .product-image:hover {
+    transform: scale(1.03); /* Adjust scale value for zoom level */
+    filter: brightness(85%); /*Decrease brightness to darken the image, adjust percentage as needed*/
+  }
+  
+  
+  .infoPanel {
+    width: 400px;
+    height: 100%; /* Adjust as per requirement */
+    position: fixed;
+    left: -400px; /* Hide by default */
+    top: 0;
+    background-color: #ebe1c7;
+    transition: left 0.3s ease-in-out; /* Smooth transition */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    border-right: 3px solid #553c2c;
+  }
+  
+  .infoPanel.show {
+    left: 0; /* Slide in */
+  }
+  
+  .closeBtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  /* Add this CSS to your CategoryProductStyles.css or a global stylesheet */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #c20e35 !important;
+  border-color: #c20e35 !important;
+}
+
+  

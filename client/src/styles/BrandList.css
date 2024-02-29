@@ -1,0 +1,48 @@
+.brand-list-container {
+    font-family: 'Poppins', sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.brand-list-title {
+    color: #333;
+    text-align: center;
+}
+
+.brand-list {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+
+.brand-item {
+    background-color: white;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border-bottom: 1px solid #ddd;
+    }
+  
+.brand-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.brand-search-input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  
+
+
+  

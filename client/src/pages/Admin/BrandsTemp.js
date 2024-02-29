@@ -1,0 +1,22 @@
+export const fashionBrands = [
+    { "_id": 1, "name": "Elegance Couture", "slug": "elegance-couture" },
+    { "_id": 2, "name": "Urban Trends", "slug": "urban-trends" },
+    { "_id": 3, "name": "Vogue Visions", "slug": "vogue-visions" },
+    { "_id": 4, "name": "Chic Avenue", "slug": "chic-avenue" },
+    { "_id": 5, "name": "Moda Maison", "slug": "moda-maison" },
+    { "_id": 6, "name": "Trendy Tailors", "slug": "trendy-tailors" },
+    { "_id": 7, "name": "Haute Fashion", "slug": "haute-fashion" },
+    { "_id": 8, "name": "Luxe Line", "slug": "luxe-line" },
+    { "_id": 9, "name": "Classic Creations", "slug": "classic-creations" },
+    { "_id": 10, "name": "Style Studio", "slug": "style-studio" },
+    { "_id": 11, "name": "Avant-Garde Attire", "slug": "avant-garde-attire" },
+    { "_id": 12, "name": "Retro Revival", "slug": "retro-revival" },
+    { "_id": 13, "name": "Fashion Forward", "slug": "fashion-forward" },
+    { "_id": 14, "name": "Glamour Garb", "slug": "glamour-garb" },
+    { "_id": 15, "name": "Innovative Threads", "slug": "innovative-threads" },
+    { "_id": 16, "name": "Visionary Vogue", "slug": "visionary-vogue" },
+    { "_id": 17, "name": "Sophisticated Styles", "slug": "sophisticated-styles" },
+    { "_id": 18, "name": "Runway Ready", "slug": "runway-ready" },
+    { "_id": 19, "name": "Dapper Designs", "slug": "dapper-designs" },
+    { "_id": 20, "name": "Timeless Trends", "slug": "timeless-trends" }
+];

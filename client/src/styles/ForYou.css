@@ -1,0 +1,48 @@
+.for-you-page {
+    background: linear-gradient(to bottom, #000000, #000000);
+    color: white; /* Adjust text color if needed */
+    /* Other styles as needed */
+}
+.carousel-image {
+    width: 200px; /* Adjust as needed */
+    height: 450px; /* Adjust as needed */
+    object-fit: cover; /* This makes the image cover the area, can also use 'contain' */
+    cursor: pointer;
+}
+.product-detail{
+    background: linear-gradient(to bottom, #fff, #fff);
+    color: black; /* Adjust text color if needed */
+}
+.infoPanel {
+    width: 400px; 
+    height: 100%; /* Adjust as per requirement */
+    position: fixed;
+    left: -400px; /* Hide by default */
+    top: 0;
+    background-color: #600020;
+    transition: left 0.3s ease-in-out; /* Smooth transition */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    border-right: 3px solid #553c2c;
+    z-index: 100;
+  }
+  
+  .infoPanel.show {
+    left: 0; /* Slide in */
+  }
+  
+  .closeBtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  /* Add this CSS to your CategoryProductStyles.css or a global stylesheet */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #c20e35 !important;
+  border-color: #c20e35 !important;
+}

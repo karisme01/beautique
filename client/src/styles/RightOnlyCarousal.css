@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap');
+
+
+.text-center {
+    font-family: 'Poppins', sans-serif;
+}
+.slide-item {
+    margin-right: 20px; /* Adjust this value as needed */
+}
+
+/* For the last slide, you might want to remove the margin */
+.slick-slide:last-child .slide-item {
+    margin-right: 0;
+}
+/* Dim all slides */
+.slick-slide {
+    opacity: 0.2; /* Lower opacity for dimming effect */
+    transition: opacity 0.1s ease; /* Smooth transition for the dimming effect */
+}
+
+/* Highlight the center slide */
+.slick-center {
+    opacity: 1; /* Full opacity for the centered slide */
+    
+}
+.carousel-container {
+    position: relative;
+}
+
+.slider-buttons {
+    position: absolute;
+    bottom: -70px; /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.expand-button{
+    padding: 10px 20px;
+    border: none;
+    background-color: #ffffff;
+    color: black;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    outline: none;
+    opacity: 0.6;
+}
+.like-button, .not-like-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ffffff;
+    color: black;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    outline: none;
+    opacity: 0.6;
+}
+
+.not-like-button {
+    background-color: white;
+    opacity: 0.6;
+}
+
+.like-button:hover, .not-like-button:hover .expand-button:hover{
+    opacity: 1; /* Full opacity on hover */
+}
+
+.like-button:hover {
+    background-color: lightgreen; /* Change to blue on hover */
+    opacity: 0.6; /* Full opacity on hover */
+}
+
+.expand-button:hover {
+    background-color: white; /* Change to blue on hover */
+    opacity: 1; /* Full opacity on hover */
+}
+
+/* Hover effect for the not-like-button */
+.not-like-button:hover {
+    background-color: red; /* Change to red on hover */
+    opacity: 0.6; /* Full opacity on hover */
+}
