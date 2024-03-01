@@ -5,7 +5,7 @@ const Card = ({ title, content, videoUrl, height }) => (
     minWidth: '300px',
     margin: '10px',
     background: '#000000',
-    borderRadius: '8px',
+    borderRadius: '8px', 
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     cursor: 'pointer',
     display: 'flex',

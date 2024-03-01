@@ -22,12 +22,14 @@ import { IoFilter } from "react-icons/io5";
 
 const ForYou = () => {
   const [products, setProducts] = useState();
-  const [relatedProducts, setRelatedProducts] = useState([])
   const [activeProduct, setActiveProduct] = useState(null);
+  const [prevProduct, setPrevProduct] = useState(null);
+  const [productLikes, setProductLikes] = useState({});
   const [cart, setCart] = useCart()
   const [wish, setWish] = useWish()
   const productDetailRef = useRef(null);
   const [expand, setExpand] = useState(false)
+  const [liked, setLiked] = useState(false)
   const [category, setCategory] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -43,18 +45,7 @@ const ForYou = () => {
   const [categories, setCategories] = useState([])
   const navigate = useNavigate()
 
-  const isProductInWishList = (product) => {
-    return wish.some((wishProduct) => wishProduct._id === product._id);
-  };
 
-  // const getSimilarProduct = async (pid, cid) => {
-  //   try {
-  //     const { data } = await axios.get(`/api/v1/product/related-products/${pid}/${cid}`);
-  //     setRelatedProducts(data?.products);
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
   const getAllCategory = async () => {
     try {
@@ -86,9 +77,21 @@ const ForYou = () => {
     }
   }, [expand]);
 
+  useEffect(() => {
+    if (activeProduct) {
+      setPrevProduct(activeProduct);
+      if (prevProduct){
+        setProductLikes(prev => ({...prev,[prevProduct.name]: liked}));
+      }
+      console.log(productLikes)
+    }
+    
+  }, [activeProduct]);
+  
+
 
   useEffect(() => {
-    getAllProducts();
+    getAllProducts(); 
     getAllCategory();
     setActiveProduct(products)
   }, []);
@@ -265,9 +268,15 @@ const ForYou = () => {
           FOR YOU FROM US
         </h1>
 
+
         <RightOnlyCarousel 
-            onActiveSlideChange={(index) => {setActiveProduct(products[index]);}}
+            onActiveSlideChange={(index) => {
+              setActiveProduct(products[index]);
+            }}
             onExpandPress={(expand)=>setExpand(expand)}
+            onLikePress={(liked) => {
+              setLiked(liked);
+          }}
           >
           {products?.map((product, index) => (
             <img key={index} 
@@ -279,6 +288,7 @@ const ForYou = () => {
           ))}
         </RightOnlyCarousel>
 
+        
 
         {/* product detail section */}
 
@@ -432,7 +442,9 @@ const ForYou = () => {
             </div>
       </div>
                    */}
-                   </div>
+                  
+          </div>
+          
     </Layout>
     </div>
   )
