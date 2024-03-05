@@ -8,6 +8,7 @@ import StarRating from "../components/Designs/Stars"
 import { IoHeartCircle } from "react-icons/io5";
 import { GiShoppingCart } from "react-icons/gi";
 import video from '../videos/video.mp4'
+import '../styles/ProductDetails.css'
 
 
 import toast from 'react-hot-toast';
@@ -19,6 +20,9 @@ const ProductDetails = () => {
   const [cart, setCart] = useCart()
   const [relatedProducts, setRelatedProducts] = useState([])
   const [wish, setWish] = useWish();
+  const [selectedSize, setSelectedSize] = useState(""); 
+  const [price, setPrice] = useState()
+  const [image, setImage] = useState()
 
   const isProductInWishList = (product) => {
     return wish.some((wishProduct) => wishProduct._id === product._id);
@@ -41,6 +45,15 @@ const ProductDetails = () => {
     }
   };
 
+  useEffect(() => {
+    if (product?.price) {
+      setPrice(parseInt(product.price, 10)); // Ensure price is a number
+    }
+    // const {photo} = axios.get(`/api/v1/product/product-photo/${product?._id}`)
+    // setImage(photo)
+  }, [product]);
+  
+
 
   //similar product
   const getSimilarProduct = async (pid, cid) => {
@@ -53,12 +66,16 @@ const ProductDetails = () => {
     }
   }
 
+  const handleSizeSelection = (size) => {
+    setSelectedSize(size);
+  };
+
   return (
     <Layout>
       <div className='row container' style={{marginTop: '30px', marginLeft: '-100px'}}>
         <div className='col-md-6' style={{marginLeft:'100px', marginRight: '60px'}}>
         <img
-            src={`/api/v1/product/product-photo/${product._id}`}
+            src={`/api/v1/product/product-photo/${product?._id}`}
             className="card-img-top"
             alt={product.name}
             style={{ height: '600px', width: '400px', objectFit: 'cover'}}
@@ -70,7 +87,7 @@ const ProductDetails = () => {
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '500px', marginLeft: '70px'}}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <img
-                      src={`/api/v1/product/product-photo/${product._id}`}
+                      src={`/api/v1/product/product-photo/${product?._id}`}
                       alt="Small Image 1"
                       style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
                       className='product-image'
@@ -82,7 +99,7 @@ const ProductDetails = () => {
                       className='product-image'
                   /> */}
                   <img
-                      src={`/api/v1/product/product-photo/${product._id}`}
+                      src={`/api/v1/product/product-photo/${product?._id}`}
                       alt="Small Image 3"
                       style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer' }}
                       className='product-image'
@@ -107,27 +124,67 @@ const ProductDetails = () => {
               <strong>Description:</strong> {product.description}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Price:</strong> ${product.price}
+              <strong>Price:</strong> Rs {product.price}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Occasion:</strong> ${product.occasion}
+              <strong>Occasion:</strong> {product.occasion}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
               <strong>Category:</strong> {product?.category?.name}
             </p>
+
+            <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => handleSizeSelection(size)}
+                style={{
+                  width: '60px',
+                  padding: '15px',
+                  margin: '10px',
+                  borderRadius: '20px',
+                  background: selectedSize === size ? '#332211' : '#fff',
+                  color: selectedSize === size ? '#fff' : '#000',
+                  border: '1px solid #000',
+                  cursor: 'pointer',
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Buy</p>
+              <p>Price: {product.price}</p>
+            </button>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Lease for 3 days</p>
+              <p>Price: {String(Math.round(0.3*price / 10) * 10)}</p>
+            </button>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Lease for 7 days</p>
+              <p>Price: {String(Math.round(0.4*price / 10) * 10)}</p>
+            </button>
+          </div>
+
             {/* <GiShoppingCart style={{fontSize: '50px'}} 
                 onClick={()=>{
                   setCart([...cart, product]);
                   toast.success('Item added to cart');
                 }}/> */}
             <button
-              className='btn btn-secondary ms-1'
+              className='btn-cart'
               onClick={() => {
                 setCart([...cart, product]);
                 toast.success('Item added to cart');
               }}
               style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
-              alignItems: 'center', justifyContent: 'center', backgroundColor: '#ebe8de', borderWidth: '0.5px', color: 'black'}}
+              alignItems: 'center', justifyContent: 'center',  borderWidth: '0.5px', color: 'black'}}
             >
               Add to cart <GiShoppingCart style={{fontSize: '30px'}}/>
             </button>

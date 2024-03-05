@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 // import { AiFillWarning } from "react-icons/ai";
 import axios from "axios";
 import toast from "react-hot-toast";
-// import "../styles/CartStyles.css";
+import "../styles/CartPage.css";
+import StarRating from "../components/Designs/Stars";
+import { MdOutlineRemoveShoppingCart } from "react-icons/md";
+
 
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
-  const [clientToken, setClientToken] = useState("");
-  const [instance, setInstance] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   //total price
@@ -26,7 +26,7 @@ const CartPage = () => {
       });
       return total.toLocaleString("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "INR",
       });
     } catch (error) {
       console.log(error);
@@ -79,7 +79,7 @@ const CartPage = () => {
 //   };
   return (
     <Layout>
-      <div className=" cart-page">
+      <div className="cart-page">
         <div className="row">
           <div className="col-md-12">
             <h1 className="text-center bg-light p-2 mb-1">
@@ -96,36 +96,42 @@ const CartPage = () => {
             </h1>
           </div>
         </div>
-        <div className="container ">
+        <div className="list-container" style={{marginLeft: '50px', marginRight: '40px'}}>
           <div className="row ">
-            <div className="col-md-7  p-0 m-0">
-              {cart?.map((p) => (
-                <div className="row card flex-row" key={p._id}>
-                  <div className="col-md-4">
-                    <img
-                      src={`/api/v1/product/product-photo/${p._id}`}
-                      className="card-img-top"
-                      alt={p.name}
-                      width="100%"
-                      height={"130px"}
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <p>{p.name}</p>
-                    <p>{p.description.substring(0, 30)}</p>
-                    <p>Price : {p.price}</p>
-                  </div>
-                  <div className="col-md-4 cart-remove-btn">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => removeCartItem(p._id)}
-                    >
-                      Remove
-                    </button>
+          <div className="col-md-7 p-0 m-0">
+          <div className="row"> 
+            {cart?.map((p) => (
+              <div className="col-md-4 card" key={p._id} style={{cursor: 'pointer'}}> 
+                <div className="product-container"> 
+                  <img
+                    src={`/api/v1/product/product-photo/${p._id}`}
+                    alt={p.name}
+                    style={{ height: '300px', width: '100%', cursor: 'pointer', objectFit: 'cover'}} 
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                    className="product-image"
+                  />
+                  <div>
+                    <h5 style={{ fontSize: '14px', marginTop: '10px' }}>{p.name}</h5>
+                    <h5 style={{ fontSize: '16px', marginTop: '-5px' }}>
+                      {p.price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </h5>
+                    <div style={{ marginTop: '-10px' }}>
+                      <StarRating rating={p.rating || 3} />
+                    </div>
+                    <div style={{ fontSize: '25px', marginTop: '-50px', marginLeft: '200px' }}>
+                      <MdOutlineRemoveShoppingCart style={{ fontSize: '25px', cursor: 'pointer', marginTop: '-20px' }} 
+                        onClick={() => removeCartItem(p._id)} />
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
             <div className="col-md-5 cart-summary text-center">
               <h2>Cart Summary</h2>
               <p>Total | Checkout | Payment</p>
@@ -176,3 +182,4 @@ const CartPage = () => {
 };
 
 export default CartPage;
+

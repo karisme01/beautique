@@ -43,6 +43,8 @@ const ForYou = () => {
   const [filterRent, setFilterRent] = useState(true);
   const [filterCategory, setFilterCategory] = useState([]);
   const [categories, setCategories] = useState([])
+  const [selectedSize, setSelectedSize] = useState(""); 
+
   const navigate = useNavigate()
 
 
@@ -59,11 +61,16 @@ const ForYou = () => {
     }
   };
 
+  const handleSizeSelection = (size) => {
+    setSelectedSize(size);
+  };
+
   const getAllProducts = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/get-product");
       if (data?.success) {
         setProducts(data?.products);
+        
       }
     } catch (error) {
       console.log(error);
@@ -81,20 +88,43 @@ const ForYou = () => {
     if (activeProduct) {
       setPrevProduct(activeProduct);
       if (prevProduct){
-        setProductLikes(prev => ({...prev,[prevProduct.name]: liked}));
+        setProductLikes(prev => ({...prev,[prevProduct._id]: liked}));
       }
       console.log(productLikes)
     }
     
   }, [activeProduct]);
+
+  const updatePreferences = async () => {
+    try {
+      const { data } = await axios.put(`/api/v1/auth/preferences`, {productLikes});
+      console.log('hiii')
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const likesCount = Object.keys(productLikes).length;
+    if (likesCount === 10) {
+      updatePreferences();
+      setProductLikes({})
+    }
+  }, [productLikes]); // This us
   
 
 
   useEffect(() => {
     getAllProducts(); 
     getAllCategory();
-    setActiveProduct(products)
   }, []);
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      setActiveProduct(products[0]);
+    }
+  }, [products]); 
+  
 
   return (
     <div className="for-you-page">
@@ -347,7 +377,7 @@ const ForYou = () => {
                   <strong>Description:</strong> {activeProduct.description}
                 </p>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-                  <strong>Price:</strong> ${activeProduct.price}
+                  <strong>Price:</strong> Rs {activeProduct.price}
                 </p>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
                   <strong>Occasion:</strong> ${activeProduct.occasion}
@@ -360,6 +390,47 @@ const ForYou = () => {
                       setCart([...cart, product]);
                       toast.success('Item added to cart');
                     }}/> */}
+
+                
+          <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => handleSizeSelection(size)}
+                style={{
+                  width: '60px',
+                  padding: '15px',
+                  margin: '10px',
+                  borderRadius: '20px',
+                  background: selectedSize === size ? '#332211' : '#fff',
+                  color: selectedSize === size ? '#fff' : '#000', 
+                  border: '1px solid #000',
+                  cursor: 'pointer',
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Buy</p>
+              <p>Price: {activeProduct.price}</p>
+            </button>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Lease for 3 days</p>
+              <p>Price: {String(Math.round(0.3*activeProduct.price / 10) * 10)}</p>
+            </button>
+            <button className='btn-options' style={{width: '200px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              <p>Lease for 7 days</p>
+              <p>Price: {String(Math.round(0.4*activeProduct.price / 10) * 10)}</p>
+            </button>
+          </div>
+
                 <button
                   className='btn btn-secondary ms-1'
                   onClick={() => {

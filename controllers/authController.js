@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+import productModel from "../models/productModel.js";
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 
@@ -34,8 +35,12 @@ export const registerController = async (req, res) => {
         }
         //register user
         const hashedPassword = await hashPassword(password)
+
+        //preferences
+        const preferences = {color: 0.1, material: 0.1, 
+            occasion: 0.2, category: 0.4}
         //save
-        const user = await new userModel({name, email, password: hashedPassword, phone, address, answer}).save()
+        const user = await new userModel({name, email, password: hashedPassword, phone, address, answer, preferences: preferences}).save()
 
         res.status(201).send({
             success: true,
@@ -184,3 +189,38 @@ export const updateProfileController = async (req, res) => {
       });
     }
   };
+
+
+
+  export const updatePreferencesController = async (req, res) => {
+    try {
+        const { productLikes } = req.body;
+        const user = await userModel.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+        for (const [productId, liked] of Object.entries(productLikes)) {
+            const product = await productModel.findById(productId);
+            if (!product) continue;
+        
+            const weightAdjustment = liked ? 0.1 : -0.1;
+            console.log(productId, liked)
+            const featuresToCheck = ['color', 'occasion', 'category', 'material'];
+            featuresToCheck.forEach(featureKey => {
+                if (user.preferences.has(featureKey)) {
+                    let currentWeight = user.preferences.get(featureKey) || 0;
+                    console.log(currentWeight, featureKey)
+                    user.preferences.set(featureKey, currentWeight + weightAdjustment); 
+                }
+            });
+        }
+        await user.save();
+        
+        res.status(200).send({ 
+            message: "Preferences updated successfully", 
+            preferences: user.preferences }); 
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "An error occurred while updating preferences" });
+    }
+};

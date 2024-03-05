@@ -31,7 +31,12 @@ const userSchema = new mongoose.Schema({
     role: {
         type: Number,
         default: 0
-    }, 
+    },
+    preferences: {
+        type: Map,
+        of: Number 
+    }
+    
 }, {timestamps: true})
 
 export default mongoose.model('users', userSchema)

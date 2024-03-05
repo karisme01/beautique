@@ -95,6 +95,7 @@ const RightOnlyCarousel = ({ children, onActiveSlideChange, onExpandPress, onLik
                 <button className="not-like-button" onClick={debouncedHandleNextHate} style={{fontSize: '24px'}}>✖ </button>
                 <button className="expand-button" onClick={handleExpandPress}style={{fontSize: '21px', marginLeft: '10px'}}>↓</button>
                 <button className="like-button" onClick={debouncedHandleNextWish} style={{fontSize: '21px',marginLeft: '10px'}}>♥</button>
+                <button className="skip-button" onClick={debouncedHandleNextHate} style={{fontSize: '24px'}}> → </button>
             </div>
         </div>
     );

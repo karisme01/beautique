@@ -27,18 +27,25 @@ const WishListPage = () => {
         }
       };
 
+      const generateWhatsAppShareLink = () => {
+        const baseURL = "https://api.whatsapp.com/send?text=";
+        const messageIntro = "Check out my wishlist items:%0a%0a"; // %0a is the URL encoded newline character
+        const itemsString = wish.map(p => `${p.name}: ${window.location.origin}/product/${p.slug}`).join('%0a');
+        return `${baseURL}${messageIntro}${itemsString}`;
+      };
+
       return (
         <Layout>
           <div className="wish-page">
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-12" style={{marginTop: '40px'}}>
                 <h1 className="text-center bg-light p-2 mb-1">
-                  {!auth?.user
+                  {/* {!auth?.user
                     ? "Hello Guest"
-                    : `Hello  ${auth?.token && auth?.user?.name}`}
+                    : `Hello  ${auth?.token && auth?.user?.name}`} */}
                   <p className="text-center">
                     {wish?.length
-                      ? `You Have ${wish.length} items in your wishlist ${
+                      ? `Hi ${auth?.token && auth?.user?.name}, here are your liked items ${
                           auth?.token ? "" : "please login to view your wishlist !"
                         }`
                       : " Your wish list Is Empty"}
@@ -47,8 +54,19 @@ const WishListPage = () => {
               </div>
             </div>
         </div>
+              
+        <div style={{marginLeft: '1000px', marginTop: '-90px', marginBottom: '60px'}}>
+          <a href={generateWhatsAppShareLink()} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <button style={{marginLeft: '100px', borderRadius: '30px', width: '170px', 
+              height: '38px', backgroundColor: 'white', borderWidth: '3px', borderColor: 'green'}}>
+              <div style={{flexDirection: 'row'}}>
+                Share with friends
+              </div>
+            </button>
+          </a>
+        </div>
 
-    <div style={{marginLeft: '200px', marginRight: '200px', marginTop: '-50px'}}>
+    <div style={{marginLeft: '200px', marginRight: '200px', marginTop: '-30px'}}>
         <div className="d-flex flex-wrap p-3" style={{marginLeft: '-165px', marginRight: '-350px', padding: '0px'}}>
               {wish?.map((p) => (
                 <div key={p._id}>
