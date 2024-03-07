@@ -23,6 +23,7 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState(""); 
   const [price, setPrice] = useState()
   const [image, setImage] = useState()
+  const [purchaseType, setPurchaseType] = useState(0);
 
   const isProductInWishList = (product) => {
     return wish.some((wishProduct) => wishProduct._id === product._id);
@@ -53,7 +54,9 @@ const ProductDetails = () => {
     // setImage(photo)
   }, [product]);
   
-
+  const handlePurchaseSelection = (type) => {
+    setPurchaseType(type);
+  };
 
   //similar product
   const getSimilarProduct = async (pid, cid) => {
@@ -77,7 +80,7 @@ const ProductDetails = () => {
         <img
             src={`/api/v1/product/product-photo/${product?._id}`}
             className="card-img-top"
-            alt={product.name}
+            alt={product?.name}
             style={{ height: '600px', width: '400px', objectFit: 'cover'}}
           />
         </div>
@@ -119,15 +122,15 @@ const ProductDetails = () => {
           </div>
 
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-            <h1>{product.name}</h1>
+            <h1>{product?.name}</h1>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Description:</strong> {product.description}
+              <strong>Description:</strong> {product?.description}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Price:</strong> Rs {product.price}
+              <strong>Price:</strong> Rs {product?.price}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Occasion:</strong> {product.occasion}
+              <strong>Occasion:</strong> {product?.occasion}
             </p>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
               <strong>Category:</strong> {product?.category?.name}
@@ -156,31 +159,38 @@ const ProductDetails = () => {
 
           <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 0 ? '#332211' : '#fff',
+              color: purchaseType === 0 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(0)}>
               <p>Buy</p>
-              <p>Price: {product.price}</p>
+              <p>Price: {product?.price}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 1 ? '#332211' : '#fff',
+              color: purchaseType === 1 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(1)}>
               <p>Lease for 3 days</p>
               <p>Price: {String(Math.round(0.3*price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 2 ? '#332211' : '#fff',
+              color: purchaseType === 2 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(2)}>
               <p>Lease for 7 days</p>
               <p>Price: {String(Math.round(0.4*price / 10) * 10)}</p>
             </button>
           </div>
 
-            {/* <GiShoppingCart style={{fontSize: '50px'}} 
-                onClick={()=>{
-                  setCart([...cart, product]);
-                  toast.success('Item added to cart');
-                }}/> */}
+
             <button
               className='btn-cart'
               onClick={() => {
-                setCart([...cart, product]);
+                setCart([...cart, [product, selectedSize, purchaseType]]);
+                localStorage.setItem("cart", JSON.stringify([...cart, [product, selectedSize, purchaseType]]));
                 toast.success('Item added to cart');
               }}
               style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
@@ -202,8 +212,8 @@ const ProductDetails = () => {
               {relatedProducts?.map((p) => (
                 <div key={p._id}>
                   <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    alt={p.name}
+                    src={`/api/v1/product/product-photo/${p?._id}`}
+                    alt={p?.name}
                     style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
                     onClick={() => navigate(`/product/${p.slug}`)}
                     className="product-image "
@@ -246,7 +256,7 @@ const ProductDetails = () => {
 
                         <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-9px' }} 
                           onClick={()=>{
-                            setCart([...cart, p]);
+                            setCart([...cart, [p, selectedSize, purchaseType]]);
                             localStorage.setItem("cart", JSON.stringify([...cart, p]));
                             toast.success('Item added to cart');
                           }}/>

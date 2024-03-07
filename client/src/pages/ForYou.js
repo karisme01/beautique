@@ -19,7 +19,6 @@ import { Occasions } from "../components/Filters/Occasions.js";
 import { IoFilter } from "react-icons/io5";
 
 
-
 const ForYou = () => {
   const [products, setProducts] = useState();
   const [activeProduct, setActiveProduct] = useState(null);
@@ -30,9 +29,6 @@ const ForYou = () => {
   const productDetailRef = useRef(null);
   const [expand, setExpand] = useState(false)
   const [liked, setLiked] = useState(false)
-  const [category, setCategory] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [radio, setRadio] = useState([]);
   const [filterColor, setFilterColor] = useState([]);
@@ -44,10 +40,9 @@ const ForYou = () => {
   const [filterCategory, setFilterCategory] = useState([]);
   const [categories, setCategories] = useState([])
   const [selectedSize, setSelectedSize] = useState(""); 
+  const [purchaseType, setPurchaseType] = useState(0);
 
   const navigate = useNavigate()
-
-
 
   const getAllCategory = async () => {
     try {
@@ -63,6 +58,24 @@ const ForYou = () => {
 
   const handleSizeSelection = (size) => {
     setSelectedSize(size);
+  };
+
+  const handlePurchaseSelection = (type) => {
+    setPurchaseType(type);
+  };
+
+  const addToCart = (product, selectedSize) => {
+    const isProductInCart = cart.some(cartItem => 
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize
+    );
+    if (isProductInCart) {
+      toast.error('Item with the selected size is already in your cart');
+    } else {
+      const newCartItem = [product, selectedSize, 0]; 
+      setCart([...cart, newCartItem]);
+      localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
+      toast.success('Item added to cart');
+    }
   };
 
   const getAllProducts = async () => {
@@ -310,7 +323,7 @@ const ForYou = () => {
           >
           {products?.map((product, index) => (
             <img key={index} 
-            src={`/api/v1/product/product-photo/${product._id}`} 
+            src={`/api/v1/product/product-photo/${product?._id}`} 
             alt={`Product ${index}`}
             className='carousel-image'
             style={{cursor: 'pointer'}}
@@ -328,9 +341,9 @@ const ForYou = () => {
             <div className='row container' style={{marginTop: '30px', marginLeft: '-100px'}}>
             <div className='col-md-6' style={{marginLeft:'100px', marginRight: '60px'}}>
             <img
-                src={`/api/v1/product/product-photo/${activeProduct._id}`}
+                src={`/api/v1/product/product-photo/${activeProduct?._id}`}
                 className="card-img-top"
-                alt={activeProduct.name}
+                alt={activeProduct?.name}
                 style={{ height: '600px', width: '400px', objectFit: 'cover'}}
               />
             </div>
@@ -340,7 +353,7 @@ const ForYou = () => {
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '500px', marginLeft: '70px'}}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <img
-                          src={`/api/v1/product/product-photo/${activeProduct._id}`}
+                          src={`/api/v1/product/product-photo/${activeProduct?._id}`}
                           alt="Small Image 1"
                           style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
                           className='product-image'
@@ -352,7 +365,7 @@ const ForYou = () => {
                           className='product-image'
                       /> */}
                       <img
-                          src={`/api/v1/product/product-photo/${activeProduct._id}`}
+                          src={`/api/v1/product/product-photo/${activeProduct?._id}`}
                           alt="Small Image 3"
                           style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer' }}
                           className='product-image'
@@ -372,15 +385,15 @@ const ForYou = () => {
               </div>
     
               <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                <h1>{activeProduct.name}</h1>
+                <h1>{activeProduct?.name}</h1>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-                  <strong>Description:</strong> {activeProduct.description}
+                  <strong>Description:</strong> {activeProduct?.description}
                 </p>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-                  <strong>Price:</strong> Rs {activeProduct.price}
+                  <strong>Price:</strong> Rs {activeProduct?.price}
                 </p>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-                  <strong>Occasion:</strong> ${activeProduct.occasion}
+                  <strong>Occasion:</strong> {activeProduct?.occasion}
                 </p>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
                   <strong>Category:</strong> {activeProduct?.category?.name}
@@ -415,28 +428,34 @@ const ForYou = () => {
 
           <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 0 ? '#332211' : '#fff',
+              color: purchaseType === 0 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(0)}>
               <p>Buy</p>
-              <p>Price: {activeProduct.price}</p>
+              <p>Price: {activeProduct?.price}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 1 ? '#332211' : '#fff',
+              color: purchaseType === 1 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(1)}>
               <p>Lease for 3 days</p>
-              <p>Price: {String(Math.round(0.3*activeProduct.price / 10) * 10)}</p>
+              <p>Price: {String(Math.round(0.3*activeProduct?.price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px'}}>
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: purchaseType === 2 ? '#332211' : '#fff',
+              color: purchaseType === 2 ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection(2)}>
               <p>Lease for 7 days</p>
-              <p>Price: {String(Math.round(0.4*activeProduct.price / 10) * 10)}</p>
+              <p>Price: {String(Math.round(0.4*activeProduct?.price / 10) * 10)}</p>
             </button>
           </div>
 
                 <button
                   className='btn btn-secondary ms-1'
-                  onClick={() => {
-                    setCart([...cart, activeProduct]);
-                    toast.success('Item added to cart');
-                  }}
+                  onClick={() => addToCart(activeProduct,selectedSize)}
                   style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
                   alignItems: 'center', justifyContent: 'center', 
                   backgroundColor: '#ebe8de', borderWidth: '0.5px', color: 'black', marginBottom: '30px', marginTop: '30px'}}

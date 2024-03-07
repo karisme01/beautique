@@ -32,11 +32,7 @@ app.use('/api/v1/brand', brandRoutes)
 
 
 // rest api
-app.get('/', (req, res) => {
-    res.send({
-        message: 'Welcome to beautique'
-    })
-} )
+
 
 const PORT = process.env.PORT || 8080
 

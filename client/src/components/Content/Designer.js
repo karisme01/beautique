@@ -13,7 +13,7 @@ const Designer = () => {
     <div>
        <div>
           <div className='row' style={{}}>
-            <h1 className='text-center' style={{ fontWeight: 'bold', color: 'black', marginLeft: '180px', marginTop: '30px'}}>
+            <h1 className='text-center' style={{color: 'black', marginLeft: '180px', marginTop: '30px'}}>
               Meet our favourite designers <GiClover />
             </h1>
             <div className='col-md-4'>

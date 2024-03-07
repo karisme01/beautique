@@ -37,6 +37,30 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedSize, setSelectedSize] = useState()
+  const [selectedType, setSelectedType] = useState(0)
+  const [selectedProductForCart, setSelectedProductForCart] = useState(null);
+
+  const handleCartIconClick = (product) => {
+    setIsModalOpen(true);
+    setSelectedProductForCart(product); // Set the selected product
+  };
+
+  const addToCart = (product, selectedSize, selectedType) => {
+    const isProductInCart = cart.some(cartItem => 
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
+    );
+    if (isProductInCart) {
+      toast.error('Item with the selected size is already in your cart');
+    } else {
+      const newCartItem = [product, selectedSize, selectedType]; 
+      setCart([...cart, newCartItem]);
+      localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
+      toast.success('Item added to cart');
+    }
+  };
+
 
   const carouselItems = [
     {
@@ -152,7 +176,7 @@ const HomePage = () => {
 
         <div className='col-md-9' style={{marginTop:'30px'}}>
           <div style={{marginLeft: '-120px', marginBottom: '-40px'}}> 
-            <h1 className='text-center body' style={{fontWeight: 'bold', color: '#3F250B', marginLeft: '500px'}}>
+            <h1 className='text-center body' style={{color: '#3F250B', marginLeft: '500px'}}>
               Our top 10 this week <IoMdTrendingUp style={{ marginLeft: '-10px' }} />
             </h1>
           </div>
@@ -204,11 +228,37 @@ const HomePage = () => {
                         }}/>
 
                         <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-9px' }} 
-                          onClick={()=>{
-                            setCart([...cart, p]);
-                            localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                            toast.success('Item added to cart');
-                          }}/>
+                          onClick={() => {
+                            handleCartIconClick(p)
+                            setSelectedProductForCart(p._id)
+                            }}
+                            />
+                          {isModalOpen && p._id === selectedProductForCart && (
+                            <div className="dropdown-container" style={{marginLeft: '-180px', marginTop: '20px', marginBottom: '-20px'}}>
+                              <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)} 
+                                style={{width: '55px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                              <option value="">Size</option>
+                              <option value="XS">XS</option>
+                              <option value="S">S</option>
+                              <option value="M">M</option>
+                              <option value="L">L</option>
+                              <option value="XL">XL</option>
+                              </select>
+                              <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
+                                style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                                <option value="">Type</option>
+                                <option value={0}>Buy</option>
+                                <option value={1}>4-day rental</option>
+                                <option value={2}>7-day rental</option>
+                              </select>
+                              <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
+                                  style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                                    height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>Add</button>
+                              <button className="close-btn" onClick={() => setIsModalOpen(false)}
+                                style={{width: '40px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                                    height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>X</button>
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>

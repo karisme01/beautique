@@ -3,174 +3,89 @@ import Layout from "./../components/Layout/Layout";
 import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
-// import DropIn from "braintree-web-drop-in-react";
-// import { AiFillWarning } from "react-icons/ai";
 import axios from "axios";
 import toast from "react-hot-toast";
 import "../styles/CartPage.css";
 import StarRating from "../components/Designs/Stars";
 import { MdOutlineRemoveShoppingCart } from "react-icons/md";
 
-
 const CartPage = () => {
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
 
-  //total price
+  // Total price calculation
   const totalPrice = () => {
-    try {
-      let total = 0;
-      cart?.map((item) => {
-        total = total + item.price;
-      });
-      return total.toLocaleString("en-US", {
-        style: "currency",
-        currency: "INR",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return cart.reduce((total, [product]) => total + product.price, 0).toLocaleString("en-US", {
+      style: "currency",
+      currency: "INR",
+    });
   };
-  //detele item
+
+  // Remove item from cart
   const removeCartItem = (pid) => {
-    try {
-      let myCart = [...cart];
-      let index = myCart.findIndex((item) => item._id === pid);
-      myCart.splice(index, 1);
-      setCart(myCart);
-      localStorage.setItem("cart", JSON.stringify(myCart));
-    } catch (error) {
-      console.log(error);
-    }
+    const updatedCart = cart.filter(([product]) => product._id !== pid);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    toast.success('Item removed from cart');
   };
 
-  //get payment gateway token
-//   const getToken = async () => {
-//     try {
-//       const { data } = await axios.get("/api/v1/product/braintree/token");
-//       setClientToken(data?.clientToken);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-//   useEffect(() => {
-//     getToken();
-//   }, [auth?.token]);
-
-  //handle payments
-//   const handlePayment = async () => {
-//     try {
-//       setLoading(true);
-//       const { nonce } = await instance.requestPaymentMethod();
-//       const { data } = await axios.post("/api/v1/product/braintree/payment", {
-//         nonce,
-//         cart,
-//       });
-//       setLoading(false);
-//       localStorage.removeItem("cart");
-//       setCart([]);
-//       navigate("/dashboard/user/orders");
-//       toast.success("Payment Completed Successfully ");
-//     } catch (error) {
-//       console.log(error);
-//       setLoading(false);
-//     }
-//   };
   return (
     <Layout>
       <div className="cart-page">
         <div className="row">
           <div className="col-md-12">
             <h1 className="text-center bg-light p-2 mb-1">
-              {!auth?.user
-                ? "Hello Guest"
-                : `Hello  ${auth?.token && auth?.user?.name}`}
+              {!auth?.user ? "Hello Guest" : `Hello ${auth?.user?.name}`}
               <p className="text-center">
-                {cart?.length
-                  ? `You Have ${cart.length} items in your cart ${
-                      auth?.token ? "" : "please login to checkout !"
-                    }`
-                  : " Your Cart Is Empty"}
+                {cart.length ? `You Have ${cart.length} items in your cart` : "Your Cart Is Empty"}
               </p>
             </h1>
           </div>
         </div>
-        <div className="list-container" style={{marginLeft: '50px', marginRight: '40px'}}>
-          <div className="row ">
-          <div className="col-md-7 p-0 m-0">
-          <div className="row"> 
-            {cart?.map((p) => (
-              <div className="col-md-4 card" key={p._id} style={{cursor: 'pointer'}}> 
-                <div className="product-container"> 
-                  <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    alt={p.name}
-                    style={{ height: '300px', width: '100%', cursor: 'pointer', objectFit: 'cover'}} 
-                    onClick={() => navigate(`/product/${p.slug}`)}
-                    className="product-image"
-                  />
-                  <div>
-                    <h5 style={{ fontSize: '14px', marginTop: '10px' }}>{p.name}</h5>
-                    <h5 style={{ fontSize: '16px', marginTop: '-5px' }}>
-                      {p.price.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </h5>
-                    <div style={{ marginTop: '-10px' }}>
-                      <StarRating rating={p.rating || 3} />
-                    </div>
-                    <div style={{ fontSize: '25px', marginTop: '-50px', marginLeft: '200px' }}>
-                      <MdOutlineRemoveShoppingCart style={{ fontSize: '25px', cursor: 'pointer', marginTop: '-20px' }} 
-                        onClick={() => removeCartItem(p._id)} />
+        <div className="list-container" style={{ marginLeft: '50px', marginRight: '40px' }}>
+          <div className="row">
+            <div className="col-md-7 p-0 m-0">
+              <div className="row">
+                {cart.map(([product, size, type], index) => (
+                  <div key={index} className="col-md-4 card" style={{ cursor: 'pointer' }}>
+                    <div className="product-container">
+                      <img
+                        src={`/api/v1/product/product-photo/${product._id}`}
+                        alt={product.name}
+                        style={{ height: '300px', width: '100%', objectFit: 'cover' }}
+                        onClick={() => navigate(`/product/${product.slug}`)}
+                      />
+                      <div>
+                        <h5 style={{ fontSize: '14px', marginTop: '10px' }}>{product.name}</h5>
+                        <h5 style={{ fontSize: '16px', marginTop: '-5px' }}>
+                          {product.price.toLocaleString("en-US", { style: "currency", currency: "INR" })}
+                        </h5>
+                        <StarRating rating={product.rating || 3} />
+                        <div style={{ fontSize: '25px', marginTop: '-50px', marginLeft: '200px' }}>
+                          <MdOutlineRemoveShoppingCart
+                            style={{ fontSize: '25px', cursor: 'pointer' }}
+                            onClick={() => removeCartItem(product._id)}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
             <div className="col-md-5 cart-summary text-center">
               <h2>Cart Summary</h2>
-              <p>Total | Checkout | Payment</p>
               <hr />
-              <h4>Total : {totalPrice()} </h4>
-              {auth?.user?.address ? (
-                <>
-                  <div className="mb-3">
-                    <h4>Current Address</h4>
-                    <h5>{auth?.user?.address}</h5>
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                    >
-                      Update Address
-                    </button>
-                  </div>
-                </>
-              ) : (
+              <h4>Total: {totalPrice()}</h4>
+              {auth.user?.address && (
                 <div className="mb-3">
-                  {auth?.token ? (
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                    >
-                      Update Address
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() =>
-                        navigate("/login", {
-                          state: "/cart",
-                        })
-                      }
-                    >
-                      Plase Login to checkout
-                    </button>
-                  )}
+                  <h4>Current Address</h4>
+                  <h5>{auth.user.address}</h5>
+                  <button className="btn btn-outline-warning" onClick={() => navigate("/dashboard/user/profile")}>
+                    Update Address
+                  </button>
                 </div>
               )}
             </div>
@@ -182,4 +97,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-

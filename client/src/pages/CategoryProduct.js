@@ -6,7 +6,7 @@ import { Checkbox, Radio } from 'antd';
 import axios from "axios";
 import StarRating from "../components/Designs/Stars.js";
 import { IoHeartCircle } from "react-icons/io5";
-import { GiShoppingCart } from "react-icons/gi";
+import { GiShoppingCart, GiTruce } from "react-icons/gi";
 import { useCart } from '../context/cart.js';
 import { useWish } from "../context/wish.js";
 import { IoFilter } from "react-icons/io5";
@@ -19,6 +19,7 @@ import {Sizes} from '../components/Filters/Sizes.js';
 import { Materials } from "../components/Filters/Materials.js";
 import { Occasions } from "../components/Filters/Occasions.js";
 import TopSlider from "../components/Designs/TopSlider.js";
+import Codal from "../components/Designs/Codal.js";
 
 
 
@@ -39,7 +40,15 @@ const CategoryProduct = () => {
   const [filterMaterial, setFilterMaterial] = useState([]);
   const [filterOccasion, setFilterOccasion] = useState([]);
   const [filterRent, setFilterRent] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedSize, setSelectedSize] = useState()
+  const [selectedType, setSelectedType] = useState(0)
+  const [selectedProductForCart, setSelectedProductForCart] = useState(null);
 
+  const handleCartIconClick = (product) => {
+    setIsModalOpen(true);
+    setSelectedProductForCart(product); // Set the selected product
+  };
 
   useEffect(() => {
     if ((radio.length>0 || filterColor.length > 0|| radio.length > 0|| filterSleeve.length > 0|| filterSize.length > 0 || 
@@ -74,6 +83,21 @@ const CategoryProduct = () => {
       console.log(products)
     } catch (error) {
       console.log(error);
+    }
+  };
+
+
+  const addToCart = (product, selectedSize, selectedType) => {
+    const isProductInCart = cart.some(cartItem => 
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
+    );
+    if (isProductInCart) {
+      toast.error('Item with the selected size is already in your cart');
+    } else {
+      const newCartItem = [product, selectedSize, selectedType]; 
+      setCart([...cart, newCartItem]);
+      localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
+      toast.success('Item added to cart');
     }
   };
 
@@ -243,8 +267,6 @@ const CategoryProduct = () => {
                 One Time Ownership
               </Checkbox>
           </div>
-
-          
       </div>
     </div>
         
@@ -300,11 +322,37 @@ const CategoryProduct = () => {
                         }}/>
 
                         <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-9px' }} 
-                          onClick={()=>{
-                            setCart([...cart, p]);
-                            localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                            toast.success('Item added to cart');
-                          }}/>
+                          onClick={() => {
+                          handleCartIconClick(p)
+                          setSelectedProductForCart(p._id)
+                          }}
+                          />
+                        {isModalOpen && p._id === selectedProductForCart && (
+                          <div className="dropdown-container" style={{marginLeft: '-180px', marginTop: '20px', marginBottom: '-20px'}}>
+                            <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)} 
+                              style={{width: '55px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                            <option value="">Size</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            </select>
+                            <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
+                              style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                              <option value="">Type</option>
+                              <option value={0}>Buy</option>
+                              <option value={1}>4-day rental</option>
+                              <option value={2}>7-day rental</option>
+                            </select>
+                            <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
+                                style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                                  height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>Add</button>
+                            <button className="close-btn" onClick={() => setIsModalOpen(false)}
+                              style={{width: '40px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                                  height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>X</button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
