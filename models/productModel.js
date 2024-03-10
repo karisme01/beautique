@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema({
         type: mongoose.ObjectId,
         ref: 'Brand',
         required: true
+    }, 
+    properties: {
+        type: Map,
+        of: Number 
     }
 
 }, {timestamps: true}

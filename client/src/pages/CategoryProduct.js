@@ -20,6 +20,7 @@ import { Materials } from "../components/Filters/Materials.js";
 import { Occasions } from "../components/Filters/Occasions.js";
 import TopSlider from "../components/Designs/TopSlider.js";
 import Codal from "../components/Designs/Codal.js";
+import HeartIconToggle from "../components/Designs/HeartIconToggle.jsx";
 
 
 
@@ -88,6 +89,10 @@ const CategoryProduct = () => {
 
 
   const addToCart = (product, selectedSize, selectedType) => {
+    if (!selectedSize || !selectedType) {
+      toast.error('Please select both a size and a type.');
+      return; 
+    }
     const isProductInCart = cart.some(cartItem => 
       cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
     );
@@ -297,31 +302,24 @@ const CategoryProduct = () => {
                       <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '2px'}}>
                         <StarRating rating={p.rating || 3} />
                       </div>
-                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-55px', marginBottom: '16px'}}>
-                        <IoHeartCircle style={{
-                          fontSize: '30px',
-                          borderWidth: '10px',
-                          borderColor: 'black',
-                          marginTop: '-10px',
-                          cursor: 'pointer',
-                          color: isProductInWishList(p) ? '#c20e35' : 'black',
-                        }} 
-                        onClick={() => {
-                          const isInWishList = isProductInWishList(p);
-                          if (isInWishList) {
-                            const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
-                            setWish(newWish);
-                            localStorage.setItem("wish", JSON.stringify(newWish));
-                            toast.success('Item removed from wishlist');
-                          } else {
-                            const newWish = [...wish, p];
-                            setWish(newWish);
-                            localStorage.setItem("wish", JSON.stringify(newWish));
-                            toast.success('Item added to wishlist');
-                          }
-                        }}/>
+                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-60px', marginBottom: '16px'}}>
+                          <HeartIconToggle
+                            isFilled={isProductInWishList(p)}
+                            onToggle={() => {
+                            if (isProductInWishList(p)) {
+                              const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
+                              setWish(newWish);
+                              localStorage.setItem("wish", JSON.stringify(newWish));
+                              toast.success('Item removed from wishlist');
+                            } else {
+                              const newWish = [...wish, p];
+                              setWish(newWish);
+                              localStorage.setItem("wish", JSON.stringify(newWish));
+                              toast.success('Item added to wishlist');
+                            }
+                          }}/>
 
-                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-9px' }} 
+                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px' }} 
                           onClick={() => {
                           handleCartIconClick(p)
                           setSelectedProductForCart(p._id)

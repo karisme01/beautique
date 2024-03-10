@@ -65,6 +65,7 @@ const ForYou = () => {
   };
 
   const addToCart = (product, selectedSize) => {
+    
     const isProductInCart = cart.some(cartItem => 
       cartItem[0]._id === product._id && cartItem[1] === selectedSize
     );
@@ -77,13 +78,16 @@ const ForYou = () => {
       toast.success('Item added to cart');
     }
   };
-
+  const { token } = JSON.parse(localStorage.getItem("auth")) || {};
   const getAllProducts = async () => {
     try {
-      const { data } = await axios.get("/api/v1/product/get-product");
+      const { data } = await axios.get("/api/v1/product/for-you-products", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        } 
+      });
       if (data?.success) {
         setProducts(data?.products);
-        
       }
     } catch (error) {
       console.log(error);
@@ -415,7 +419,7 @@ const ForYou = () => {
                   padding: '15px',
                   margin: '10px',
                   borderRadius: '20px',
-                  background: selectedSize === size ? '#332211' : '#fff',
+                  background: selectedSize === size ? '#4A2B2B' : '#fff',
                   color: selectedSize === size ? '#fff' : '#000', 
                   border: '1px solid #000',
                   cursor: 'pointer',
@@ -429,7 +433,7 @@ const ForYou = () => {
           <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 0 ? '#332211' : '#fff',
+              background: purchaseType === 0 ? '#4A2B2B' : '#fff',
               color: purchaseType === 0 ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection(0)}>
               <p>Buy</p>
@@ -437,7 +441,7 @@ const ForYou = () => {
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 1 ? '#332211' : '#fff',
+              background: purchaseType === 1 ? '#4A2B2B' : '#fff',
               color: purchaseType === 1 ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection(1)}>
               <p>Lease for 3 days</p>
@@ -445,7 +449,7 @@ const ForYou = () => {
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 2 ? '#332211' : '#fff',
+              background: purchaseType === 2 ? '#4A2B2B' : '#fff',
               color: purchaseType === 2 ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection(2)}>
               <p>Lease for 7 days</p>

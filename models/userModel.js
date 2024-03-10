@@ -35,8 +35,8 @@ const userSchema = new mongoose.Schema({
     preferences: {
         type: Map,
         of: Number 
-    }
-    
+    }, 
+    seenProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
 }, {timestamps: true})
 
 export default mongoose.model('users', userSchema)

@@ -1,6 +1,6 @@
 // Card.js
-const Card2 = ({ title, content, image }) => (
-    <div  className='shadow-lg' style={{
+const Card2 = ({ title, content, image, onClick }) => (
+    <div onClick={onClick} className='shadow-lg' style={{
       height: '300px',
       minWidth: '300px', // Adjusted width
       margin: '10px',

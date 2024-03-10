@@ -62,3 +62,34 @@
   .forgot-btn:hover {
     color: white !important;
   }
+
+  /* AuthStyles.css */
+
+.preference-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.preference-group {
+  margin-bottom: 20px;
+}
+
+.preference-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-check {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-check-input {
+  margin-top: 0;
+  margin-right: 10px;
+}
+
+.form-check-label {
+  margin-right: 80px; /* Adjust spacing between checkboxes */
+  margin-bottom: 10px; /* Spacing between rows of checkboxes */
+}

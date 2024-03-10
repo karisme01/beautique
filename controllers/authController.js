@@ -5,7 +5,8 @@ import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
     try {
-        const {name, email, password, phone, address, answer} = req.body
+        const {name, email, password, phone, address, answer, preferredCategories, 
+                preferredColors, preferredMaterials, preferredOccasions, preferredPriceRanges} = req.body
         //validation
         if (!name) {
             return res.send({message: 'Name is Required'})
@@ -37,10 +38,27 @@ export const registerController = async (req, res) => {
         const hashedPassword = await hashPassword(password)
 
         //preferences
-        const preferences = {color: 0.1, material: 0.1, 
-            occasion: 0.2, category: 0.4}
+        const allPreferences = preferredCategories.concat(preferredColors, preferredMaterials, preferredOccasions, preferredPriceRanges);
+
+        const preferences = {
+            red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
+            indowesternwear: 0, kurtistunics: 0, sari: 0,
+            tank: 0, cap: 0, shortsleeve: 0, midlength: 0, threequarter: 0, fullsleeve: 0,
+            cotton: 0, nylon: 0, silk: 0, wool: 0, leather: 0, chiffon: 0,
+            party: 0, formal: 0, casual: 0, festival: 0, wedding: 0,
+            pricerange1: 0, pricerange2: 0, pricerange3: 0, pricerange4: 0, pricerange5: 0
+        };
         //save
-        const user = await new userModel({name, email, password: hashedPassword, phone, address, answer, preferences: preferences}).save()
+        allPreferences.forEach(pref => {
+            const normalizedPref = pref.toLowerCase().replace(/[\s\-&]+/g, '');
+            if (normalizedPref in preferences) {
+                preferences[normalizedPref] = 1;
+            }
+        });
+        const seenProducts = []
+
+        const user = await new userModel({name, email, password: hashedPassword, phone, address, 
+                answer, preferences: preferences, seenProducts: seenProducts}).save()
 
         res.status(201).send({
             success: true,
@@ -204,15 +222,25 @@ export const updateProfileController = async (req, res) => {
             if (!product) continue;
         
             const weightAdjustment = liked ? 0.1 : -0.1;
-            console.log(productId, liked)
-            const featuresToCheck = ['color', 'occasion', 'category', 'material'];
+            const featuresToCheck = [
+                "red", "yellow", "green", "gold", "white", "black", "blue", "brown",
+                "indowesternwear", "kurtistunics", "sari",
+                "tank", "cap", "shortsleeve", "midlength", "threequarter", "fullsleeve",
+                "cotton", "nylon", "silk", "wool", "leather", "chiffon",
+                "party", "formal", "casual", "festival", "wedding",
+                "pricerange1", "pricerange2", "pricerange3", "pricerange4", "pricerange5"
+              ];
             featuresToCheck.forEach(featureKey => {
                 if (user.preferences.has(featureKey)) {
-                    let currentWeight = user.preferences.get(featureKey) || 0;
-                    console.log(currentWeight, featureKey)
-                    user.preferences.set(featureKey, currentWeight + weightAdjustment); 
+                    let currentWeight = user.preferences.get(featureKey);
+                    let productWeight = product.properties.get(featureKey);
+                    user.preferences.set(featureKey, currentWeight + weightAdjustment * productWeight); 
                 }
             });
+
+            if (!user.seenProducts.includes(product._id)) {
+                user.seenProducts.push(product._id);
+            }
         }
         await user.save();
         
@@ -224,3 +252,4 @@ export const updateProfileController = async (req, res) => {
         res.status(500).send({ message: "An error occurred while updating preferences" });
     }
 };
+

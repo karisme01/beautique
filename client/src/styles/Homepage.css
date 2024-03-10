@@ -172,3 +172,8 @@ body {
 .carousal-slide {
   opacity: 1;
 }
+
+.blur-effect {
+  filter: blur(6px);
+}
+

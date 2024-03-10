@@ -21,9 +21,9 @@ import { Carousel } from 'antd';
 import {sliderItems1} from '../components/Content/SliderItem1.js'
 import {sliderItems2} from '../components/Content/SliderItem2.js'
 import {sliderCelebrities} from '../components/Content/SliderCelebrities.js'
-import guide1 from '../images/guide1.jpeg'
-import RightOnlyCarousel from '../components/Designs/RightOnlyCarousal.js';
+import {Modal, Button} from 'antd';
 import Designer from '../components/Content/Designer.js';
+import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx';
 
 
 const HomePage = () => {
@@ -37,17 +37,33 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCartPressed, setIsCartPressed] = useState(false)
   const [selectedSize, setSelectedSize] = useState()
-  const [selectedType, setSelectedType] = useState(0)
+  const [selectedType, setSelectedType] = useState()
   const [selectedProductForCart, setSelectedProductForCart] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSlide, setSelectedSlide] = useState(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [currentItems, setCurrentItems] = useState([]);
+
 
   const handleCartIconClick = (product) => {
-    setIsModalOpen(true);
+    setIsCartPressed(true);
     setSelectedProductForCart(product); // Set the selected product
   };
+  const handleSlideClick = (slide, index, itemsArray) => {
+    setSelectedSlide(slide);
+    setCurrentSlideIndex(index);
+    setCurrentItems(itemsArray);
+    setIsModalOpen(true);
+  };
+
 
   const addToCart = (product, selectedSize, selectedType) => {
+    if (!selectedSize || !selectedType) {
+      toast.error('Please select both a size and a type.');
+      return; 
+    }
     const isProductInCart = cart.some(cartItem => 
       cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
     );
@@ -61,6 +77,28 @@ const HomePage = () => {
     }
   };
 
+  const goToNextSlide = () => {
+    const nextIndex = currentSlideIndex + 1;
+    if (nextIndex < currentItems.length) { 
+      setSelectedSlide(currentItems[nextIndex]);
+      setCurrentSlideIndex(nextIndex);
+    } else {
+      setSelectedSlide(currentItems[0]);
+      setCurrentSlideIndex(0);
+    }
+  };
+  
+  const goToPrevSlide = () => {
+    const prevIndex = currentSlideIndex - 1;
+    if (prevIndex >= 0) {
+      setSelectedSlide(currentItems[prevIndex]);
+      setCurrentSlideIndex(prevIndex);
+    } else {
+      setSelectedSlide(currentItems[currentItems.length - 1]);
+      setCurrentSlideIndex(currentItems.length - 1);
+    }
+  };
+  
 
   const carouselItems = [
     {
@@ -162,6 +200,7 @@ const HomePage = () => {
 
   return (
     <Layout title={'Karisme'}>
+      <div className={`row body ${isModalOpen ? 'blur-effect' : ''}`}>
       <div className='row body'>
 
       <TopSlider items={topSliderItems} />
@@ -200,43 +239,36 @@ const HomePage = () => {
                           currency: "INR",
                         })}
                       </h5>
-                      <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '4px'}}>
+                      {/* <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '4px'}}>
                         <StarRating rating={p.rating || 3} />
-                      </div>
-                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-55px', marginBottom: '16px'}}>
-                        <IoHeartCircle style={{
-                          fontSize: '30px',
-                          borderWidth: '10px',
-                          borderColor: 'black',
-                          marginTop: '-10px',
-                          cursor: 'pointer',
-                          color: isProductInWishList(p) ? '#c20e35' : 'black',
-                        }} 
-                        onClick={() => {
-                          const isInWishList = isProductInWishList(p);
-                          if (isInWishList) {
-                            const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
-                            setWish(newWish);
-                            localStorage.setItem("wish", JSON.stringify(newWish));
-                            toast.success('Item removed from wishlist');
-                          } else {
-                            const newWish = [...wish, p];
-                            setWish(newWish);
-                            localStorage.setItem("wish", JSON.stringify(newWish));
-                            toast.success('Item added to wishlist');
-                          }
-                        }}/>
+                      </div> */}
+                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
+                        <HeartIconToggle
+                            isFilled={isProductInWishList(p)}
+                            onToggle={() => {
+                            if (isProductInWishList(p)) {
+                              const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
+                              setWish(newWish);
+                              localStorage.setItem("wish", JSON.stringify(newWish));
+                              toast.success('Item removed from wishlist');
+                            } else {
+                              const newWish = [...wish, p];
+                              setWish(newWish);
+                              localStorage.setItem("wish", JSON.stringify(newWish));
+                              toast.success('Item added to wishlist');
+                            }
+                          }}/>
 
-                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-9px' }} 
+                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px' }} 
                           onClick={() => {
                             handleCartIconClick(p)
                             setSelectedProductForCart(p._id)
                             }}
                             />
-                          {isModalOpen && p._id === selectedProductForCart && (
+                          {isCartPressed && p._id === selectedProductForCart && (
                             <div className="dropdown-container" style={{marginLeft: '-180px', marginTop: '20px', marginBottom: '-20px'}}>
                               <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)} 
-                                style={{width: '55px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                                style={{width: '55px', marginRight: '10px', fontSize: '17px', height: '30px', borderRadius: '7px'}}>
                               <option value="">Size</option>
                               <option value="XS">XS</option>
                               <option value="S">S</option>
@@ -245,17 +277,17 @@ const HomePage = () => {
                               <option value="XL">XL</option>
                               </select>
                               <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
-                                style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
+                                style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px', borderRadius: '7px'}}>
                                 <option value="">Type</option>
                                 <option value={0}>Buy</option>
                                 <option value={1}>4-day rental</option>
                                 <option value={2}>7-day rental</option>
                               </select>
                               <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
-                                  style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                                  style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '7px', 
                                     height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>Add</button>
-                              <button className="close-btn" onClick={() => setIsModalOpen(false)}
-                                style={{width: '40px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 
+                              <button className="close-btn" onClick={() => setIsCartPressed(false)}
+                                style={{width: '40px', marginRight: '10px', fontSize: '17px', borderRadius: '7px', 
                                     height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>X</button>
                             </div>
                           )}
@@ -267,17 +299,6 @@ const HomePage = () => {
               ))}
             </div>  
 
-          {/* <div className='m-2 p-3'>
-            {products && products.length < total && (
-              <button className='btn' onClick={(e) => {
-                e.preventDefault();
-                setPage(page + 1);
-              }}  style={{marginLeft: '600px', height: '40px', borderRadius: '30px', 
-                    width: '130px', marginTop: '-17px', backgroundColor: '#f3e5e3'}}>
-                {loading ? "Loading..." : "Load More"}
-              </button>
-            )}
-          </div> */}
           {/* <div style={{marginLeft: '30px', marginRight: '-300px'}}>
           <RightOnlyCarousel className='shadow'>
             <img src={guide1}></img>
@@ -313,9 +334,28 @@ const HomePage = () => {
         <div className='col-md-9' style={{ textAlign: 'center', marginTop: '10px' }}>
         <h3 style={{marginLeft: '-920px', marginBottom: '-30px', marginTop: '40px', fontSize: '30px'}}>Guides</h3>
           <div className='' style={{marginRight: '-300px'}}>
-            <Slider2 items={sliderItems2}/>
+            <Slider2 items={sliderItems2} onSlideClick={(slide, index) => handleSlideClick(slide, index, sliderItems2)}/>
           </div>
         </div>
+
+        <Modal 
+          title="Slide Detail" 
+          open={isModalOpen} 
+          onCancel={() => setIsModalOpen(false)} 
+          centered
+          footer={[
+            <Button key="prev" onClick={goToPrevSlide}>Previous</Button>,
+            <Button key="next" onClick={goToNextSlide}>Next</Button>,
+          ]}
+        >
+          <div>
+            <h2>{selectedSlide?.title}</h2>
+            <img style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto' }}
+            src={selectedSlide?.image}/>
+            <p>{selectedSlide?.content}</p>
+          </div>
+        </Modal>
+
 
         <div className='col-md-9' style={{ textAlign: 'center', marginTop: '50px', marginBottom: '10px' }}>
           <div className='' style={{marginRight: '-302px', marginTop: '-30px'}}>
@@ -327,16 +367,17 @@ const HomePage = () => {
         <div className='col-md-9' style={{ textAlign: 'center', marginTop: '-10px' }}>
           <h3 style={{marginLeft: '-760px', marginBottom: '-30px', marginTop: '0px', fontSize: '30px'}}>Celebrity Spotlight</h3>
           <div className='' style={{marginRight: '-300px'}}>
-            <Slider2 items={sliderCelebrities}/>
+          <Slider2 items={sliderCelebrities} onSlideClick={(slide, index) => handleSlideClick(slide, index, sliderCelebrities)}/>
           </div>
         </div>
 
         <div className='col-md-9' style={{ textAlign: 'center', marginTop: '10px' }}>
           <h3 style={{marginLeft: '-870px', marginBottom: '-30px', marginTop: '30px', fontSize: '30px'}}>Celebrities</h3>
           <div className='' style={{marginRight: '-300px'}}>
-            <Slider2 items={sliderItems2}/>
+            <Slider2 items={sliderItems2} onSlideClick={(slide, index) => handleSlideClick(slide, index, sliderItems2)}/>
           </div>
         </div>
+      </div>
       </div>
     </Layout>
   )

@@ -3,47 +3,72 @@ import categoryModel from '../models/categoryModel.js'
 import productModel from "../models/productModel.js"
 import brandModel from "../models/brandModel.js"
 import fs from 'fs';
+import userModel from "../models/userModel.js";
 
 export const createProductController = async (req, res) => {
     try {
-        const {name, slug, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} = req.fields
-        const {photo} = req.files
-        //validation
-        switch (true) {
-            case !name:
-                return res.status(500).send({error: 'Name is required'})
-            case !description:
-                return res.status(500).send({error: 'Description is required'})
-            case !price:
-                return res.status(500).send({error: 'Price is required'})
-            case !category:
-                return res.status(500).send({error: 'Category is required'})    
-            case !quantity:
-                return res.status(500).send({error: 'Quantity is required'})
-            case photo && photo.size > 1000000:
-                return res.status(500).send({error: 'Photo is required and should be less than 1MB'})
-        }
-        const products = new productModel({...req.fields, slug: slugify(name)})
+        const {name, slug, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} = req.fields;
+        const {photo} = req.files;
+
+        const products = new productModel({...req.fields, slug: slugify(name)});
         if (photo) {
-            products.photo.data = fs.readFileSync(photo.path)
-            products.photo.contentType = photo.type
+            products.photo.data = fs.readFileSync(photo.path);
+            products.photo.contentType = photo.type;
         }
+        const properties = {
+            red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
+            indowesternwear: 0, kurtistunics: 0, sari: 0,
+            tank: 0, cap: 0, shortsleeve: 0, midlength: 0, threequarter: 0, fullsleeve: 0,
+            cotton: 0, nylon: 0, silk: 0, wool: 0, leather: 0, chiffon: 0,
+            party: 0, formal: 0, casual: 0, festival: 0, wedding: 0,
+            pricerange1: 0, pricerange2: 0, pricerange3: 0, pricerange4: 0, pricerange5: 0
+        };
+    
+            const categoryName = await categoryModel.findById(category).exec();
+    
+        // Helper function to update properties based on input
+            const updateProperties = (key, value) => {
+                const lowerValue = value.toLowerCase().replace(/[\s\-&]+/g, '');
+                if (properties.hasOwnProperty(lowerValue)) {
+                    properties[lowerValue] = 1;
+                }
+            };
+    
+            // Update properties based on input
+            updateProperties('color', color);
+            console.log(category)
+            updateProperties('category', categoryName.name);
+            updateProperties('sleeve', sleeve);
+            updateProperties('material', material);
+            updateProperties('occasion', occasion);
+    
+            // Price range logic (assuming price is a number)
+            const priceRanges = [1000, 5000, 10000, 20000];
+            const priceRangeKeys = ['pricerange1', 'pricerange2', 'pricerange3', 'pricerange4', 'pricerange5'];
+            let priceIndex = priceRanges.findIndex(range => price < range);
+            priceIndex = priceIndex === -1 ? priceRanges.length : priceIndex;
+            properties[priceRangeKeys[priceIndex]] = 1;
+    
+            products.properties = properties;
+    
+
         await products.save();
         res.status(201).send({
-        success: true,
-        message: "Product Created Successfully",
-        products,
+            success: true,
+            message: "Product Created Successfully",
+            products,
         });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).send({
             success: false,
             error,
             message: 'Error while creating product'
-        })
+        });
     }
 }
+
 
 // get all products
 export const getProductController = async (req, res) => {
@@ -155,6 +180,42 @@ export const updateProductController = async (req, res) => {
         products.photo.data = fs.readFileSync(photo.path);
         products.photo.contentType = photo.type;
       }
+      const properties = {
+        red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
+        indowesternwear: 0, kurtistunics: 0, sari: 0,
+        tank: 0, cap: 0, shortsleeve: 0, midlength: 0, threequarter: 0, fullsleeve: 0,
+        cotton: 0, nylon: 0, silk: 0, wool: 0, leather: 0, chiffon: 0,
+        party: 0, formal: 0, casual: 0, festival: 0, wedding: 0,
+        pricerange1: 0, pricerange2: 0, pricerange3: 0, pricerange4: 0, pricerange5: 0
+    };
+
+        const categoryName = await categoryModel.findById(category).exec();
+
+    // Helper function to update properties based on input
+        const updateProperties = (key, value) => {
+            const lowerValue = value.toLowerCase().replace(/[\s\-&]+/g, '');
+            if (properties.hasOwnProperty(lowerValue)) {
+                properties[lowerValue] = 1;
+            }
+        };
+
+        // Update properties based on input
+        updateProperties('color', color);
+        console.log(category)
+        updateProperties('category', categoryName.name);
+        updateProperties('sleeve', sleeve);
+        updateProperties('material', material);
+        updateProperties('occasion', occasion);
+
+        // Price range logic (assuming price is a number)
+        const priceRanges = [1000, 5000, 10000, 20000];
+        const priceRangeKeys = ['pricerange1', 'pricerange2', 'pricerange3', 'pricerange4', 'pricerange5'];
+        let priceIndex = priceRanges.findIndex(range => price < range);
+        priceIndex = priceIndex === -1 ? priceRanges.length : priceIndex;
+        properties[priceRangeKeys[priceIndex]] = 1;
+
+        products.properties = properties;
+
       await products.save();
       res.status(201).send({
         success: true,
@@ -456,3 +517,58 @@ export const productBrandController = async (req, res) => {
         });
       }
 }
+
+export const getCuratedProductsController = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+        const products = await productModel.find({
+            _id: { $nin: [...user.seenProducts] }
+        }).select("-photo").exec();
+
+        const userPreferences = user.preferences; 
+
+        const calculateMatchScore = (productProperties = new Map(), userPreferences = new Map()) => {
+            let score = 0;
+        
+            // Ensure productProperties and userPreferences are Maps
+            if (!(productProperties instanceof Map) || !(userPreferences instanceof Map)) {
+                console.error('Invalid arguments: productProperties and userPreferences must be Maps');
+                return 0;
+            }
+            for (const [key, prefValue] of userPreferences) {
+                const productValue = productProperties.get(key);
+                if (typeof productValue === 'number' && typeof prefValue === 'number') {
+                    score += productValue * prefValue;
+                } else {
+                    console.log(`Mismatch or non-numeric value for ${key}: productValue=${productValue}, prefValue=${prefValue}`);
+                }
+            }
+            return score;
+        };
+        
+        // Map products with their match scores
+        const productsWithScores = products.map(product => {
+            const score = calculateMatchScore(product.properties, userPreferences)
+            return { ...product.toObject(), matchScore: score };
+        });
+        const sortedProducts = productsWithScores.sort((a, b) => b.matchScore - a.matchScore);
+
+        const seenProducts = await productModel.find({
+            _id: { $in: user.seenProducts }
+        }).select("-photo").exec();
+
+        const combinedProducts = [...sortedProducts, ...seenProducts]; 
+
+        res.status(200).send({ success: true, products: combinedProducts });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "An error occurred while getting curated products" });
+    }
+}; 
+
+
+
+

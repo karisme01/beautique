@@ -19,7 +19,7 @@
     position: fixed;
     left: -400px; /* Hide by default */
     top: 0;
-    background-color: #600020;
+    background-color: #F4EEE0;
     transition: left 0.3s ease-in-out; /* Smooth transition */
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: hidden; /* Hide horizontal scrollbar */

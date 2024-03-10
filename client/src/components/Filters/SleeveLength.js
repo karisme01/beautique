@@ -13,18 +13,14 @@ export const SleeveLength = [
     },
     {
       _id: 3,
-      name: "Above elbow",
-    },
-    {
-      _id: 4,
       name: "Mid-length",
     },
     {
-        _id: 5,
+        _id: 4,
         name: "Three-quarter",
     },
     {
-        _id: 6,
+        _id: 5,
         name: "Full-sleeve",
       },
   ];
