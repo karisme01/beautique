@@ -110,6 +110,7 @@ const HomePage = () => {
       content: 'Slide 1 Content',
     }
   ];
+  
   const topSliderItems = [
     { id: 1, content: "Free Delivery over Rs 4000" },
     { id: 2, content: "Hassle-free return process" },
@@ -201,10 +202,10 @@ const HomePage = () => {
   return (
     <Layout title={'Karisme'}>
       <div className={`row body ${isModalOpen ? 'blur-effect' : ''}`}>
-      <div className='row body'>
+      <div className='row body' style={{marginLeft: '7px'}}>
+
 
       <TopSlider items={topSliderItems} />
-
       <Carousel autoplay autoplaySpeed={3000}>
           {carouselItems.map((item, index) => (
             <div key={index} className="carousel-slide">
@@ -352,7 +353,7 @@ const HomePage = () => {
             <h2>{selectedSlide?.title}</h2>
             <img style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto' }}
             src={selectedSlide?.image}/>
-            <p>{selectedSlide?.content}</p>
+            <h5>{selectedSlide?.content}</h5>
           </div>
         </Modal>
 

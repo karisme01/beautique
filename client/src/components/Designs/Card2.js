@@ -15,9 +15,9 @@ const Card2 = ({ title, content, image, onClick }) => (
       objectFit: 'cover',
     
     }} />
-      {/* <h3>{title}</h3> */}
+      <p>{title}</p>
       <div >
-      <p className="text-center">{content}</p>
+      {/* <p className="text-center">{content}</p> */}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../../styles/AuthStyles.css";
+import cel2 from '../../images/celebrities/cel2.png'
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -21,8 +22,9 @@ const Register = () => {
 
 
   const navigate = useNavigate();
-  const occasionsOptions = ["Wedding", "Casual", "Party", "Formal", "Festival"];
+  // const occasionsOptions = ["Wedding", "Casual", "Party", "Formal", "Festival"];
   const categoryOptions = ["Indowestern Wear", "Kurtis & Tunics", "Sari"];
+  const occasionsOptions = ["Wedding", "Casual", "Party", "Formal", "Festival"]
   const colorOptions = ["Red", "Yellow", "Green", "Blue", "Black", "White", "Gold", "Brown"];
   const materialOptions = ["Cotton", "Silk", "Wool", "Leather", "Chiffon", "Nylon"];
   const priceRangeOptions = [
@@ -109,8 +111,8 @@ const Register = () => {
 
   return (
     <Layout title="Register - Karisme">
-      <div className="form-container" style={{ minHeight: "90vh", display: 'flex', flexDirection: 'row'}}>
-        <form style={{width: '500px', marginLeft: '-100px'}} onSubmit={handleSubmit}>
+      <div className="form-container" style={{ minHeight: "90vh", display: 'flex', flexDirection: ''}}>
+        <form style={{width: '400px', marginLeft: '100px', marginTop: '50px', marginBottom: '50px'}} onSubmit={handleSubmit}>
           <h4 className="title">REGISTER FORM</h4>
           <div className="" style={{marginBottom: '30px'}}>
             <input
@@ -179,20 +181,12 @@ const Register = () => {
               required
             />
           </div>
-          {/* <button type="submit" className="btn btn-primary">
-            REGISTER
-          </button> */}
-        </form>
-
-        <form style={{width: '700px', marginLeft: '50px'}} onSubmit={handleSubmit}>
-          <h4 className="title">PREFERENCES</h4>
-
 
           <div className="preference-group">
             <label className="preference-label">Preferred Occasions:</label>
-            <div className="form-check">
+            <div className="form-check" style={{marginLeft: '0px'}}>
               {occasionsOptions.map((occasion) => (
-                <div key={occasion}>
+                <div key={occasion} className="">
                   <input
                     type="checkbox"
                     id={`occasion-${occasion}`}
@@ -211,9 +205,9 @@ const Register = () => {
 
           <div className="preference-group">
             <label className="preference-label">Preferred Categories:</label>
-            <div className="form-check">
+            <div className="form-check" style={{marginLeft: '0px'}}>
               {categoryOptions.map((category) => (
-                <div key={category}>
+                <div key={category} className="">
                   <input
                     type="checkbox"
                     id={`category-${category}`}
@@ -222,6 +216,7 @@ const Register = () => {
                     onChange={() => handleCategoryChange(category)}
                     checked={preferredCategories.includes(category)}
                   />
+                  <div style={{width: '20px'}}/>
                   <label htmlFor={`category-${category}`} className="form-check-label">
                     {category}
                   </label>
@@ -230,11 +225,11 @@ const Register = () => {
             </div>
           </div>
 
-        <div className="preference-group">
+          <div className="preference-group">
             <label className="preference-label">Preferred Colors:</label>
-            <div className="form-check">
+            <div className="form-check" style={{marginLeft: '0px'}}>
               {colorOptions.map((color) => (
-                <div key={color}>
+                <div key={color} className="">
                   <input
                     type="checkbox"
                     id={`color-${color}`}
@@ -251,12 +246,11 @@ const Register = () => {
             </div>
           </div>
 
-
-          <div className="preference-group">
+           <div className="preference-group">
             <label className="preference-label">Preferred Materials:</label>
-            <div className="form-check">
+            <div className="form-check" style={{marginLeft: '0px'}}>
               {materialOptions.map((material) => (
-                <div key={material}>
+                <div key={material} className="">
                   <input
                     type="checkbox"
                     id={`material-${material}`}
@@ -291,19 +285,11 @@ const Register = () => {
               </div>
             ))}
           </div>
-
-
-          
-
         <button type="submit" className="btn btn-primary">
           REGISTER
         </button>
-      </form>
+        </form>
       </div>
-
-
-
-      
     </Layout>
   );
 };

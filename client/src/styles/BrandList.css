@@ -13,7 +13,7 @@
     text-align: center;
 }
 
-.brand-list {
+.brand-list { 
     overflow-y: auto;
     max-height: 500px;
 }
@@ -43,6 +43,12 @@
     border-radius: 6px;
     margin-bottom: 20px;
   }
+
+.cover {
+    background-image: url('../images/brandLishBgd.webp'); /* Adjust path accordingly */
+    background-size: cover;
+    background-position: center;
+}
   
 
 

@@ -28,7 +28,7 @@ const ForYou = () => {
   const [wish, setWish] = useWish()
   const productDetailRef = useRef(null);
   const [expand, setExpand] = useState(false)
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false) 
   const [showPanel, setShowPanel] = useState(false);
   const [radio, setRadio] = useState([]);
   const [filterColor, setFilterColor] = useState([]);
@@ -64,10 +64,9 @@ const ForYou = () => {
     setPurchaseType(type);
   };
 
-  const addToCart = (product, selectedSize) => {
-    
+  const addToCart = (product, selectedSize, selectedType) => {
     const isProductInCart = cart.some(cartItem => 
-      cartItem[0]._id === product._id && cartItem[1] === selectedSize
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
     );
     if (isProductInCart) {
       toast.error('Item with the selected size is already in your cart');
@@ -78,6 +77,7 @@ const ForYou = () => {
       toast.success('Item added to cart');
     }
   };
+
   const { token } = JSON.parse(localStorage.getItem("auth")) || {};
   const getAllProducts = async () => {
     try {
@@ -459,7 +459,7 @@ const ForYou = () => {
 
                 <button
                   className='btn btn-secondary ms-1'
-                  onClick={() => addToCart(activeProduct,selectedSize)}
+                  onClick={() => addToCart(activeProduct,selectedSize, purchaseType)}
                   style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
                   alignItems: 'center', justifyContent: 'center', 
                   backgroundColor: '#ebe8de', borderWidth: '0.5px', color: 'black', marginBottom: '30px', marginTop: '30px'}}

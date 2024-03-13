@@ -41,23 +41,25 @@ const BrandList = () => {
     };
 
     return (
-        <Layout>
-            <div className="brand-list-container">
-                <h1 className="brand-list-title">Shop By Designer Brands</h1>
-                <input 
-                    type="text" 
-                    placeholder="Search brands..." 
-                    value={searchTerm} 
-                    onChange={handleSearchChange}
-                    className="brand-search-input"
-                />
-                <div className="brand-list">
-                    {filteredBrands.map(brand => (
-                        <div key={brand._id} className="brand-item" onClick={() => handleBrandClick(brand.slug)}>{brand.name} </div>
-                    ))}
+        <div className='cover'>
+            <Layout>
+                <div className="brand-list-container">
+                    <h1 className="brand-list-title">Shop By Designer Brands</h1>
+                    <input 
+                        type="text" 
+                        placeholder="Search brands..." 
+                        value={searchTerm} 
+                        onChange={handleSearchChange}
+                        className="brand-search-input"
+                    />
+                    <div className="brand-list">
+                        {filteredBrands.map(brand => (
+                            <div key={brand._id} className="brand-item" onClick={() => handleBrandClick(brand.slug)}>{brand.name} </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </Layout>
+            </Layout>
+        </div>
     );
 };
 

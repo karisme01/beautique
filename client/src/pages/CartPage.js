@@ -16,19 +16,31 @@ const CartPage = () => {
 
   // Total price calculation
   const totalPrice = () => {
-    return cart.reduce((total, [product]) => total + product.price, 0).toLocaleString("en-US", {
+    return cart.reduce((total, [product, size, selectedType]) => {
+      let priceToAdd = product.price;
+      if (selectedType === '1') {
+        priceToAdd = 0.3 * product.price; 
+      } else if (selectedType === '2') {
+        priceToAdd = 0.4 * product.price;   
+      }
+      return total + priceToAdd;
+    }, 0).toLocaleString("en-US", {
       style: "currency",
       currency: "INR",
     });
   };
+  
 
   // Remove item from cart
-  const removeCartItem = (pid) => {
-    const updatedCart = cart.filter(([product]) => product._id !== pid);
+  const removeCartItem = (pid, sizeToRemove, typeToRemove) => {
+    const updatedCart = cart.filter(([product, size, selectedType]) => {
+        return !(product._id === pid && size === sizeToRemove && selectedType === typeToRemove);
+    });
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
     toast.success('Item removed from cart');
-  };
+};
+
 
   return (
     <Layout>
@@ -57,15 +69,27 @@ const CartPage = () => {
                         onClick={() => navigate(`/product/${product.slug}`)}
                       />
                       <div>
-                        <h5 style={{ fontSize: '14px', marginTop: '10px' }}>{product.name}</h5>
-                        <h5 style={{ fontSize: '16px', marginTop: '-5px' }}>
-                          {product.price.toLocaleString("en-US", { style: "currency", currency: "INR" })}
+                        <h5 style={{ fontSize: '14px', marginTop: '10px', marginBottom: '15px'}}>{product.name}</h5>
+                        <h5 style={{ fontSize: '16px', marginTop: '-5px', marginBottom: '10px'}}>
+                          Retail Price: {product.price.toLocaleString("en-US", { style: "currency", currency: "INR" })}
+                        </h5>
+                        <h5 style={{fontSize: '16px', marginBottom: '10px'}}>
+                          Purchase Type: {
+                          (type === '0' ? 'Buy' : type === '1' ? '4 day lease' : '7 day lease')
+                          .toLocaleString("en-US", { style: "currency", currency: "INR" })
+                          }
+                        </h5>
+                        <h5 style={{fontSize: '16px'}}>
+                          Purchase Price: {
+                          (type === 0 ? product.price : type === 1 ? 0.3 * product.price : 0.4 * product.price)
+                          .toLocaleString("en-US", { style: "currency", currency: "INR" })
+                          }
                         </h5>
                         <StarRating rating={product.rating || 3} />
-                        <div style={{ fontSize: '25px', marginTop: '-50px', marginLeft: '200px' }}>
-                          <MdOutlineRemoveShoppingCart
+                        <div style={{ fontSize: '25px', marginTop: '-150px', marginLeft: '220px' }}>
+                         <MdOutlineRemoveShoppingCart
                             style={{ fontSize: '25px', cursor: 'pointer' }}
-                            onClick={() => removeCartItem(product._id)}
+                            onClick={() => removeCartItem(product._id, size, type)}
                           />
                         </div>
                       </div>
@@ -83,7 +107,7 @@ const CartPage = () => {
                 <div className="mb-3">
                   <h4>Current Address</h4>
                   <h5>{auth.user.address}</h5>
-                  <button className="btn btn-outline-warning" onClick={() => navigate("/dashboard/user/profile")}>
+                  <button className="btn btn-outline-dark" onClick={() => navigate("/dashboard/user/profile")}>
                     Update Address
                   </button>
                 </div>
