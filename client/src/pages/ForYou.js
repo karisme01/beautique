@@ -16,7 +16,10 @@ import {SleeveLength} from '../components/Filters/SleeveLength.js';
 import {Sizes} from '../components/Filters/Sizes.js';
 import { Materials } from "../components/Filters/Materials.js";
 import { Occasions } from "../components/Filters/Occasions.js";
+import { BsQuestionCircle } from "react-icons/bs";
 import { IoFilter } from "react-icons/io5";
+import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx'
+import {Modal} from 'antd'
 
 
 const ForYou = () => {
@@ -40,9 +43,19 @@ const ForYou = () => {
   const [filterCategory, setFilterCategory] = useState([]);
   const [categories, setCategories] = useState([])
   const [selectedSize, setSelectedSize] = useState(""); 
-  const [purchaseType, setPurchaseType] = useState(0);
+  const [purchaseType, setPurchaseType] = useState('0');
+  const [showModal, setShowModal] = useState(false);
+
 
   const navigate = useNavigate()
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   const getAllCategory = async () => {
     try {
@@ -71,7 +84,7 @@ const ForYou = () => {
     if (isProductInCart) {
       toast.error('Item with the selected size is already in your cart');
     } else {
-      const newCartItem = [product, selectedSize, 0]; 
+      const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
       setCart([...cart, newCartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
       toast.success('Item added to cart');
@@ -141,13 +154,80 @@ const ForYou = () => {
       setActiveProduct(products[0]);
     }
   }, [products]); 
+
+  const isProductInWishList = (product) => {
+    return wish.some((wishProduct) => wishProduct._id === product._id);
+  };
+
+  const isProductInCart = (product, selectedSize, selectedType) => {
+    return cart.some(cartItem => 
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[2] === selectedType
+    );
+  };
   
 
   return (
     <div className="for-you-page">
     <Layout>
       <div>
-    <div className="App" style={{marginTop: '85px', marginBottom: '-85px', marginLeft: '-50px'}}>
+
+      <div style={{marginTop: '81px', marginBottom: '-78px', marginLeft: '1383px'}}>
+          <BsQuestionCircle style={{marginLeft: '-10px', marginRight: '10px', fontSize: '45px', cursor: 'pointer'}} onClick={handleOpenModal}/>
+          
+      </div>
+
+      <Modal
+        title={
+          <div style={{ fontSize: '24px', color: '#8B5A42' }}>Discover Your Style</div>
+        }
+        open={showModal}
+        onCancel={handleCloseModal}
+        footer={[
+          <button onClick={handleCloseModal} style={{
+            background: '#8B5A42',
+            color: 'white',
+            padding: '10px 30px',
+            border: 'none',
+            cursor: 'pointer',
+            borderRadius: '5px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}>
+            Explore & Enjoy
+          </button>
+        ]}
+        style={{ maxWidth: '600px'}}
+        // bodyStyle={{ backgroundColor: '#F5F5DC' }}
+      >
+        <div style={{fontSize: '16px', lineHeight: '1.5', color: '#555', padding: '20px', backgroundColor: 'cream', borderRadius: '10px', border: '2px solid #D3B8AE'}}>
+          <p style={{marginBottom: '8px'}}>Welcome to your personalized clothing recommendation journey!</p>
+          <p style={{marginBottom: '15px'}}>As you explore, your interactions will help us tailor suggestions just for you:</p>
+          <ul>
+            <li style={{marginBottom: '10px'}}>
+            <span style={{fontWeight: 'bold'}}>Like</span> what you see? Tap the 
+            <span style={{color: 'black', marginLeft: '4px', marginRight: '4px'}}>♥</span>
+             to let us know.
+            </li>
+            <li style={{marginBottom: '10px'}}>
+              Not for you? Hit the 
+              <span style={{color: '#000', marginLeft: '4px', marginRight: '4px', fontSize: '20px'}}>✖</span>
+              to pass.
+            </li>
+            <li>
+              Curious? The 
+              <span style={{color: '#000', marginLeft: '4px', marginRight: '4px', fontSize: '20px'}}>↓</span>
+              lets you delve into the details.
+            </li>
+          </ul>
+          <p>Your interactions here shape a bespoke experience, sculpting the art of personal style. Let's embark on this style journey together.</p>
+        </div>
+      </Modal>
+
+
+
+
+
+    {/* <div className="App" style={{marginTop: '85px', marginBottom: '-85px', marginLeft: '-50px'}}>
       <button style={{marginLeft: '100px', borderRadius: '30px', width: '130px', 
           height: '38px', backgroundColor: 'black', borderWidth: '1px', borderColor: 'white'}} onClick={() => setShowPanel(!showPanel)}>
         <div style={{flexDirection: 'row'}}>
@@ -155,7 +235,7 @@ const ForYou = () => {
           All Filters
         </div>
       </button>
-      {/* filter slide */}
+
       <div className={`infoPanel ${showPanel ? 'show' : ''}`}>
         <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'360px', marginTop: '20px'}}></button>
 
@@ -173,7 +253,7 @@ const ForYou = () => {
             </div>
           </div>
 
-          {/* Category */}
+
           <div className="filter-container bg-white" style={{ marginTop: '30px', padding: '20px', 
                borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c' }}>
             <h4 className='text-center' style={{marginLeft: '-230px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Category</h4>
@@ -205,7 +285,7 @@ const ForYou = () => {
               value={filterColor}
             >
               {Colors?.map(c => (
-                <div key={c._id} className="mb-1" style={{width: '40%', marginRight: '-20px'}}> {/* Add a margin-bottom for spacing and width control */}
+                <div key={c._id} className="mb-1" style={{width: '40%', marginRight: '-20px'}}>
                   <Checkbox value={c.name}>
                     {c.name}
                   </Checkbox>
@@ -216,7 +296,6 @@ const ForYou = () => {
           </div>
 
 
-          {/* sleevelength filter */}
           <div className="filter-container bg-white" style={{ marginTop: '10px', padding: '20px', 
           borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c' }}>
             <h4 className='text-center' style={{marginLeft: '-190px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Sleeve Length</h4>
@@ -226,7 +305,7 @@ const ForYou = () => {
               value={filterSleeve}
             >
               {SleeveLength?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '100%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
+                <div key={s._id} className="mb-1" style={{width: '100%', marginRight: '30px'}}> 
                   <Checkbox value={s.name}>
                     {s.name}
                   </Checkbox>
@@ -236,7 +315,6 @@ const ForYou = () => {
           </div>
           </div>
 
-          {/* Sizes */}
           <div className="filter-container bg-white" style={{ marginTop: '10px', padding: '20px', 
           borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '30px' }}>
             <h4 className='text-center' style={{marginLeft: '-260px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Sizes</h4>
@@ -246,7 +324,7 @@ const ForYou = () => {
               value={filterSize}
             >
               {Sizes?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
+                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
                   <Checkbox value={s.name}>
                     {s.name}
                   </Checkbox>
@@ -256,7 +334,6 @@ const ForYou = () => {
           </div>
           </div>
 
-          {/* Materials */}
           <div className="filter-container bg-white" style={{ marginTop: '-20px', padding: '20px', 
           borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '10px' }}>
             <h4 className='text-center' style={{marginLeft: '-240px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Material</h4>
@@ -266,7 +343,7 @@ const ForYou = () => {
               value={filterMaterial}
             >
               {Materials?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
+                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
                   <Checkbox value={s.name}>
                     {s.name}
                   </Checkbox>
@@ -285,7 +362,7 @@ const ForYou = () => {
               value={filterOccasion}
             >
               {Occasions?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
+                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
                   <Checkbox value={s.name}>
                     {s.name}
                   </Checkbox>
@@ -306,9 +383,9 @@ const ForYou = () => {
               </Checkbox>
           </div>
 
-          
+        
       </div>
-    </div>
+    </div> */}
         
 
         <h1 className='text-center' style={{marginTop: '30px', fontWeight: 'bold', letterSpacing: '4px'}}>
@@ -350,6 +427,29 @@ const ForYou = () => {
                 alt={activeProduct?.name}
                 style={{ height: '600px', width: '400px', objectFit: 'cover'}}
               />
+
+              <div classname="text-center" style={{width: '610px', height: '350px', marginTop: '30px', 
+                borderWidth: '20px', backgroundColor: '#efefef', marginLeft: '0px'}}>
+                <h1 style={{fontSize: '23px', padding: '20px', fontWeight: 'bold'}}>
+                Take it on lease and enjoy luxury while saving thousands with easy returns and services.
+                </h1>
+                <p style={{fontSize: '15px', padding: '25px', marginTop: '-30px', color: 'grey'}}>
+                  Experience the luxury of a diverse wardrobe with Karisme Collections' 4-day and 7-day clothing options. 
+                  Say goodbye to buyer's remorse. Embrace a movement that champions confidence, ambition, and eco-conscious living. 
+                </p>
+
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <button style={{marginLeft: '100px', height: '50px', width: '200px', color: 'white', backgroundColor: 'black'}}>
+                    Check leasing policy
+                  </button>
+                  <button style={{marginLeft: '10px', height: '50px', width: '200px', color: 'white', backgroundColor: 'black'}}>
+                    Check return policy
+                  </button>
+                </div>
+                  <div style={{fontSize: '15px', marginLeft: '200px'}}>
+                    <p style={{marginTop: '20px', textDecoration: 'underline'}}>Reserve event leasing here</p>
+                  </div>
+              </div>
             </div>
     
             {/* three extra pictures */}
@@ -379,7 +479,7 @@ const ForYou = () => {
             </div>
     
     
-            <div className='col-md-6' style={{ marginLeft: '730px', marginTop: '-600px' }}>
+            <div className='col-md-6' style={{ marginLeft: '730px', marginTop: '-980px' }}>
               {/* video */}
               <div>
                 <video width="100%" height="auto" controls style={{ marginBottom: '20px' }}>
@@ -433,39 +533,96 @@ const ForYou = () => {
           <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 0 ? '#4A2B2B' : '#fff',
-              color: purchaseType === 0 ? '#fff' : '#000',
-              }} onClick={()=>handlePurchaseSelection(0)}>
+              background: purchaseType === '0' ? '#4A2B2B' : '#fff',
+              color: purchaseType === '0' ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection('0')}>
               <p>Buy</p>
               <p>Price: {activeProduct?.price}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 1 ? '#4A2B2B' : '#fff',
-              color: purchaseType === 1 ? '#fff' : '#000',
-              }} onClick={()=>handlePurchaseSelection(1)}>
+              background: purchaseType === '1' ? '#4A2B2B' : '#fff',
+              color: purchaseType === '1' ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection('1')}>
               <p>Lease for 3 days</p>
               <p>Price: {String(Math.round(0.3*activeProduct?.price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: purchaseType === 2 ? '#4A2B2B' : '#fff',
-              color: purchaseType === 2 ? '#fff' : '#000',
-              }} onClick={()=>handlePurchaseSelection(2)}>
+              background: purchaseType === '2' ? '#4A2B2B' : '#fff',
+              color: purchaseType === '2' ? '#fff' : '#000',
+              }} onClick={()=>handlePurchaseSelection('2')}>
               <p>Lease for 7 days</p>
               <p>Price: {String(Math.round(0.4*activeProduct?.price / 10) * 10)}</p>
             </button>
           </div>
 
-                <button
-                  className='btn btn-secondary ms-1'
-                  onClick={() => addToCart(activeProduct,selectedSize, purchaseType)}
-                  style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
-                  alignItems: 'center', justifyContent: 'center', 
-                  backgroundColor: '#ebe8de', borderWidth: '0.5px', color: 'black', marginBottom: '30px', marginTop: '30px'}}
-                >
-                  Add to cart <GiShoppingCart style={{fontSize: '30px'}}/>
-                </button>
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+              <button
+              className='btn-cart'
+              onClick={() => {
+                if (!isProductInCart(activeProduct, selectedSize, purchaseType)) {
+                  setCart([...cart, [activeProduct, selectedSize, purchaseType, 0, 1]]);
+                  localStorage.setItem("cart", JSON.stringify([...cart, [activeProduct, selectedSize, purchaseType]]));
+                  toast.success('Item added to cart');
+                }else {
+                  const newCart = cart.filter(cartItem => 
+                    !(cartItem[0]._id === activeProduct._id && 
+                      cartItem[1] === selectedSize && 
+                      cartItem[2] === purchaseType));
+                  setCart(newCart);
+                  localStorage.setItem("cart", JSON.stringify(newCart));
+                  toast.success('Item removed from cart');
+                }
+              }}
+              style={{
+                padding: '10px 20px', 
+                cursor: 'pointer', 
+                borderRadius: '20px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',  
+                borderWidth: '0.5px', 
+                color: 'black', 
+                height: '52px', marginTop: '28px',
+                backgroundColor: isProductInCart(activeProduct, selectedSize, purchaseType) ? '#FFF5EE	' : 'white' // Change the color based on the item's presence in the cart
+              }}
+            >
+              {isProductInCart(activeProduct, selectedSize, purchaseType) ? 'Added to cart' : 'Add to cart'}
+              <GiShoppingCart style={{fontSize: '30px'}}/>
+            </button>
+
+              <button
+              className='btn-cart'
+              onClick={() => {
+                const isInWishList = isProductInWishList(activeProduct);
+                if (isInWishList) {
+                  const newWish = wish.filter((wishProduct) => wishProduct._id !== activeProduct._id);
+                  setWish(newWish);
+                  localStorage.setItem("wish", JSON.stringify(newWish));
+                  toast.success('Item removed from wishlist');
+                } else {
+                  const newWish = [...wish, activeProduct];
+                  setWish(newWish);
+                  localStorage.setItem("wish", JSON.stringify(newWish));
+                  toast.success('Item added to wishlist');
+                }
+              }}
+              style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
+              alignItems: 'center', justifyContent: 'center',  borderWidth: '0.5px', color: 'black', marginLeft: '20px', 
+              backgroundColor: isProductInWishList(activeProduct) ? '#FFF5EE' : 'white', height: '52px', marginTop: '30px'}}
+            >
+              <div>
+                <span style={{ marginRight: '8px' }}>
+                  {isProductInWishList(activeProduct) ? 'Added to wishlist' : 'Add to wishlist'}
+                </span>
+                <span><HeartIconToggle style={{ fontSize: '30px' }}/></span>
+              </div>
+            </button>
+
+              </div>
+
+
               </div>
             </div>
     

@@ -3,9 +3,6 @@
     color: #fff; /* Optional: Change text color on hover for better visibility */
 }
 
-.btn-cart {
-    background-color: #fff;
-}
 
 .btn-options {
     background-color: #fff;
@@ -18,8 +15,21 @@
     background-color: #FAF6EF;
     color: #000; /* Optional: Change text color on hover for better visibility */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-}
+} 
 
 /* .btn-sizes:hover {
     background-color: #FAF6EF;
 } */
+
+.reviews-container {
+    max-height: 300px; /* Adjust based on your design */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal overflow */
+    padding: 10px;
+    border: 0.01px solid #ccc; 
+  }
+  
+  .review-item {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }

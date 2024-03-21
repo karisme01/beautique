@@ -281,10 +281,10 @@ export const productFiltersController = async (req, res) => {
 // }
 export const productFiltersCategoryController = async (req, res) => {
     try {
-        const {category, radio, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion, filterRent} = req.body;
+        const {category, filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion, filterRent} = req.body;
         let args = {};
         console.log(req.body)
-        console.log([radio, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion])
+        console.log([filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion])
         // Ensure array properties are defined and are arrays before accessing their length
         args.category = category
         if (Array.isArray(filterColor) && filterColor.length > 0) {
@@ -304,7 +304,13 @@ export const productFiltersCategoryController = async (req, res) => {
         } 
 
         // Ensure radio is defined and is an array before attempting to use its values for price range
-        if (Array.isArray(radio) && radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+        if (Array.isArray(filterPrice) && filterPrice.length > 0) {
+            args.$or = filterPrice.map(range => ({
+                price: { $gte: range[0], $lte: range[1] }
+            }));
+        }
+        
+        
 
         const products = await productModel.find(args);
         console.log(args)
@@ -326,10 +332,10 @@ export const productFiltersCategoryController = async (req, res) => {
 
 export const productFiltersBrandController = async (req, res) => {
     try {
-        const {brand, radio, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion} = req.body;
+        const {brand, filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion} = req.body;
         let args = {};
         console.log(req.body)
-        console.log([brand, radio, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion])
+        console.log([brand, filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion])
         // Ensure array properties are defined and are arrays before accessing their length
         args.brand = brand
         if (Array.isArray(filterColor) && filterColor.length > 0) {
@@ -349,7 +355,11 @@ export const productFiltersBrandController = async (req, res) => {
         } 
 
         // Ensure radio is defined and is an array before attempting to use its values for price range
-        if (Array.isArray(radio) && radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+        if (Array.isArray(filterPrice) && filterPrice.length > 0) {
+            args.$or = filterPrice.map(range => ({
+                price: { $gte: range[0], $lte: range[1] }
+            }));
+        }
 
         const products = await productModel.find(args);
         console.log(args)
@@ -423,6 +433,10 @@ export const productListController = async (req, res) => {
             $or: [
                 {name: {$regex: keyword, $options: 'i'}},
                 {description: {$regex: keyword, $options: 'i'}},
+                {color: {$regex: keyword, $options: 'i'}},
+                {material: {$regex: keyword, $options: 'i'}},
+                {occasion: {$regex: keyword, $options: 'i'}},
+                // {brand.name: {$regex: keyword, $options: 'i'}}, 
             ]
         }).select('-photo')
         res.json(results)

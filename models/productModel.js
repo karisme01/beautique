@@ -55,11 +55,11 @@ const productSchema = new mongoose.Schema({
     properties: {
         type: Map,
         of: Number 
-    }
+    }, 
 
 }, {timestamps: true}
 );
 
 export default mongoose.model('Products', productSchema)
 
-
+ 

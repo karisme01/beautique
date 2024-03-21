@@ -119,3 +119,16 @@
 }
 
 
+/* Show dropdown on hover */
+.navbar .dropdown-hover:hover .dropdown-menu {
+  display: block;
+}
+
+.navbar .dropdown-menu:hover {
+  display: block;
+}
+
+.no-dropdown-arrow::after {
+  display: none;
+}
+

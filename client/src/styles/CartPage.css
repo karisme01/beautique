@@ -1,14 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+
+
+body {
+    background: #fff;;
+    font-family: "Poppins", sans-serif;
+  }
+
+
 .cart-page {
     /* margin-top: 64px; */
+    font-family: "Poppins", sans-serif;
   }
   
   .cart-page h1 {
     padding: 15px !important;
-    font-family: "roboto", sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: normal;
-    background-color: #F2E8DF !important;
+    background-color: #f7f4f1 !important;
   }
-  .cart-page h1 > p {
+  .cart-page h1 > p { 
     font-size: 20px;
     margin-top: 10px;
   }
@@ -30,3 +41,33 @@
   .list-container {
     margin-top: 30px;
   }
+
+  /* CartPage.css or your custom stylesheet */
+  .reduced-gap > [class*='col-'] {
+    padding-right: 5px !important; /* Adjust the right padding as needed */
+    padding-left: 5px !important; /* Adjust the left padding as needed */
+  }
+
+  .cart-table {
+    margin-left: 130px;
+    border-collapse: collapse;
+    width: 80%;
+    border: 0.01px solid #ddd; /* Adjust color as needed */
+  }
+  
+  .cart-table th,
+  .cart-table td {
+    border: 0.01px solid #ddd; /* Adjust color as needed */
+    padding: 12px; /* Adjust padding as needed */
+  }
+  
+  .cart-table tr:nth-child(even){background-color: #f7f4f1;} 
+  
+  .cart-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #F8F8F8; /* Adjust header background color as needed */
+    color: black;
+  }
+  

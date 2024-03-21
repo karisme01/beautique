@@ -14,7 +14,7 @@ const WishListPage = () => {
     const [wish, setWish] = useWish();
     const [cart, setCart] = useCart();
     const [selectedSize, setSelectedSize] = useState(""); 
-    const [selectedType, setSelectedType] = useState(0)
+    const [selectedType, setSelectedType] = useState('0')
     const [selectedProductForCart, setSelectedProductForCart] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const navigate = useNavigate();
@@ -47,11 +47,12 @@ const WishListPage = () => {
         if (isProductInCart) {
           toast.error('Item with the selected size is already in your cart');
         } else {
-          const newCartItem = [product, selectedSize, selectedType]; 
+          const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
           setCart([...cart, newCartItem]);
           localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
           toast.success('Item added to cart');
         }
+        removeWishItem(product._id);
       };
 
       const generateWhatsAppShareLink = () => {
@@ -139,9 +140,9 @@ const WishListPage = () => {
                             <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
                               style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
                               <option value="">Type</option>
-                              <option value={0}>Buy</option>
-                              <option value={1}>4-day rental</option>
-                              <option value={2}>7-day rental</option>
+                              <option value={'0'}>Buy</option>
+                              <option value={'1'}>4-day rental</option>
+                              <option value={'2'}>7-day rental</option>
                             </select>
                             <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
                                 style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 

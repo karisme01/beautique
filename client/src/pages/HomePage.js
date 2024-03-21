@@ -24,6 +24,7 @@ import {sliderCelebrities} from '../components/Content/SliderCelebrities.js'
 import {Modal, Button} from 'antd';
 import Designer from '../components/Content/Designer.js';
 import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx';
+import homeVideo from '../videos/homeVideo.mp4'
 
 
 const HomePage = () => {
@@ -45,8 +46,27 @@ const HomePage = () => {
   const [selectedSlide, setSelectedSlide] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    phoneNumber: '',
+    photo: null,
+  });
 
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  
+  const handlePhotoChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      photo: e.target.files[0],
+    }));
+  };
+  
   const handleCartIconClick = (product) => {
     setIsCartPressed(true);
     setSelectedProductForCart(product); // Set the selected product
@@ -70,7 +90,7 @@ const HomePage = () => {
     if (isProductInCart) {
       toast.error('Item with the selected size is already in your cart');
     } else {
-      const newCartItem = [product, selectedSize, selectedType]; 
+      const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
       setCart([...cart, newCartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
       toast.success('Item added to cart');
@@ -105,10 +125,10 @@ const HomePage = () => {
       image: backgroundImage,
       content: 'Slide 1 Content',
     },
-    {
-      image: try2,
-      content: 'Slide 1 Content',
-    }
+    // {
+    //   image: try2,
+    //   content: 'Slide 1 Content',
+    // }
   ];
   
   const topSliderItems = [
@@ -205,14 +225,39 @@ const HomePage = () => {
       <div className='row body' style={{marginLeft: '7px'}}>
 
 
-      <TopSlider items={topSliderItems} />
-      <Carousel autoplay autoplaySpeed={3000}>
-          {carouselItems.map((item, index) => (
-            <div key={index} className="carousel-slide">
-              <img src={item.image} alt={`Slide ${index + 1}`} style={{ width: '100%', maxHeight: '60vh', objectFit: 'cover' }} />
+      <TopSlider items={topSliderItems}/>
+
+      <div className="top-section" style={{ display: 'flex', marginTop: '20px', marginBottom: '20px', gap: '10px' }}>
+        <div style={{ flex: 7 }}>
+          <img src={backgroundImage} alt="Background" style={{ width: '100%', height: 'auto', borderRadius: '8px', objectFit: 'cover' }} />
+        </div>
+
+        <div style={{ flex: 1, padding: '20px', backgroundColor: '#f5ebe7', borderRadius: '8px', 
+          display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+          <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          <div style={{ marginBottom: '20px' }}>
+            <h2 style={{ textAlign: 'center', margin: '0', fontSize: '24px', fontWeight: 'bold' }}>Apply to participate in 'Outfit of the Week' contest</h2>
+          </div>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
+              <label htmlFor="name" style={{ marginBottom: '5px' }}>Name</label>
+              <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da' }} />
             </div>
-          ))}
-        </Carousel>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
+              <label htmlFor="phoneNumber" style={{ marginBottom: '5px' }}>Phone Number</label>
+              <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
+              <label htmlFor="photoUpload" style={{ marginBottom: '5px' }}>Upload Photo</label>
+              <input type="file" id="photoUpload" onChange={handlePhotoChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da', cursor: 'pointer' }} />
+            </div>
+            <button type="submit" style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', 
+              backgroundColor: '#000', color: 'white', cursor: 'pointer', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              Apply
+            </button>
+          </form>
+        </div>
+      </div>
+
 
         <div className='col-md-9' style={{marginTop:'30px'}}>
           <div style={{marginLeft: '-120px', marginBottom: '-40px'}}> 
@@ -299,21 +344,6 @@ const HomePage = () => {
                 
               ))}
             </div>  
-
-          {/* <div style={{marginLeft: '30px', marginRight: '-300px'}}>
-          <RightOnlyCarousel className='shadow'>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-            <img src={guide1}></img>
-          </RightOnlyCarousel>
-
-          </div> */}
           
           {/* line for designers */}
           
@@ -345,8 +375,9 @@ const HomePage = () => {
           onCancel={() => setIsModalOpen(false)} 
           centered
           footer={[
-            <Button key="prev" onClick={goToPrevSlide}>Previous</Button>,
-            <Button key="next" onClick={goToNextSlide}>Next</Button>,
+            <Button key="find">
+              Find like this
+            </Button>,
           ]}
         >
           <div>

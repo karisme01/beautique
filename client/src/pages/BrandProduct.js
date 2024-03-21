@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useParams, useNavigate } from "react-router-dom";
-import { Checkbox, Radio } from 'antd';
+import { Checkbox } from 'antd';
 import axios from "axios";
 import StarRating from "../components/Designs/Stars.js";
 import { IoHeartCircle } from "react-icons/io5";
@@ -32,15 +32,15 @@ const BrandProduct = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
-  const [radio, setRadio] = useState([]);
   const [filterColor, setFilterColor] = useState([]);
+  const [filterPrice, setFilterPrice] = useState([]);
   const [filterSleeve, setFilterSleeve] = useState([]);
   const [filterSize, setFilterSize] = useState([]);
   const [filterMaterial, setFilterMaterial] = useState([]);
   const [filterOccasion, setFilterOccasion] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedSize, setSelectedSize] = useState()
-  const [selectedType, setSelectedType] = useState(0)
+  const [selectedType, setSelectedType] = useState('0')
   const [selectedProductForCart, setSelectedProductForCart] = useState(null);
 
   const handleCartIconClick = (product) => {
@@ -59,7 +59,7 @@ const BrandProduct = () => {
     if (isProductInCart) {
       toast.error('Item with the selected size is already in your cart');
     } else {
-      const newCartItem = [product, selectedSize, selectedType]; 
+      const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
       setCart([...cart, newCartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
       toast.success('Item added to cart');
@@ -67,7 +67,7 @@ const BrandProduct = () => {
   };
 
   useEffect(() => {
-    if ((radio.length>0 || filterColor.length > 0|| radio.length > 0|| filterSleeve.length > 0|| filterSize.length > 0 || 
+    if ((filterPrice.length>0 || filterColor.length > 0|| filterSleeve.length > 0|| filterSize.length > 0 || 
         filterMaterial.length>0 || filterOccasion.length>0)) {
       filterBrandProduct();
     } else {
@@ -77,7 +77,7 @@ const BrandProduct = () => {
         getProductsByBrand();
       }
     }
-  }, [filterColor.length, radio.length, filterSleeve.length, filterSize.length, filterMaterial.length, filterOccasion.length, params?.slug]);
+  }, [filterColor.length, filterPrice.length, filterSleeve.length, filterSize.length, filterMaterial.length, filterOccasion.length, params?.slug]);
   
   const getProductsByBrand = async () => {
     try {
@@ -92,7 +92,7 @@ const BrandProduct = () => {
   const filterBrandProduct = async () => {
     try {
       const { data } = await axios.post('/api/v1/product/product-brand-filters', 
-        {brand, radio, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion})
+        {brand, filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion})
       setProducts(data?.products);
       console.log(products)
     } catch (error) {
@@ -180,14 +180,19 @@ const BrandProduct = () => {
         <div className="filter-container mt-5 bg-white" style={{ marginTop: '100px', padding: '20px', 
             borderRadius: '10px',marginLeft: '15px', marginRight: '20px', marginBottom: '-20px', borderColor: '#553c2c' }}>
             <h4 className='text-center' style={{marginLeft: '-190px', fontSize: '18px', fontWeight:'bold'}}>Price</h4>
-            <div className='d-flex flex-column' style={{marginLeft: '5px'}}>
-              <Radio.Group onChange={e => setRadio(e.target.value)}>
-                {Prices?.map(p => (
-                  <div key={p._id}>
-                    <Radio value={p.array}>{p.name}</Radio>
+            <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
+              <Checkbox.Group
+                onChange={(checkedValues) => setFilterPrice(checkedValues)}
+                value={filterPrice}
+              >
+                {Prices?.map(s => (
+                  <div key={s._id} className="mb-1" style={{width: '100%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
+                    <Checkbox value={s.array}>
+                      {s.name}
+                    </Checkbox>
                   </div>
                 ))}
-              </Radio.Group>
+              </Checkbox.Group>
             </div>
           </div>
           <div className="filter-container bg-white" style={{ marginTop: '30px', padding: '20px', 
@@ -356,9 +361,9 @@ const BrandProduct = () => {
                               <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
                                 style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px'}}>
                                 <option value="">Type</option>
-                                <option value={0}>Buy</option>
-                                <option value={1}>4-day rental</option>
-                                <option value={2}>7-day rental</option>
+                                <option value={'0'}>Buy</option>
+                                <option value={'1'}>4-day rental</option>
+                                <option value={'2'}>7-day rental</option>
                               </select>
                               <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
                                   style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '5px', 

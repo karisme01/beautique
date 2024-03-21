@@ -3,11 +3,14 @@
 
 .product-image {
     transition: transform 0.5s ease, filter 0.5s ease; /* Add filter to the transition for a smooth effect */
+    
   }
   
   .product-image:hover {
-    transform: scale(1.03); /* Adjust scale value for zoom level */
+    transform: scale(1.03); 
     filter: brightness(85%); /*Decrease brightness to darken the image, adjust percentage as needed*/
+    transform-origin: center center; /* Adjust as needed */
+    
   }
   
   
@@ -47,3 +50,5 @@
 .drop-down {
   width: 10px;
 }
+
+

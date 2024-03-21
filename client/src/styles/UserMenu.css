@@ -1,0 +1,6 @@
+
+.active-link {
+    color: black !important; /* Use !important to override any other styles if necessary */
+    background-color: #f0f0f0 !important;
+  }
+  

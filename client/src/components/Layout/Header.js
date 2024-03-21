@@ -40,11 +40,11 @@ const Header = () => {
                 Home
               </NavLink>
             </li> */}
-            <li className="nav-item dropdown">
-              <Link to="/categories" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{color: '#3F250B' }}>
+            <li className="nav-item dropdown dropdown-hover">
+              <Link to="/categories" className="nav-link dropdown-toggle no-dropdown-arrow" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{color: '#3F250B' }}>
                 Categories
               </Link>
-              <ul className="dropdown-menu">
+              <ul className="dropdown-menu" aria-labelledby="categoriesDropdown">
                 <li>
                   <Link to="/categories" className="dropdown-item">
                     All Categories
@@ -85,7 +85,7 @@ const Header = () => {
                   </a>
                   <ul className="dropdown-menu">
                     <li>
-                      <NavLink to={`/dashboard/${auth.user.role === 1 ? 'admin' : 'user'}`} className="dropdown-item">
+                      <NavLink to={`/dashboard/${auth.user.role === 1 ? 'admin' : 'user/profile'}`} className="dropdown-item">
                         Dashboard
                       </NavLink>
                     </li>
@@ -112,14 +112,14 @@ const Header = () => {
               )}
               <li className="nav-item">
                 <NavLink to="/wish" className="nav-link" activeClassName="active">
-                  <Badge count={wish.length} showZero>
+                  <Badge count={wish.length} showZero style={{backgroundColor: '#CC0033'}}>
                     <CiHeart style={{fontSize: '30px', marginBottom: '1px', marginTop: '-5px', color: '#3F250B'}}/>
                   </Badge>
                 </NavLink>
               </li>
               <li className="nav-item" style={{marginLeft: '10px', marginRight: '-30px'}}>
                 <NavLink to="/cart" className="nav-link" activeClassName="active">
-                  <Badge count={cart.length} showZero>
+                  <Badge count={cart.length} showZero style={{backgroundColor: '#CC0033'}}>
                     <GiShoppingCart style={{fontSize: '35px', marginBottom: '1px', marginTop: '-5px', color: '#3F250B'}}/>
                   </Badge>
                 </NavLink>
