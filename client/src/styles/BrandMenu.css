@@ -1,0 +1,18 @@
+.badge {
+    background-color: #ff4500; /* Vivid red-orange */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px; /* Circular edges */
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    position: relative;
+    top: -2px; /* Adjust for alignment */
+    left: 10px;
+  }
+  
+  /* Enhancing the hover effect */
+  .badge:hover {
+    background-color: #ff5733; /* A slightly lighter shade for hover */
+    cursor: pointer;
+  }
+  

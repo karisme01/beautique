@@ -9,6 +9,7 @@ import { SearchProvider } from './context/search';
 import { CartProvider } from './context/cart';
 import 'antd/dist/reset.css';
 import { WishProvider } from './context/wish';
+import { ReserveProvider } from './context/reserve';
 
 
 
@@ -17,11 +18,13 @@ root.render(
   <AuthProvider>
     <SearchProvider>
       <WishProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CartProvider>
+        <ReserveProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </CartProvider>
+        </ReserveProvider>
       </WishProvider>
     </SearchProvider>
   </AuthProvider>

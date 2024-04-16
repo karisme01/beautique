@@ -86,8 +86,8 @@ const RightOnlyCarousel = ({ children, onActiveSlideChange, onExpandPress, onLik
         );
     }
 
-    return (
-        <div className="carousel-container" style={{marginBottom: '100px'}}>
+    return ( 
+        <div className="right-only carousel-container" style={{marginBottom: '100px'}}>
             <Slider ref={sliderRef} {...settings}>
                 {children}
             </Slider>

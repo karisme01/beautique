@@ -3,8 +3,7 @@ import Layout from "../components/Layout/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import { Checkbox } from 'antd';
 import axios from "axios";
-import StarRating from "../components/Designs/Stars.js";
-import { IoHeartCircle } from "react-icons/io5";
+import {Modal, Button} from "antd";
 import { GiShoppingCart } from "react-icons/gi";
 import { useCart } from '../context/cart.js';
 import { useWish } from "../context/wish.js";
@@ -298,6 +297,119 @@ const BrandProduct = () => {
 
       </div>
     </div>
+
+    <Modal
+        title="Selected Product"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button
+            key="add"
+            onClick={() => {
+              addToCart(selectedProductForCart, selectedSize, selectedType);
+              setIsModalOpen(false); 
+            }}
+            style={{ 
+              width: 'auto', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: '#8B4513', // Brown color
+              color: 'white', 
+              border: 'none', 
+              fontWeight: 'bold',
+              boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
+              transition: 'background-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
+          >
+            Add to Cart
+          </Button>,
+          <Button
+            key="close"
+            onClick={() => setIsModalOpen(false)}
+            style={{ 
+              width: '40px', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: 'white', 
+              color: '#8B4513', // Brown text color
+              borderWidth: '1px',
+              borderColor: '#8B4513', // Brown border
+              transition: 'border-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.borderColor = '#5C4033')} // Original brown color
+          >
+            X
+          </Button>
+        ]}
+      > 
+        <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                style={{ 
+                  width: '60px',
+                  padding: '15px',
+                  margin: '10px',
+                  borderRadius: '20px',
+                  background: selectedSize === size ? '#4E362B' : '#fff',
+                  color: selectedSize === size ? '#fff' : '#000',
+                  border: '1px solid #000',
+                  cursor: 'pointer',
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        <div className='flex-row' style={{marginBottom: '-25px', marginRight: '-60px'}}>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '0' ? '#4E362B' : '#fff',
+              color: selectedType === '0' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('0')}>
+              <p>Buy</p>
+              <p>Price: {selectedProductForCart?.price}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '1' ? '#4E362B' : '#fff',
+              color: selectedType === '1' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('1')}>
+              <p>Half-weekly cycle</p>
+              <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '2' ? '#4E362B' : '#fff',
+              color: selectedType === '2' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('2')}>
+              <p>Full-weekly cycle</p>
+              <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+          </div>
+          
+          <div style={{marginTop: '35px', marginBottom: '-35px', marginLeft: '5px', textDecoration: 'underline', cursor: 'pointer'}}
+            onClick={() => navigate(`/product/${selectedProductForCart.slug}`)}>
+            <p>Click here to reserve</p>
+          </div>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          marginBottom: '20px', 
+          padding: '20px', 
+        }}>
+        </div>
+      </Modal>
         
     
         <div className="row">
@@ -344,7 +456,7 @@ const BrandProduct = () => {
                         <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px' }} 
                           onClick={() => {
                             handleCartIconClick(p)
-                            setSelectedProductForCart(p._id)
+                            setSelectedProductForCart(p)
                             }}
                             />
                           {isModalOpen && p._id === selectedProductForCart && (

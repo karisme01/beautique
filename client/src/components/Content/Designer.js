@@ -17,7 +17,8 @@ const Designer = () => {
     <div>
        <div style={{marginBottom: '-70px'}}>
           <div className='row' style={{}}>
-            <h1 className='text-center' style={{color: 'black', marginLeft: '180px', marginTop: '30px'}}>
+            <h1 className='text-center' style={{color: 'black', marginLeft: '180px', marginTop: '30px', 
+              fontWeight: 'bold', fontSize: '30px'}}>
               Meet our favourite designers <GiClover />
             </h1>
 
@@ -33,7 +34,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Ritu Kumar</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Ritu Kumar</h2>
               </div>
             </div>
 
@@ -49,7 +50,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Masaba</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Masaba</h2>
               </div>
             </div>
 
@@ -65,7 +66,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Carolina Pessi</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Carolina Pessi</h2>
               </div>
             </div>
           </div>
@@ -85,7 +86,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Alex Honacceni</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Alex Honacceni</h2>
               </div>
             </div>
 
@@ -102,7 +103,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Johnathan Parel</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Johnathan Parel</h2>
               </div>
             </div>
 
@@ -120,7 +121,7 @@ const Designer = () => {
                   position: 'absolute',top: 0,left: 0,right: 0,bottom: 0, backgroundColor: 'rgba(0,0,0,0.75)', color: 'white',display: 'flex',
                   alignItems: 'center',justifyContent: 'center',opacity: 0, transition: 'opacity .5s ease', 
               }}>
-                <h3 style={{fontWeight: 'bold'}}>Manish Malhotra</h3>
+                <h2 style={{fontWeight: 'bold', marginTop: '-50px'}}>Manish Malhotra</h2>
               </div>
             </div>
           </div>

@@ -13,23 +13,23 @@
     margin-right: 0;
 }
 /* Dim all slides */
-.slick-slide {
-    opacity: 0.2; /* Lower opacity for dimming effect */
+.right-only .slick-slide {
+    opacity: 0.15; /* Lower opacity for dimming effect */
     transition: opacity 0.1s ease; /* Smooth transition for the dimming effect */
 }
 
 /* Highlight the center slide */
-.slick-center {
+.right-only .slick-center {
     opacity: 1; /* Full opacity for the centered slide */
     
 }
-.carousel-container {
+.right-only .carousel-container {
     position: relative;
 }
 
 .slider-buttons {
     position: absolute;
-    bottom: -70px; /* Adjust this value as needed */
+    bottom: 25px; /* Adjust this value as needed */
     left: 50%;
     transform: translateX(-50%);
     display: flex;

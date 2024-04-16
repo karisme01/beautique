@@ -1,6 +1,6 @@
 import React from 'react'
 
-const BrandForm = ({handleSubmit, value, setValue, phone, setPhone, photo, setPhoto}) => {
+const BrandForm = ({handleSubmit, value, setValue, phone, setPhone, photo, setPhoto, userId, setUserId}) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -27,6 +27,12 @@ const BrandForm = ({handleSubmit, value, setValue, phone, setPhone, photo, setPh
             hidden
           />
         </label>
+      </div>
+      <div className="mb-3">
+        <input className="form-control" placeholder='Enter userId' 
+        value={userId} 
+        onChange={(e)=>setUserId(e.target.value)
+        }/>
       </div>
 
       <button type="submit" className="btn btn-primary">Submit</button>

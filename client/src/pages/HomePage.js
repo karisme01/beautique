@@ -24,11 +24,10 @@ import {sliderCelebrities} from '../components/Content/SliderCelebrities.js'
 import {Modal, Button} from 'antd';
 import Designer from '../components/Content/Designer.js';
 import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx';
-import homeVideo from '../videos/homeVideo.mp4'
 
 
 const HomePage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [cart, setCart] = useCart();
   const [wish, setWish] = useWish();
   const [products, setProducts] = useState([]);
@@ -71,6 +70,8 @@ const HomePage = () => {
     setIsCartPressed(true);
     setSelectedProductForCart(product); // Set the selected product
   };
+
+
   const handleSlideClick = (slide, index, itemsArray) => {
     setSelectedSlide(slide);
     setCurrentSlideIndex(index);
@@ -85,10 +86,10 @@ const HomePage = () => {
       return; 
     }
     const isProductInCart = cart.some(cartItem => 
-      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[1] === selectedType
+      cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[2] === selectedType
     );
     if (isProductInCart) {
-      toast.error('Item with the selected size is already in your cart');
+      toast.error('Item with the selected size and purchase type is already in your cart');
     } else {
       const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
       setCart([...cart, newCartItem]);
@@ -117,6 +118,10 @@ const HomePage = () => {
       setSelectedSlide(currentItems[currentItems.length - 1]);
       setCurrentSlideIndex(currentItems.length - 1);
     }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
   
 
@@ -224,7 +229,6 @@ const HomePage = () => {
       <div className={`row body ${isModalOpen ? 'blur-effect' : ''}`}>
       <div className='row body' style={{marginLeft: '7px'}}>
 
-
       <TopSlider items={topSliderItems}/>
 
       <div className="top-section" style={{ display: 'flex', marginTop: '20px', marginBottom: '20px', gap: '10px' }}>
@@ -233,7 +237,7 @@ const HomePage = () => {
         </div>
 
         <div style={{ flex: 1, padding: '20px', backgroundColor: '#f5ebe7', borderRadius: '8px', 
-          display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: '20px'}}>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
           <div style={{ marginBottom: '20px' }}>
             <h2 style={{ textAlign: 'center', margin: '0', fontSize: '24px', fontWeight: 'bold' }}>Apply to participate in 'Outfit of the Week' contest</h2>
@@ -258,12 +262,118 @@ const HomePage = () => {
         </div>
       </div>
 
+      <Modal
+        title="Selected Product"
+        open={isCartPressed}
+        onCancel={() => setIsCartPressed(false)}
+        footer={[
+          <Button
+            key="add"
+            onClick={() => {
+              addToCart(selectedProductForCart, selectedSize, selectedType);
+              setIsCartPressed(false); 
+            }}
+            style={{ 
+              width: 'auto', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: '#8B4513', // Brown color
+              color: 'white', 
+              border: 'none', 
+              fontWeight: 'bold',
+              boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
+              transition: 'background-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Original brown color
+          >
+            Add to Cart
+          </Button>,
+          <Button
+            key="close"
+            onClick={() => setIsCartPressed(false)}
+            style={{ 
+              width: '40px', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: 'white', 
+              color: '#8B4513', // Brown text color
+              borderWidth: '1px',
+              borderColor: '#8B4513', // Brown border
+              transition: 'border-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Original brown color
+          >
+            X
+          </Button>
+        ]}
+      >
+        <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                style={{
+                  width: '60px',
+                  padding: '15px',
+                  margin: '10px',
+                  borderRadius: '20px',
+                  background: selectedSize === size ? '#4E362B' : '#fff',
+                  color: selectedSize === size ? '#fff' : '#000',
+                  border: '1px solid #000',
+                  cursor: 'pointer',
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        <div className='flex-row' style={{marginBottom: '25px', marginRight: '-60px'}}>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '0' ? '#4E362B' : '#fff',
+              color: selectedType === '0' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('0')}>
+              <p>Buy</p>
+              <p>Price: {selectedProductForCart?.price}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '1' ? '#4E362B' : '#fff',
+              color: selectedType === '1' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('1')}>
+              <p>Lease for 3 days</p>
+              <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '2' ? '#4E362B' : '#fff',
+              color: selectedType === '2' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('2')}>
+              <p>Lease for 7 days</p>
+              <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+            <div style={{marginTop: '15px', marginBottom: '-15px', marginLeft: '5px', textDecoration: 'underline', cursor: 'pointer'}}
+            onClick={() => navigate(`/product/${selectedProductForCart.slug}`)}>
+            <p>Click here to reserve</p>
+          </div>
+          </div>
+      </Modal>
+
+
 
         <div className='col-md-9' style={{marginTop:'30px'}}>
           <div style={{marginLeft: '-120px', marginBottom: '-40px'}}> 
-            <h1 className='text-center body' style={{color: '#3F250B', marginLeft: '500px'}}>
+            <h1 className='text-center body' style={{color: '#3F250B', marginLeft: '500px', fontWeight: 'bold', fontSize: '30px'}}>
               Our top 10 this week <IoMdTrendingUp style={{ marginLeft: '-10px' }} />
             </h1>
+            <div className='mt-4'></div>
           </div>
         
           <div className="d-flex flex-wrap p-3" style={{marginLeft: '20px', marginRight: '-350px', padding: '0px'}}>
@@ -279,15 +389,13 @@ const HomePage = () => {
                   <div >
                     <div>
                       <h5  style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
-                      <h5 style={{marginBottom: '-5px', fontSize:'16px', marginLeft: '8px', marginTop: '1px'}}>
+                      <h5 style={{marginBottom: '-5px', fontSize:'14px', marginLeft: '8px', marginTop: '1px'}}>
                         {p.price.toLocaleString("en-US", {
                           style: "currency",
                           currency: "INR",
                         })}
                       </h5>
-                      {/* <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '4px'}}>
-                        <StarRating rating={p.rating || 3} />
-                      </div> */}
+                      
                       <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
                         <HeartIconToggle
                             isFilled={isProductInWishList(p)}
@@ -308,35 +416,8 @@ const HomePage = () => {
                         <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px' }} 
                           onClick={() => {
                             handleCartIconClick(p)
-                            setSelectedProductForCart(p._id)
                             }}
                             />
-                          {isCartPressed && p._id === selectedProductForCart && (
-                            <div className="dropdown-container" style={{marginLeft: '-180px', marginTop: '20px', marginBottom: '-20px'}}>
-                              <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)} 
-                                style={{width: '55px', marginRight: '10px', fontSize: '17px', height: '30px', borderRadius: '7px'}}>
-                              <option value="">Size</option>
-                              <option value="XS">XS</option>
-                              <option value="S">S</option>
-                              <option value="M">M</option>
-                              <option value="L">L</option>
-                              <option value="XL">XL</option>
-                              </select>
-                              <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} 
-                                style={{width: '60px', marginRight: '10px', fontSize: '17px', height: '30px', borderRadius: '7px'}}>
-                                <option value="">Type</option>
-                                <option value={0}>Buy</option>
-                                <option value={1}>4-day rental</option>
-                                <option value={2}>7-day rental</option>
-                              </select>
-                              <button className="add-btn" onClick={() => addToCart(p, selectedSize, selectedType)} 
-                                  style={{width: '55px', marginRight: '10px', fontSize: '17px', borderRadius: '7px', 
-                                    height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>Add</button>
-                              <button className="close-btn" onClick={() => setIsCartPressed(false)}
-                                style={{width: '40px', marginRight: '10px', fontSize: '17px', borderRadius: '7px', 
-                                    height: '30px', backgroundColor: 'white', borderWidth: '1px'}}>X</button>
-                            </div>
-                          )}
                       </div>
                     </div>
                   </div>
@@ -344,6 +425,7 @@ const HomePage = () => {
                 
               ))}
             </div>  
+            
           
           {/* line for designers */}
           

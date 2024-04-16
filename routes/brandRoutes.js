@@ -1,6 +1,6 @@
 import express from "express";
-import {isAdmin, requireSignIn} from './../middlewares/authMiddleware.js'
-import { brandController, brandPhotoController, createBrandController, deleteBrandController, singleBrandController, updateBrandController } from "../controllers/brandController.js";
+import {isAdmin, isBrand, requireSignIn} from './../middlewares/authMiddleware.js'
+import { brandController, brandPhotoController, createBrandController, createRequestController, deleteBrandController, findBrandsAndProductsByUserId, searchUserBrandController, singleBrandController, updateBrandController } from "../controllers/brandController.js";
 import formidable from 'express-formidable'
 import { productBrandController } from "../controllers/productController.js";
 
@@ -33,3 +33,12 @@ router.delete('/delete-brand/:id', requireSignIn, isAdmin, deleteBrandController
 
 //get brand photo
 router.get('/brand-photo/:bid', brandPhotoController)
+
+//get-user
+router.get('/search-user', requireSignIn, isBrand, searchUserBrandController)
+
+//create-request
+router.post('/create-ad-request', requireSignIn, isBrand, createRequestController)
+
+//get-brand-products
+router.get('/get-brand-products/:userId', requireSignIn, isBrand, findBrandsAndProductsByUserId)

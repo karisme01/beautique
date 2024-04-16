@@ -1,0 +1,441 @@
+/* SearchBot.css - Adjusted styles for responsiveness */
+
+.second-search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  width: '100%';
+  max-width: 800px;
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+.second-search-form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.second-search-input {
+  width: 650px;
+  padding: 10px 15px;
+  font-size: 15px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  outline: none;
+  margin-bottom: 30px;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.karisme-top-text {
+  margin-bottom: 20px;
+  margin-top: -160px;
+  text-align: center;
+  letter-spacing: 5px;
+  font-size: 100px
+}
+
+.top-search-form {
+  width: '100%';
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.top-search-bar {
+  width: 600px;
+  padding: 15px;
+  font-size: 14px;
+  border-radius: 35px;
+  border: 1px solid #ccc;
+}
+
+.btn-options-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.btn-random-search {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 30px;
+  border-width: 1px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  margin-right: 10px;
+  border-color: black;
+}
+
+.btn-search {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 30px;
+  border-width: 1px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+.sample-questions-container {
+  display: flex;
+  max-width: '90%';
+  height: 400px;
+  justify-content: center;
+  margin-top: -210px;
+  margin-bottom: 50px;
+  overflow-y: auto;
+  /* padding: 0 15px; */
+}
+
+.questions-extra-div {
+  padding-right: 15px;
+}
+
+.question-wrap-1 {
+  width: '100%';
+  height: 300px;
+  overflow-y: auto;
+}
+
+.question-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  width: 700px;
+}
+
+
+.search-container-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  font-size: 10px;
+  margin-top: 0px;
+  background-color: white;
+}
+
+.search-input {
+  width: 90%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.search-button, .btn-close {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 30px;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+/* .product-card {
+  width: calc(50% - 10px); 
+  margin: 5px;
+} */
+
+.product-image {
+  height: 23rem;
+  width: 17rem;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+.product-image-name {
+  font-size: 14px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 8px;
+}
+
+.product-image-price {
+  margin-bottom: -5px;
+  font-size: 16px;
+  margin-left: 8px;
+  margin-top: -1px;
+}
+
+.product-card-like {
+  font-size: 25px;
+  margin-left: 190px;
+  margin-top: -40px;
+  margin-bottom: 16px;
+}
+
+.product-card-cart {
+  font-size: 40px;
+  color: black;
+  cursor: pointer;
+  padding: 2px;
+  margin-top: 0px;
+}
+.modal-add-to-cart-btn {
+  width: auto;
+  margin-right: 10px;
+  font-size: 17px;
+  border-radius: 7px;
+  height: 40px;
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  font-weight: bold;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+}
+
+.modal-close-btn {
+  width: 40px;
+  margin-right: 10px;
+  font-size: 17px;
+  border-radius: 7px;
+  height: 40px;
+  background-color: white;
+  color: #8B4513;
+  border-width: 1px;
+  border-color: #8B4513;
+  transition: border-color 0.3s;
+}
+
+.modal-size-btn {
+  width: 60px;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 20px;
+  color: #000;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.modal-size-btn-selected {
+  background-color: #4E362B;
+  color: #fff;
+}
+
+.modal-size-btn-not-selected {
+  background-color: #fff;
+  color: #000;
+}
+
+.modal-btn-options {
+  width: 140px;
+  height: 100px;
+  margin-right: 10px;
+  border-radius: 5%;
+  border-width: 0.5px;
+}
+
+.modal-btn-options-selected {
+  background-color: #4E362B;
+  color: #fff;
+}
+
+.modal-btn-options-not-selected {
+  background-color: #fff;
+  color: #000;
+}
+
+.modal-reserve-text {
+  margin-top: 35px;
+  margin-bottom: 15px;
+  margin-left: 5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
+
+/* Adjusting for smaller screens */
+@media (max-width: 768px) {
+
+  .search-input, .product-container, .search-button, .btn-close {
+    width: 90%; /* Increase width to utilize more space */
+  }
+
+  .search-container, .product-container {
+    padding: 10px;
+  }
+  /* .product-card {
+    width: calc(50% - 10px); 
+    margin: 5px;
+  } */
+}
+
+
+
+@media (max-width: 480px) {
+  /* .product-card {
+    width: calc(50% - 800px); 
+    margin: 5px;
+  } */
+
+  .search-button, .btn-close {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  h1 {
+    font-size: 24px; /* Smaller font size for smaller screens */
+    margin: 20px 0;
+  }
+
+  /* Additional adjustments for better mobile experience */
+  .search-container {
+    padding: 10px;
+  }
+}
+
+.karisme-text {
+  margin-right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 35px;
+  cursor: pointer;
+}
+
+.close-button {
+  margin-left: 583px;
+  margin-top: -40px;
+  margin-bottom: 40px;
+  position: relative; /* Adjust based on your layout */
+  z-index: 10; /* Ensure it's above other content */
+  border-width: 0px;
+}
+
+.product-container {
+  margin-top: -20px;
+}
+
+
+/* General Styles */
+/* body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+} */
+
+/* Adjusting for smaller screens */
+@media (max-width: 768px) {
+  .product-card {
+    /* margin-left: 10px; */
+    width: 50px; 
+  }
+
+  .search-input, .product-container, .btn-close, .second-search-input {
+    width: 100%; 
+  }
+
+  .top-search-bar {
+    width: 130%;
+    height: 100%;
+  }
+
+  .search-button {
+    width: 50%;
+  }
+
+  .search-container, .product-container, .second-search-container{
+    padding: 0px;
+  }
+
+  .search-container-start {
+    width: 100%;
+    margin-top: -220px;
+  }
+
+  .karisme-top-text, .product-image-name, .product-image-price, .karisme-text {
+    font-size: 20px; /* Smaller font size */
+  }
+
+  .modal-size-btn, .modal-btn-options, .modal-add-to-cart-btn, .modal-close-btn {
+    font-size: 14px; /* Smaller buttons and text in modal */
+    padding: 8px; /* Reduce padding for a better fit */
+  }
+
+  .product-card-like {
+    font-size: 24px; /* Adjust icon sizes */
+  }
+
+  .product-card-cart {
+    font-size: 40px;
+  }
+
+  .modal-reserve-text, .question-container {
+    font-size: 14px; /* Smaller text for modals and question containers */
+  }
+
+  .btn-random-search, .btn-search {
+    padding: 0px 0px; /* Smaller buttons */
+    border: none;
+  }
+
+  .sample-questions-container {
+    max-width: 100%; /* Use full width */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    /* margin-left: 10px; */
+    width: 50px; 
+  }
+  .karisme-top-text {
+    font-size: 32px; /* Even smaller text for very small devices */
+    margin-top: 0px; /* Adjust top margin */
+  }
+
+  .product-image {
+    height: auto;
+    width: 90%; /* Full width images */
+    margin: 10px auto; /* Centering the image */
+  }
+
+  .close-button {
+    margin-left: auto; /* Align close button to the right */
+    margin-right: 10px; /* Add some right margin */
+  }
+
+  .second-search-container, .search-container-start {
+    flex-direction: column; /* Stack elements vertically */
+  }
+
+  .btn-options-container {
+    flex-direction: row; /* Stack buttons vertically */
+  }
+
+  .btn-random-search, .btn-search {
+    width: 90%; /* Full width buttons */
+    margin: 10px auto; /* Centering buttons */
+  }
+}
+

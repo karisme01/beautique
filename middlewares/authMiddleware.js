@@ -63,3 +63,45 @@ export const isAdmin = async (req, res, next) => {
         })
     }
 }
+
+export const isBrand = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(req.user._id)
+        if (user.role != 2) {
+            return res.status(401).send({
+                success: false,
+                message: "Unauthorized Access"
+            })
+        } else {
+            next()
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(401).send({
+            success: false,
+            message: "error in admin middleware",
+            error
+        })
+    }
+}
+
+export const isUser = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(req.user._id)
+        if (user.role != 0) {
+            return res.status(401).send({
+                success: false,
+                message: "Unauthorized Access"
+            })
+        } else {
+            next()
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(401).send({
+            success: false,
+            message: "error in admin middleware",
+            error
+        })
+    }
+}

@@ -1,0 +1,28 @@
+.about-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    color: #000; /* A shade of brown for the text */
+    background-color: #fff; /* A cream-like background */
+  }
+  
+  .about-container h1, .about-container h2 {
+    color: #000; /* Burgundy for headings */
+    text-align: center;
+  }
+  
+  .about-container p {
+    text-align: justify;
+    margin-bottom: 1rem;
+  }
+  
+  .about-container a {
+    color: #800020; /* Burgundy for links */
+    text-decoration: none;
+  }
+  
+  .about-container a:hover {
+    text-decoration: underline;
+  }
+  

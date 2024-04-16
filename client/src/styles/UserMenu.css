@@ -1,6 +1,4 @@
-
-.active-link {
-    color: black !important; /* Use !important to override any other styles if necessary */
-    background-color: #f0f0f0 !important;
-  }
-  
+.text-center .list-group-item.active-link {
+  color: white !important;
+  background-color: #2F181B;
+}

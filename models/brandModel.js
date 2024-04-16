@@ -16,6 +16,11 @@ const brandSchema = new mongoose.Schema({
     photo: {
         data: Buffer,
         contentType: String,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users', // This should match the name you gave your user model
+        required: true // Only if every brand must be associated with a user
     }
     // incharge: {
     //     type: String,

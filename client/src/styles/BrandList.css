@@ -1,16 +1,17 @@
 .brand-list-container {
     font-family: 'Poppins', sans-serif;
     max-width: 900px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 10px;
+    background-color: #f4f4f0;
+    border-radius: 0px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .brand-list-title {
     color: #333;
     text-align: center;
+    font-size: 24px; /* Adjusted font size */
 }
 
 .brand-list { 
@@ -18,38 +19,54 @@
     max-height: 500px;
 }
 
-
 .brand-item {
     background-color: white;
     padding: 10px;
-    margin: 10px;
+    margin: 10px 0; /* Adjusted for better spacing on mobile */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 5px;
+    border-radius: 0px;
     cursor: pointer;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     border-bottom: 1px solid #ddd;
-    }
-  
+}
+
 .brand-item:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-
 .brand-search-input {
     width: 100%;
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 16px; /* Slightly larger for easier focus on mobile */
     border: 1px solid #ccc;
     border-radius: 6px;
     margin-bottom: 20px;
-  }
+}
 
 .cover {
-    background-image: url('../images/brandLishBgd.webp'); /* Adjust path accordingly */
     background-size: cover;
     background-position: center;
+    /* No changes here, as cover is generally responsive */
 }
-  
 
+/* Media queries for devices with widths up to 600px */
+@media (max-width: 600px) {
+    .brand-list-container {
+        padding: 15px;
+        margin: 10px;
+        max-width: 100%; /* Allows the container to stretch on smaller screens */
+    }
 
-  
+    .brand-list-title {
+        font-size: 20px; /* Smaller font size for smaller screens */
+    }
+
+    .brand-item {
+        margin: 5px 0; /* Less space between items for compact display */
+    }
+
+    .brand-search-input {
+        font-size: 14px; /* Adjusted for smaller screens */
+        padding: 8px 10px;
+    }
+}

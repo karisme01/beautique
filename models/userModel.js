@@ -1,5 +1,24 @@
 import mongoose from "mongoose";
 
+const addressSchema = new mongoose.Schema({
+    street: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    zipCode: {
+        type: String,
+        required: true 
+    },
+}, {_id: false});
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -20,11 +39,8 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    address: {
-        type: {},
-        required: true
-    },
-    answer: {
+    address: [addressSchema],
+    answer: { 
         type: String,
         required: true
     },
@@ -36,7 +52,7 @@ const userSchema = new mongoose.Schema({
         type: Map,
         of: Number 
     }, 
-    seenProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    seenProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Products' }],
 }, {timestamps: true})
 
 export default mongoose.model('users', userSchema)

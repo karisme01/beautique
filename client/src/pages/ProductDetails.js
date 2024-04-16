@@ -11,17 +11,20 @@ import img from '../images/celebrities/cel1.png'
 import img2 from '../images/celebrities/cel2.png'
 import video from '../videos/video.mp4'
 import '../styles/ProductDetails.css'
-
-
+import { Modal, Button, DatePicker } from 'antd';
 import toast from 'react-hot-toast';
 import TopSlider from '../components/Designs/TopSlider';
 import HeartIconToggle from '../components/Designs/HeartIconToggle';
+import moment from 'moment';
+import { useReserve } from '../context/reserve';
+
 
 const ProductDetails = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [product, setProduct] = useState({})
   const [cart, setCart] = useCart()
+  const [reserve, setReserve] = useReserve()
   const [relatedProducts, setRelatedProducts] = useState([])
   const [wish, setWish] = useWish();
   const [selectedSize, setSelectedSize] = useState(""); 
@@ -30,6 +33,9 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [productImages, setProductImages] = useState([]);
   const [showReviews, setShowReviews] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [reviews, setReviews] = useState([
     { author: "Alice Johnson", content: "Absolutely love this! Exceeded all my expectations, would definitely recommend!" },
     { author: "Mark Benson", content: "Not what I expected based on the description. It's okay, but I probably wouldn't buy again." },
@@ -43,16 +49,90 @@ const ProductDetails = () => {
     { author: "Kyle Cho", content: "I had high hopes, but it fell short. The material feels cheap and not very durable." },
 ]);
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
 
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const isProductInWishList = (product) => {
     return wish.some((wishProduct) => wishProduct._id === product._id);
   };
 
+  const isProductInReserve = (product, selectedSize, selectedType) => {
+    return reserve.some(reserveItem => 
+      reserveItem[0]._id === product._id && reserveItem[1] === selectedSize && reserveItem[2] === selectedType
+    );
+  };
+
+  const addToReserve = (product, selectedSize, purchaseType, date) => {
+    if (!agreedToTerms) {
+      toast.error("You must agree to the Terms & Conditions to proceed.");
+      return;
+    }
+    if (!selectedSize) {
+      toast.error('Select the size');
+      return
+    }
+    if (purchaseType != '1' && purchaseType != '2') {
+      toast.error('Select the purchase type');
+      return
+    }
+    if (!date) {
+      toast.error('Select the reservation date');
+      return
+    }
+    if (!isProductInReserve(product, selectedSize, purchaseType)) {
+      setReserve([...reserve, [product, selectedSize, purchaseType, 0, 1, date]]);
+      localStorage.setItem("reserve", JSON.stringify([...reserve, [product, selectedSize, purchaseType, 0, 1, date]]));
+      toast.success('Item added to reserve');
+      setIsModalVisible(false)
+    }
+    // }else {
+    //   const newReserve = reserve.filter(reserveItem => 
+    //     !(reserveItem[0]._id === product._id && 
+    //       reserveItem[1] === selectedSize && 
+    //       reserveItem[2] === purchaseType));
+    //   setReserve(newReserve);
+    //   localStorage.setItem("reserve", JSON.stringify(newReserve));
+    //   toast.success('Item removed from reserve');
+    //   setIsModalVisible(false)
+    // }
+  }
+
   const isProductInCart = (product, selectedSize, selectedType) => {
     return cart.some(cartItem => 
       cartItem[0]._id === product._id && cartItem[1] === selectedSize && cartItem[2] === selectedType
     );
+  };
+
+  const addToCart = (product, selectedSize, purchaseType) => {
+    if (!isProductInCart(product, selectedSize, purchaseType)) {
+      setCart([...cart, [product, selectedSize, purchaseType, 0, 1]]);
+      localStorage.setItem("cart", JSON.stringify([...cart, [product, selectedSize, purchaseType, 0, 1]]));
+      toast.success('Item added to cart');
+    }else {
+      const newCart = cart.filter(cartItem => 
+        !(cartItem[0]._id === product._id && 
+          cartItem[1] === selectedSize && 
+          cartItem[2] === purchaseType));
+      setCart(newCart);
+      localStorage.setItem("cart", JSON.stringify(newCart));
+      toast.success('Item removed from cart');
+    }
+  }
+
+  const calculateReturnDate = () => {
+    if (!selectedDate) return ''; // No selected date
+    const duration = purchaseType === '1' ? 3 : 7; // '1' for 3 days, else assume 7 days
+    const returnDate = moment(selectedDate).add(duration, 'days').format('YYYY-MM-DD');
+    return `${returnDate}`;
   };
 
   useEffect(() => {
@@ -168,24 +248,6 @@ const ProductDetails = () => {
             height: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '300px'}}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '500px', marginLeft: '70px'}}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {/* <img
-                      src={`/api/v1/product/product-photo/${product?._id}`}
-                      alt="Small Image 1"
-                      style={{ height: '285px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
-                      className='product-image'
-                  />
-                  <img
-                      src={`/api/v1/product/product-photo/${product?._id}`}
-                      alt="Small Image 3"
-                      style={{ height: '285px', width: '200px', marginBottom: '6px', cursor: 'pointer' }}
-                      className='product-image'
-                  />
-                  <img
-                      src={`/api/v1/product/product-photo/${product?._id}`}
-                      alt="Small Image 3"
-                      style={{ height: '285px', width: '200px', marginBottom: '6px', cursor: 'pointer' }}
-                      className='product-image'
-                  /> */}
                   {productImages.map((image, index) => (
                     <img
                       key={index}
@@ -213,19 +275,157 @@ const ProductDetails = () => {
               </p>
 
               <div style={{display: 'flex', flexDirection: 'row', marginTop: '-20px'}}>
-                <button style={{marginLeft: '100px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
+                <button onClick={() => navigate('/Policy')} style={{marginLeft: '100px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
                   Check leasing policy
                 </button>
-                <button style={{marginLeft: '10px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
+                <button onClick={() => navigate('/Policy')} style={{marginLeft: '10px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
                   Check return policy
                 </button>
               </div>
               <div style={{fontSize: '15px', marginLeft: '200px'}}>
-                <p style={{marginTop: '20px', textDecoration: 'underline'}}>Reserve event leasing here</p>
+                <p style={{marginTop: '20px', textDecoration: 'underline', cursor: 'pointer'}} onClick={showModal}> Reserve event leasing here</p>
               </div>
           </div>
+
+          <Modal
+            title="Reserve product leasing"
+            open={isModalVisible}
+            onCancel={handleCancel}
+            // onOk={handleOk}
+            footer={[
+              <Button
+                key="add"
+                onClick={() => {
+                  addToReserve(product, selectedSize, purchaseType, selectedDate); 
+                }}
+                style={{ 
+                  width: 'auto', 
+                  marginRight: '10px', 
+                  fontSize: '17px', 
+                  borderRadius: '7px', 
+                  height: '40px', // Increased height
+                  backgroundColor: '#8B4513', // Brown color
+                  color: 'white', 
+                  border: 'none', 
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
+                  transition: 'background-color 0.3s', // Smooth transition for hover effect
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
+              >
+                Add to Cart
+              </Button>,
+              <Button
+                key="close"
+                onClick={() => setIsModalVisible(false)}
+                style={{ 
+                  width: '40px', 
+                  marginRight: '10px', 
+                  fontSize: '17px', 
+                  borderRadius: '7px', 
+                  height: '40px', // Increased height
+                  backgroundColor: 'white', 
+                  color: '#8B4513', // Brown text color
+                  borderWidth: '1px',
+                  borderColor: '#8B4513', // Brown border
+                  transition: 'border-color 0.3s', // Smooth transition for hover effect
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = '#5C4033')} // Original brown color
+              >
+                X
+              </Button>
+            ]}
+          > 
+            <div className='btn-sizes' style={{marginLeft: '30px', marginBottom: '20px'}}>
+                {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    style={{
+                      width: '60px',
+                      padding: '15px',
+                      margin: '10px',
+                      borderRadius: '20px',
+                      background: selectedSize === size ? '#4E362B' : '#fff',
+                      color: selectedSize === size ? '#fff' : '#000',
+                      border: '1px solid #000',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            <div className='flex-row' style={{marginBottom: '-25px', marginRight: '-60px'}}>
+                <button className='btn-options' style={{width: '230px', height: '80px', 
+                  marginRight: '10px', borderWidth: '0.5px', 
+                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
+                  background: purchaseType === '1' ? '#4E362B' : '#fff',
+                  color: purchaseType === '1' ? '#fff' : '#000',
+                  }} onClick={()=>setPurchaseType('1')}>
+                  <p style={{marginTop: '10px'}}>Half-weekly cycle</p>
+                  <p>Price: {String(Math.round(0.3*product?.price / 10) * 10)}</p>
+                </button>
+                <button className='btn-options' style={{width: '230px', height: '80px', 
+                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
+                  background: purchaseType === '2' ? '#4E362B' : '#fff',
+                  color: purchaseType === '2' ? '#fff' : '#000',
+                  }} onClick={()=>setPurchaseType('2')}>
+                  <p style={{marginTop: '10px'}}>Full-weekly cycle</p>
+                  <p>Price: {String(Math.round(0.4*product?.price / 10) * 10)}</p>
+                </button>
+              </div>
+
+              <div style={{marginTop: '40px', marginLeft: '5px', fontSize: '15px'}}>
+                <div>
+                  <p>Select reservation date:</p>
+                  <DatePicker style={{marginTop: '-20px', fontSize: '30px'}} 
+                    onChange={(date, dateString) => setSelectedDate(dateString)} 
+                    disabledDate={(current) => current && current < moment().startOf('day')}
+                  />
+                </div>
+                <div style={{fontSize: '13px', marginBottom: '-50px'}}>
+                  {purchaseType === '0' ? (
+                    <p>*Please purchase a leasing type.</p>
+                  ) : (
+                    <p>*Your are expected to return the item by {calculateReturnDate()}.</p>
+                  )}
+                </div>
+                <div style={{ marginTop: '70px', textAlign: 'left', fontSize: '12px' }}>
+                  <div style={{ height: '150px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                    <p><strong>Terms & Conditions</strong></p>
+                    <p>For a clothing rental store, the terms and conditions might include key points such as rental duration, return policies, damage fees, and cancellation terms. For instance, you could state that items must be returned in their original condition within a specified number of days post-rental, 
+                      outline any fees for damages beyond normal wear and tear, detail the process and potential costs for cancellations, and specify any cleaning or care instructions that renters must follow. It's also crucial to address liability issues, 
+                      ensuring customers understand their responsibilities while the items are in their possession.</p>
+                  </div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={() => setAgreedToTerms(!agreedToTerms)}
+                      style={{ marginRight: '5px'}}
+                    />
+                    I agree to the Terms & Conditions
+                  </label>
+                </div>
+
+              </div>
+
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              marginBottom: '20px', 
+              padding: '20px', 
+            }}>
+            </div>
+
+            
+      </Modal>
           {/* video */}
-          {/* <div>
+          {/* <div> 
             <video width="100%" height="auto" controls style={{ marginBottom: '20px' }}>
               <source src={video} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -233,7 +433,10 @@ const ProductDetails = () => {
           </div> */}
 
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-            <h1>{product?.name}</h1>
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <h1>{product?.name}</h1>
+              {/* <StarRating rating={product.rating || 3} /> */}
+            </div>
             <p style={{ marginBottom: '10px', fontSize: '16px' }}>
               <strong>Description:</strong> {product?.description}
             </p>
@@ -283,7 +486,7 @@ const ProductDetails = () => {
               background: purchaseType === '1' ? '#332211' : '#fff',
               color: purchaseType === '1' ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection('1')}>
-              <p>Lease for 3 days</p>
+              <p>Half-weekly cycle</p>
               <p>Price: {String(Math.round(0.3*price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
@@ -291,7 +494,7 @@ const ProductDetails = () => {
               background: purchaseType === '2' ? '#332211' : '#fff',
               color: purchaseType === '2' ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection('2')}>
-              <p>Lease for 7 days</p>
+              <p>Full-weekly cycle</p>
               <p>Price: {String(Math.round(0.4*price / 10) * 10)}</p>
             </button>
           </div>
@@ -302,7 +505,7 @@ const ProductDetails = () => {
               onClick={() => {
                 if (!isProductInCart(product, selectedSize, purchaseType)) {
                   setCart([...cart, [product, selectedSize, purchaseType, 0, 1]]);
-                  localStorage.setItem("cart", JSON.stringify([...cart, [product, selectedSize, purchaseType]]));
+                  localStorage.setItem("cart", JSON.stringify([...cart, [product, selectedSize, purchaseType, 0, 1]]));
                   toast.success('Item added to cart');
                 }else {
                   const newCart = cart.filter(cartItem => 
@@ -391,10 +594,10 @@ const ProductDetails = () => {
                           currency: "INR",
                         })}
                       </h5>
-                      <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '2px'}}>
+                      {/* <div style={{marginLeft: '6px', flexDirection:'row', marginTop: '2px'}}>
                         <StarRating rating={p.rating || 3} />
-                      </div>
-                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-60px', marginBottom: '16px'}}>
+                      </div> */}
+                      <div style={{fontSize: '25px', marginLeft: '220px', marginTop:'-40px', marginBottom: '16px'}}>
                         <HeartIconToggle
                             isFilled={isProductInWishList(p)}
                             onToggle={() => {
@@ -411,12 +614,12 @@ const ProductDetails = () => {
                             }
                           }}/>
 
-                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-0px' }} 
+                        {/* <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '-0px' }} 
                           onClick={()=>{
                             setCart([...cart, [p, selectedSize, purchaseType, 0, 1]]);
                             localStorage.setItem("cart", JSON.stringify([...cart, p]));
                             toast.success('Item added to cart');
-                          }}/>
+                          }}/> */}
                       </div>
                     </div>
                   </div>

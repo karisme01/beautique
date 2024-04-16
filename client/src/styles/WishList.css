@@ -1,0 +1,11 @@
+.wish-page h1 {
+    padding: 15px !important;
+    font-family: "Poppins", sans-serif;
+    font-weight: normal;
+    background-color: #f7f4f1 !important;
+  }
+
+  .wish-page h1 > p { 
+    font-size: 20px;
+    margin-top: 10px;
+  }

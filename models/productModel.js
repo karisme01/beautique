@@ -56,6 +56,7 @@ const productSchema = new mongoose.Schema({
         type: Map,
         of: Number 
     }, 
+    reviews: [String]
 
 }, {timestamps: true}
 );

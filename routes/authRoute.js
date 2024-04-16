@@ -1,6 +1,6 @@
 import express from "express"
 import { registerController, loginController, testController, forgotPasswordController, updateProfileController, updatePreferencesController} from "../controllers/authController.js"
-import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js"
+import { isAdmin, isBrand, isUser, requireSignIn } from "../middlewares/authMiddleware.js"
 
 
 // router Object
@@ -26,6 +26,11 @@ router.get('/user-auth', requireSignIn, (req, res) => {
 
 //PROTECTED ADMIN AUTH ROUTE
 router.get('/admin-auth', requireSignIn, isAdmin, (req, res) => {
+    res.status(200).send({ok: true})
+})
+
+//PROTECTED BRAND AUTH ROUTE
+router.get('/brand-auth', requireSignIn, isBrand, (req, res) => {
     res.status(200).send({ok: true})
 })
 

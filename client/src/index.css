@@ -27,6 +27,10 @@
   border-bottom: 2px solid #800020;
 }
 
+.nav-link-active {
+  color: darkgrey !important; /* Example color for active state */
+}
+
 .navbar {
   font-weight: 400;
   /* font-family: 'Roboto Flex', sans-serif; */
@@ -37,7 +41,7 @@
 .footer {
   color: white;
   padding: 25px;
-  background: linear-gradient(to bottom, #55231C, #170402); /* From burgundy to brown */
+  background: linear-gradient(to bottom, #2F181B, #170402); /* From burgundy to brown */
 }
 
 .footer a {
@@ -132,3 +136,41 @@
   display: none;
 }
 
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .navbar {
+    font-size: 14px; /* Smaller font size for mobile */
+  }
+
+  .navbar-brand {
+    font-size: 24px; /* Adjust logo size for mobile */
+  }
+
+  .navbar-nav .nav-item {
+    margin-bottom: 5px; /* Add space between nav items */
+  }
+
+  .navbar-toggler {
+    /* Adjustments for the navbar toggler if necessary */
+  }
+
+  .brand-search-input, .search-input {
+    font-size: 14px; /* Adjust search input font size for better visibility */
+    padding: 8px 12px; /* Adjust padding for better touch accessibility */
+  }
+
+  .nav-link, .nav-link:link, .nav-link:visited {
+    font-weight: 400; /* Adjust font weight for better readability */
+  }
+  
+  .dropdown-menu {
+    font-size: 14px; /* Adjust dropdown font size for better readability */
+  }
+}
+/* Ensures dropdown menus are easily clickable on mobile */
+@media (max-width: 768px) {
+  .navbar .dropdown-hover:hover .dropdown-menu,
+  .navbar .dropdown-menu:hover {
+    display: block; /* Might need adjustments based on your specific implementation */
+  }
+}

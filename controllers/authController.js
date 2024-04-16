@@ -5,7 +5,7 @@ import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
     try {
-        const {name, email, password, phone, address, answer, preferredCategories, 
+        const {name, email, password, phone, address, role, answer, preferredCategories, 
                 preferredColors, preferredMaterials, preferredOccasions, preferredPriceRanges} = req.body
         //validation
         if (!name) {
@@ -58,7 +58,7 @@ export const registerController = async (req, res) => {
         const seenProducts = []
 
         const user = await new userModel({name, email, password: hashedPassword, phone, address, 
-                answer, preferences: preferences, seenProducts: seenProducts}).save()
+                answer, role, preferences: preferences, seenProducts: seenProducts}).save()
 
         res.status(201).send({
             success: true,
@@ -175,8 +175,9 @@ export const testController = (req, res) => {
 //update profile controller
 export const updateProfileController = async (req, res) => {
     try {
-      const { name, email, password, address, phone } = req.body;
+      const { name, email, password, phone, street, city, state, zipCode} = req.body;
       const user = await userModel.findById(req.user._id);
+      const address = {street, city, state, zipCode: zipCode}
       //password
       if (password && password.length < 6) {
         return res.json({ error: "Passsword is required and 6 character long" });

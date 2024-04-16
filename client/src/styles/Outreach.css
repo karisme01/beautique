@@ -1,0 +1,59 @@
+/* Outreach.css - Additions/Modifications */
+.card {
+    height: 100%; /* Make all cards the same height */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadows for depth */
+  }
+  
+  .card .btn-black {
+    background-color: black;
+    color: white;
+    border: none;
+  }
+  
+  .card-container {
+    padding: 0 15px; /* Space between cards */
+  }
+
+
+.card-title {
+  font-size: 1.25rem; /* Increase the size of the title */
+  color: #0056b3; /* A distinct color for emphasis */
+  font-weight: bold; /* Make it bold for better visibility */
+  margin-bottom: 15px; /* Add some spacing below the title */
+}
+
+.text-start{ 
+  padding-left: 20px; /* Ensure bullet points are nicely indented */
+  font-size: 0.8rem; /* Reduce the font size for subtlety */
+  color: #666; /* Dark gray for readable yet softer appearance */
+  list-style-type: disc; /* Optional: change bullet style to disc */
+}
+
+ul li {
+  margin-bottom: 5px; /* Add spacing between bullet points */
+}
+
+.btn-black {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px; /* More padding for a better button appearance */
+  font-weight: bold; /* Optional: make button text bold */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.btn-black:hover {
+  background-color: #333; /* Darken the button on hover for feedback */
+}
+
+.card-img-top-outreach {
+  width: 100%; /* Full width */
+  height: 180px; /* Fixed height for uniformity */
+  object-fit: cover; /* Cover to ensure images fit well */
+}
+
+.modal-submit-btn {
+    background-color: black !important; /* Important might be needed to override default styles */
+    color: white !important;
+    border-color: black !important;
+}

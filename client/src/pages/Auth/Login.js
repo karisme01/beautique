@@ -82,6 +82,10 @@ const Login = () => {
           <button type="submit" className="btn btn-primary">
             LOGIN
           </button>
+          <div style={{marginTop: '20px', fontSize: '14px', textDecoration: 'underline', cursor: 'pointer'}} 
+            onClick={()=>navigate('/register')}>
+            Don't have an account? Register here
+          </div>
         </form>
       </div>
     </Layout>

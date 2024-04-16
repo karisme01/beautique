@@ -13,14 +13,23 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
 
   //get user data
   useEffect(() => {
-    const { email, name, phone, address } = auth?.user;
+    const { email, name, phone } = auth?.user;
+    const address = auth?.user?.address[0] || {};
     setName(name);
     setPhone(phone);
     setEmail(email);
     setAddress(address);
+    setStreet(address.street || '');
+    setCity(address.city || '');
+    setState(address.state || '');
+    setZipCode(address.zipCode || '');
   }, [auth?.user]);
 
   // form function
@@ -32,7 +41,10 @@ const Profile = () => {
         email,
         password,
         phone,
-        address,
+        street,
+        city,
+        state,
+        zipCode
       });
       if (data?.error) {
         toast.error(data?.error);
@@ -84,16 +96,6 @@ const Profile = () => {
                 </div>
                 <div className="mb-3">
                   <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-control"
-                    id="exampleInputPassword1"
-                    placeholder="Enter Your Password"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -105,11 +107,37 @@ const Profile = () => {
                 <div className="mb-3">
                   <input
                     type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
                     className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Address"
+                    placeholder="Enter Your Street"
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="form-control"
+                    placeholder="Enter Your City"
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="form-control"
+                    placeholder="Enter Your State"
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                    className="form-control"
+                    placeholder="Enter Your zipcode"
                   />
                 </div>
 

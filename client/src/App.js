@@ -16,6 +16,7 @@ import CreateProduct from './pages/Admin/CreateProduct';
 import Users from './pages/Admin/Users';
 import Profile from './pages/user/Profile'
 import Orders from './pages/user/Orders';
+import OrdersAdmin from './pages/Admin/OrdersAdmin';
 import Products from './pages/Admin/Products';
 import UpdateProduct from './pages/Admin/UpdateProduct';
 import Search from './pages/Search';
@@ -29,6 +30,23 @@ import CreateBrand from './pages/Admin/CreateBrand';
 import BrandProduct from './pages/BrandProduct';
 import TrendPage from './pages/TrendPage';
 import ForYou from './pages/ForYou';
+import SearchBot from './pages/SearchBot';
+import BrandRoute from './components/Routes/BrandRoute';
+import RecordOrder from './pages/Brand/RecordOrder';
+import BrandDashboard from './pages/Brand/BrandDashboard';
+import ProfileBrand from './pages/Brand/ProfileBrand';
+import RealTimeOrder from './pages/Admin/RealTimeOrder';
+import AddressBook from './pages/user/AddressBook';
+import BrandProducts from './pages/Brand/BrandProducts';
+import OrderBook from './pages/Brand/OrderBook';
+import Messages from './pages/user/Messages';
+import RealTimeOrderItem from './pages/Admin/RealTimeOrderItems';
+import Production from './pages/Admin/Production';
+import Shipped from './pages/Admin/Shipped';
+import Collected from './pages/Admin/Collected';
+import ProcessingReturn from './pages/Admin/ProcessingReturn';
+import Returned from './pages/Admin/Returned';
+import Outreach from './pages/Brand/Outreach';
 
 
 function App() {
@@ -44,13 +62,18 @@ function App() {
         <Route path="/cloud-brands" element = {<BrandList/>} />  
         <Route path="/for-you" element = {<ForYou/>} />  
         <Route path="/trend" element = {<TrendPage/>} />  
+        <Route path="/ask" element = {<SearchBot/>} />  
         <Route path="/cloud-brands/:slug" element = {<BrandProduct/>} />
         <Route path="/search" element = {<Search/>} />
+        
         <Route path="/dashboard" element = {<PrivateRoute/>}>
           <Route path="user" element={<Dashboard/>} />
           <Route path="user/profile" element={<Profile/>} />
           <Route path="user/orders" element={<Orders/>} />
+          <Route path="user/address-book" element={<AddressBook/>} />
+          <Route path="user/messages" element={<Messages/>} />
         </Route>
+
         <Route path="/dashboard" element = {<AdminRoute/>}>
           <Route path="admin" element={<AdminDashboard/>} />
           <Route path="admin/create-category" element={<CreateCategory/>} />
@@ -59,8 +82,26 @@ function App() {
           <Route path="admin/product/:slug" element={<UpdateProduct/>} />
           <Route path="admin/products" element={<Products/>} />
           <Route path="admin/users" element={<Users/>} />
+          <Route path="admin/orders" element={<OrdersAdmin/>} />
+          <Route path="admin/real-time-orders" element={<RealTimeOrder/>} />
+          <Route path="admin/real-time-order-items" element={<RealTimeOrderItem/>} />
+          <Route path="admin/real-time-order-items-production" element={<Production/>} />
+          <Route path="admin/real-time-order-items-shipped" element={<Shipped/>} />
+          <Route path="admin/real-time-order-items-collected" element={<Collected/>} />
+          <Route path="admin/real-time-order-items-processing-return" element={<ProcessingReturn/>} />
+          <Route path="admin/real-time-order-items-returned" element={<Returned/>} />
 
         </Route>
+
+        <Route path="/dashboard" element = {<BrandRoute/>}>
+          <Route path="brand" element={<BrandDashboard/>} />
+          <Route path="brand/profileBrand" element={<ProfileBrand/>} />
+          <Route path="brand/record-order" element={<RecordOrder/>} />
+          <Route path="brand/products" element={<BrandProducts/>} />
+          <Route path="brand/order-book" element={<OrderBook/>} />
+          <Route path="brand/outreach" element={<Outreach/>} />
+        </Route>
+
         <Route path="/register" element = {<Register/>} />
         <Route path="/forgot-password" element = {<Forgotpassword/>} />
         <Route path="/login" element = {<Login/>} />

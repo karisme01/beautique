@@ -4,13 +4,19 @@ import productModel from "../models/productModel.js"
 import brandModel from "../models/brandModel.js"
 import fs from 'fs';
 import userModel from "../models/userModel.js";
+import OpenAI from "openai";
+import natural from 'natural';
+
+const openai = new OpenAI({
+    apiKey: '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'
+});
 
 export const createProductController = async (req, res) => {
     try {
         const {name, slug, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} = req.fields;
         const {photo} = req.files;
 
-        const products = new productModel({...req.fields, slug: slugify(name)});
+        const products = new productModel({...req.fields, slug: slugify(name), reviews: []});
         if (photo) {
             products.photo.data = fs.readFileSync(photo.path);
             products.photo.contentType = photo.type;
@@ -112,6 +118,34 @@ export const getSingleProductController = async (req, res) => {
         })
     }
 }
+
+//get single product using id
+export const getSingleProductIdController = async (req, res) => {
+    try {
+        const product = await productModel.findById(req.params.id) 
+                       .select('-photo') 
+                       .populate('category') 
+                       .populate('brand'); 
+
+        if (!product) {
+            return res.status(404).send({ success: false, message: 'Product not found' });
+        }
+            
+        res.status(200).send({
+            success: true,
+            message: 'Single Product Fetched',
+            product
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error,
+            message: 'Error while getting single product'
+        });
+    }
+}
+
 
 //get photo
 export const productPhotoController = async (req, res) => {
@@ -215,6 +249,9 @@ export const updateProductController = async (req, res) => {
         properties[priceRangeKeys[priceIndex]] = 1;
 
         products.properties = properties;
+        if (!products.reviews) {
+            products.reviews = [];
+        }
 
       await products.save();
       res.status(201).send({
@@ -310,8 +347,6 @@ export const productFiltersCategoryController = async (req, res) => {
             }));
         }
         
-        
-
         const products = await productModel.find(args);
         console.log(args)
         console.log('hii')
@@ -362,8 +397,6 @@ export const productFiltersBrandController = async (req, res) => {
         }
 
         const products = await productModel.find(args);
-        console.log(args)
-        console.log('hii')
         console.log(products)
         res.status(200).send({
             success: true,
@@ -426,29 +459,63 @@ export const productListController = async (req, res) => {
   };
 
   //single product
-  export const searchProductController = async (req, res) => {
+//   export const searchProductController = async (req, res) => {
+//     try {
+//         const {keyword} = req.params
+//         const results = await productModel.find({
+//             $or: [
+//                 {name: {$regex: keyword, $options: 'i'}},
+//                 {description: {$regex: keyword, $options: 'i'}},
+//                 {color: {$regex: keyword, $options: 'i'}},
+//                 {material: {$regex: keyword, $options: 'i'}},
+//                 {occasion: {$regex: keyword, $options: 'i'}},
+//                 // {brand.name: {$regex: keyword, $options: 'i'}}, 
+//             ]
+//         }).select('-photo')
+//         res.json(results)
+//     } catch (error) {   
+//         console.log(error)
+//         res.status(400).send({
+//             success: false,
+//             message: 'Error in search product API',
+//             error
+//         })
+//     }
+//   };
+
+export const searchProductController = async (req, res) => {
     try {
-        const {keyword} = req.params
+        const { keyword } = req.params;
+
+        // Stem the keyword using Natural
+        const stemmer = natural.PorterStemmer;
+        const stemmedKeyword = stemmer.stem(keyword);
+
+        // Example search logic with stemmed keyword
         const results = await productModel.find({
             $or: [
-                {name: {$regex: keyword, $options: 'i'}},
-                {description: {$regex: keyword, $options: 'i'}},
-                {color: {$regex: keyword, $options: 'i'}},
-                {material: {$regex: keyword, $options: 'i'}},
-                {occasion: {$regex: keyword, $options: 'i'}},
-                // {brand.name: {$regex: keyword, $options: 'i'}}, 
+                {name: {$regex: stemmedKeyword, $options: 'i'}},
+                {description: {$regex: stemmedKeyword, $options: 'i'}},
+                {color: {$regex: stemmedKeyword, $options: 'i'}},
+                {material: {$regex: stemmedKeyword, $options: 'i'}},
+                {occasion: {$regex: stemmedKeyword, $options: 'i'}},
+                // Uncomment and adjust if needed
+                // {"brand.name": {$regex: stemmedKeyword, $options: 'i'}}, 
             ]
-        }).select('-photo')
-        res.json(results)
+        }).select('-photo');
+
+        res.json(results);
     } catch (error) {   
-        console.log(error)
+        console.error(error);
         res.status(400).send({
             success: false,
             message: 'Error in search product API',
-            error
-        })
+            error: error.message
+        });
     }
-  };
+};
+
+  
 
 
 //related product controller
@@ -480,20 +547,32 @@ export const relatedProductController = async (req, res) => {
 //productCategoryController
 export const productCategoryController = async (req, res) => {
     try {
-        const perPage = 10;
+        const perPage = 20;
         const page = req.params.page ? req.params.page : 1;
         const category = await categoryModel.findOne({ slug: req.params.slug });
+        const sortOption = req.query.sort;
+        let sortCriteria = { createdAt: -1 }; // Default sorting by createdAt
+        if (sortOption === 'price (Low To High)') {
+            sortCriteria = { price: 1 };
+        } else if (sortOption === 'price (High To Low)') {
+            sortCriteria = { price: -1 };
+        } else if (sortOption === 'new Arrivals') {
+            sortCriteria = { createdAt: -1 };
+        }
+        const count = await productModel.countDocuments({ category });
+        console.log(category)
         const products = await productModel
             .find({ category })
             .select("-photo")
             .skip((page - 1) * perPage)
             .limit(perPage)
-            .sort({ createdAt: -1 })
+            .sort(sortCriteria)
             .populate("category");
         res.status(200).send({
           success: true,
           category,
           products,
+          count
         });
       } catch (error) {
         console.log(error);
@@ -582,6 +661,119 @@ export const getCuratedProductsController = async (req, res) => {
         res.status(500).send({ message: "An error occurred while getting curated products" });
     }
 }; 
+
+export const getOpenAISearchController = async (req, res) => {
+    const { text } = req.body;
+    console.log(text)
+    try {
+        function parseClothingOptions(str) {
+            console.log('Original String:', str);
+            const map = new Map();
+            const regex = /(\w+):\s*\[([^\]]+)\]/g;
+            let match;
+            while ((match = regex.exec(str)) !== null) {
+              // Key: match[1], Value: match[2] (potential array elements)
+              const key = match[1].trim();
+              const valueString = match[2];
+              const elements = [...valueString.matchAll(/'([^']+)'/g)].map(m => m[1]);
+              map.set(key, elements);
+            }
+            return map;
+          }
+
+          const calculateMatchScore = (product, criteria) => {
+            let score = 0;
+            if (criteria.color.includes(product.color)) score += 3;
+            // if (criteria.category.includes(product.category.toString())) score += 4;
+            if (criteria.occasion.includes(product.occasion)) score += 3;
+            if (criteria.material.includes(product.material)) score += 2;
+            if (criteria.sleeve.includes(product.sleeve)) score++;
+            return score;
+          };
+           
+        const completion = await openai.completions.create({
+            model: "gpt-3.5-turbo-instruct",
+            prompt: `I am going to give you a text about my needs for clothing options. I want you to imply certain categories from the text. 1) Category - what kind of clothing option would be apt. Choose from 'Sari', 'Indo-Western Wear', 'Kurtis & Tunics'. 2) Color - what kind of color would be apt. Choose from 'Black', 'White', 'Orange', 'Red', 'Blue', 'Yellow', 'Green'. 3) What kind of sleevelength would be apt. If hot, you can choose tank or cap, if cold, can use full. Choose from 'Tank', 'Cap', 'Mid-length', and 'Full-sleeve'. 4) Occasion - what ype of occasion is more apt. Choose from 'Party', 'Wedding', 'Festival', 'Casual', 'Formal'. 5) Material - what type of material is apt. Choose from 'Cotton', 'Leather', 'Nylon', 'Wool', 'Silk'. After choosing, give me a javascript map of these categories with their respective options in an array in plain text. You can choose more than one option. Like you can choose red and yellow and white for color. JUST GIVE ME THE MAP. NO TEXT. This is the text - ${text}. Give your output in this structure - Category: ['western'], Color: ['black']...etc. Give all the categories.`,
+            max_tokens: 120,
+            temperature: 0.5,
+          });
+          const aiResponse = completion.choices[0].text
+          const clothingOptions = parseClothingOptions(aiResponse);
+          console.log(clothingOptions)
+
+          const categoryFetchPromises = clothingOptions.get('Category').map(async (categoryName) => {
+            return await categoryModel.findOne({ name: categoryName }); 
+            });
+          const categoriesObjects = await Promise.all(categoryFetchPromises);
+          const categoryIds = categoriesObjects.map(obj => obj._id); 
+
+
+          //sorting all the products with score
+          let args = {};
+          if (categoryIds.length > 0) {
+                args.category = { $in: categoryIds }; 
+            }
+          const allProducts = await productModel.find(args).select("-photo")
+          const scoredProducts = allProducts.map(product => ({
+            product,
+            score: calculateMatchScore(product, {
+              color: clothingOptions.get('Color') || [],
+            //   category: categoryIds,
+              occasion: clothingOptions.get('Occasion') || [],
+              sleeve: clothingOptions.get('Sleeve') || [],
+              material: clothingOptions.get('Material') || [],
+            })
+          }));
+
+          scoredProducts.sort((a, b) => b.score - a.score);
+          const sortedProducts = scoredProducts.map(sp => sp.product);
+
+          res.status(200).send({
+            success: true,
+            products: sortedProducts,
+          });
+
+
+            // let args = {};
+
+            // const categoryFetchPromises = clothingOptions.get('Category').map(async (categoryName) => {
+            //     return await categoryModel.findOne({ name: categoryName }); 
+            // });
+
+            // const categoriesObjects = await Promise.all(categoryFetchPromises);
+            
+            // const categoryIds = categoriesObjects.map(obj => obj._id); 
+
+            // if (categoryIds.length > 0) {
+            //     args.category = { $in: categoryIds }; 
+            // }
+
+            // if (Array.isArray(clothingOptions.get('Color')) && clothingOptions.get('Color').length > 0) {
+            //     args.color = { $in: clothingOptions.get('Color')};
+            // } 
+            // if (Array.isArray(clothingOptions.get('Sleevelength')) && clothingOptions.get('Sleevelength').length > 0) {
+            //     args.sleevelength = { $in: clothingOptions.get('Sleevelength') };
+            // } 
+            // if (Array.isArray(clothingOptions.get('Occasion')) && clothingOptions.get('Occasion').length > 0) {
+            //     args.occasion = { $in: clothingOptions.get('Occasion') };
+            // } 
+            // if (Array.isArray(clothingOptions.get('Material')) && clothingOptions.get('Material').length > 0) {
+            //     args.material = { $in: clothingOptions.get('Material') };
+            // } 
+            // console.log(args)
+            // const products = await productModel.find(args).select("-photo");
+            // res.status(200).send({
+            //     success: true,
+            //     products,
+            // });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "An error occurred while getting openAI search" });
+    }
+}
+
+
 
 
 

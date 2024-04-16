@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useParams, useNavigate } from "react-router-dom";
-import { Checkbox} from 'antd';
+import { Button, Checkbox, Modal} from 'antd';
 import axios from "axios";
 import StarRating from "../components/Designs/Stars.js";
 import { IoHeartCircle } from "react-icons/io5";
@@ -47,22 +47,32 @@ const CategoryProduct = () => {
   const [selectedSize, setSelectedSize] = useState()
   const [selectedType, setSelectedType] = useState('0')
   const [selectedProductForCart, setSelectedProductForCart] = useState(null);
-  const [sortOption, setSortOption] = useState('New Arrivals');
+  const [sortOption, setSortOption] = useState('newArrivals');
+  const [productCount, setProductCount] = useState()
+  const [productImage, setProductImage] = useState('');
+
 
   const sortMenu = (
     <Menu onClick={(e) => setSortOption(e.key)}>
-      <Menu.Item key="New Arrivals">NEW ARRIVALS</Menu.Item>
-      <Menu.Item key="Trending">TRENDING</Menu.Item>
-      <Menu.Item key="Price (low to high)">PRICE (LOW TO HIGH)</Menu.Item>
-      <Menu.Item key="Price (high to low)">PRICE (HIGH TO LOW)</Menu.Item>
+      <Menu.Item key="new Arrivals">NEW ARRIVALS</Menu.Item>
+      <Menu.Item key="trending">TRENDING</Menu.Item>
+      <Menu.Item key="price (Low To High)">PRICE (LOW TO HIGH)</Menu.Item>
+      <Menu.Item key="price (High To Low)">PRICE (HIGH TO LOW)</Menu.Item>
     </Menu>
   );
 
 
 
-  const handleCartIconClick = (product) => {
+  const handleCartIconClick = async (product) => {
     setIsModalOpen(true);
-    setSelectedProductForCart(product); // Set the selected product
+    setSelectedProductForCart(product);
+    try {
+      const response = await axios.get(`/api/v1/product/product-photo/${product._id}`);
+      setProductImage(response.config.url); 
+    } catch (error) {
+      console.error("Failed to load product image.", error);
+      toast.error("Failed to load product image.");
+    } 
   };
   
   useEffect(() => {
@@ -82,18 +92,20 @@ const CategoryProduct = () => {
   
   const getProductsByCat = async () => {
     try {
-      const { data } = await axios.get(`/api/v1/product/product-category/${params.slug}/${page}`);
+      const { data } = await axios.get(`/api/v1/product/product-category/${params.slug}/${page}?sort=${sortOption}`);
       setProducts(data?.products);
       setCategory(data?.category);
+      setProductCount(data?.count)
     } catch (error) {
       console.log(error);
     }
   };
 
+
   
   const filterCategoryProduct = async () => {
     try {
-      const { data } = await axios.post('/api/v1/product/product-category-filters', 
+      const { data } = await axios.post(`/api/v1/product/product-category-filters?sort=${sortOption}`, 
         {category, filterPrice, filterColor, filterSleeve, filterSize, filterMaterial, filterOccasion, filterRent})
       setProducts(data?.products);
     } catch (error) {
@@ -125,6 +137,13 @@ const CategoryProduct = () => {
     loadMore();
   }, [page]);
 
+  useEffect(() => {
+    getProductsByCat()
+  }, [sortOption])
+  // useEffect(() => {
+  //   setProductCount(products.length)
+  // }, [products]);
+
   const loadMore = async () => {
     try {
       setLoading(true);
@@ -141,6 +160,9 @@ const CategoryProduct = () => {
   const isProductInWishList = (product) => {
     return wish.some((wishProduct) => wishProduct._id === product._id);
   };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Layout>
@@ -150,8 +172,8 @@ const CategoryProduct = () => {
     { id: 3, content: "Greater quality, lower price" }
   ]} />
       <div className="container category mt-3">
-
-      <div style={{marginLeft: '1081px', marginTop: '110px', marginBottom: '-110px'}}>
+      
+      <div style={{marginLeft: '1081px', marginTop: '150px', marginBottom: '-120px'}}>
         <Dropdown trigger={['click']} overlay={sortMenu}>
           <a onClick={(e) => e.preventDefault()} 
             style={{ 
@@ -170,18 +192,29 @@ const CategoryProduct = () => {
 
 
 
+
     {/* filter infoPanel */}
     <div className="App" style={{marginTop: '85px', marginBottom: '-85px', marginLeft: '-50px'}}>
-      <button style={{marginLeft: '20px', borderRadius: '30px', width: '130px', 
-          height: '38px', backgroundColor: 'white', borderWidth: '3px', borderColor: 'black'}} onClick={() => setShowPanel(!showPanel)}>
-        <div style={{flexDirection: 'row'}}>
-          <IoFilter style={{marginLeft: '-10px', marginRight: '10px'}}/>
-            All Filters
-        </div>
-      </button>
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <button style={{marginLeft: '20px', borderRadius: '30px', width: '130px', 
+            height: '38px', backgroundColor: 'white', borderWidth: '0px', borderColor: 'black'}} onClick={() => setShowPanel(!showPanel)}>
+          <div style={{flexDirection: 'row'}}>
+            <IoFilter style={{marginLeft: '-10px', marginRight: '10px'}}/>
+              ALL FILTERS
+          </div>
+        </button>
+        
+        {/* <div style={{marginLeft: '450px', bottom: '100px'}}>
+          <h6>SHOWING {productCount} DESIGNS </h6>
+        </div> */}
+
+        
+
+      </div>
+      
       {/* filter slide */}
       <div className={`infoPanel ${showPanel ? 'show' : ''}`}>
-        <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'360px', marginTop: '20px'}}></button>
+        <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'320px', marginTop: '20px'}}></button>
 
         <div className="filter-container mt-5 bg-white" style={{ marginTop: '100px', padding: '20px', 
             borderRadius: '10px',marginLeft: '15px', marginRight: '20px', marginBottom: '-20px', borderColor: '#553c2c' }}>
@@ -328,73 +361,184 @@ const CategoryProduct = () => {
           </div>
       </div>
     </div>
+
+    <Modal
+        title="Selected Product"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button
+            key="add"
+            onClick={() => {
+              addToCart(selectedProductForCart, selectedSize, selectedType);
+              setIsModalOpen(false); 
+            }}
+            style={{ 
+              width: 'auto', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: '#8B4513', // Brown color
+              color: 'white', 
+              border: 'none', 
+              fontWeight: 'bold',
+              boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
+              transition: 'background-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
+          >
+            Add to Cart
+          </Button>,
+          <Button
+            key="close"
+            onClick={() => setIsModalOpen(false)}
+            style={{ 
+              width: '40px', 
+              marginRight: '10px', 
+              fontSize: '17px', 
+              borderRadius: '7px', 
+              height: '40px', // Increased height
+              backgroundColor: 'white', 
+              color: '#8B4513', // Brown text color
+              borderWidth: '1px',
+              borderColor: '#8B4513', // Brown border
+              transition: 'border-color 0.3s', // Smooth transition for hover effect
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
+            onMouseOut={(e) => (e.currentTarget.style.borderColor = '#5C4033')} // Original brown color
+          >
+            X
+          </Button>
+        ]}
+      > 
+        <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                style={{
+                  width: '60px',
+                  padding: '15px',
+                  margin: '10px',
+                  borderRadius: '20px',
+                  background: selectedSize === size ? '#4E362B' : '#fff',
+                  color: selectedSize === size ? '#fff' : '#000',
+                  border: '1px solid #000',
+                  cursor: 'pointer',
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        <div className='flex-row' style={{marginBottom: '-25px', marginRight: '-60px'}}>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '0' ? '#4E362B' : '#fff',
+              color: selectedType === '0' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('0')}>
+              <p>Buy</p>
+              <p>Price: {selectedProductForCart?.price}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '1' ? '#4E362B' : '#fff',
+              color: selectedType === '1' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('1')}>
+              <p>Half-weekly cycle</p>
+              <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+            <button className='btn-options' style={{width: '140px', height: '100px', 
+              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+              background: selectedType === '2' ? '#4E362B' : '#fff',
+              color: selectedType === '2' ? '#fff' : '#000',
+              }} onClick={()=>setSelectedType('2')}>
+              <p>Full-weekly cycle</p>
+              <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
+            </button>
+          </div>
+          
+          <div style={{marginTop: '35px', marginBottom: '-35px', marginLeft: '5px', textDecoration: 'underline', cursor: 'pointer'}}
+            onClick={() => navigate(`/product/${selectedProductForCart.slug}`)}>
+            <p>Click here to reserve</p>
+          </div>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          marginBottom: '20px', 
+          padding: '20px', 
+        }}>
+        </div>
+      </Modal>
         
     
-
-        <h4 className="text-center body" style={{fontSize: '40px', marginTop: '20px', marginBottom: '10px',color: '#3F250B', fontWeight: 'bold'}}>{category?.name}</h4>
-        <div className="row">
-  <div className="col-md-9 offset-1">
-    <div className="d-flex flex-wrap p-3" style={{marginLeft: '-165px', marginRight: '-350px', padding: '0px'}}>
-      {products.length === 0 ? (
-        <div style={{ textAlign: 'center', width: '100%' }}>
-          <p>Sorry, we found no products.</p>
+        <div>
+        <h4 className="text-center body" style={{fontSize: '40px', marginTop: '-30px', marginBottom: '30px',color: '#3F250B', 
+          fontWeight: 'bold'}}>{category?.name}</h4>
         </div>
-      ) : (
-        products.map((p) => (
-          <div key={p._id}>
-            <img
-              src={`/api/v1/product/product-photo/${p._id}`}
-              alt={p.name}
-              style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
-              onClick={() => navigate(`/product/${p.slug}`)}
-              className="product-image "
-            />
-            <div>
-              <div>
-                <h5 style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
-                <h5 style={{marginBottom: '-5px', fontSize:'16px', marginLeft: '8px', marginTop: '-1px'}}>
-                  {p.price.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                </h5>
-                <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
-                  <HeartIconToggle
-                    isFilled={isProductInWishList(p)}
-                    onToggle={() => {
-                      if (isProductInWishList(p)) {
-                        const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
-                        setWish(newWish);
-                        localStorage.setItem("wish", JSON.stringify(newWish));
-                        toast.success('Item removed from wishlist');
-                      } else {
-                        const newWish = [...wish, p];
-                        setWish(newWish);
-                        localStorage.setItem("wish", JSON.stringify(newWish));
-                        toast.success('Item added to wishlist');
-                      }
-                    }}
-                  />
-                  <GiShoppingCart 
-                    style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px'}}
-                    onClick={() => {
-                      handleCartIconClick(p);
-                      setSelectedProductForCart(p._id);
-                    }}
-                  />
-                  {isModalOpen && p._id === selectedProductForCart && (
-                    <div className="dropdown-container" style={{marginLeft: '-180px', marginTop: '20px', marginBottom: '-20px'}}>
-                      {/* Size and Type selection dropdowns */}
+        
+        <div className="row">
+      <div className="col-md-9 offset-1">
+        <div className="d-flex flex-wrap justify-content-start p-3" style={{marginLeft: '-165px', marginRight: '-350px', padding: '0px'}}>
+          {products.length === 0 ? (
+            <div style={{ textAlign: 'center', width: '100%' }}>
+              <p>Sorry, we found no products.</p>
+            </div>
+          ) : (
+            products.map((p) => (
+              <div key={p._id}>
+                <img
+                  src={`/api/v1/product/product-photo/${p._id}`}
+                  alt={p.name}
+                  style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
+                  onClick={() => navigate(`/product/${p.slug}`)}
+                  className="product-image "
+                />
+                <div>
+                  <div>
+                    <h5 style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
+                    <h5 style={{marginBottom: '-5px', fontSize:'16px', marginLeft: '8px', marginTop: '-1px'}}>
+                      {p.price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "INR",
+                      })}
+                    </h5>
+                    <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
+                      <HeartIconToggle
+                        isFilled={isProductInWishList(p)}
+                        onToggle={() => {
+                          if (isProductInWishList(p)) {
+                            const newWish = wish.filter((wishProduct) => wishProduct._id !== p._id);
+                            setWish(newWish);
+                            localStorage.setItem("wish", JSON.stringify(newWish));
+                            toast.success('Item removed from wishlist');
+                          } else {
+                            const newWish = [...wish, p];
+                            setWish(newWish);
+                            localStorage.setItem("wish", JSON.stringify(newWish));
+                            toast.success('Item added to wishlist');
+                          }
+                        }}
+                      />
+                      <GiShoppingCart 
+                        style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px'}}
+                        onClick={() => {
+                          handleCartIconClick(p);
+                        }}
+                      />
+                      
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-  </div>
+            ))
+          )}
+        </div>
+      </div>
 </div>
 
 

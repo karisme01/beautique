@@ -1,0 +1,103 @@
+.message-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 80%;
+  }
+  
+  .form-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .message-textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 180px;
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 1rem;
+  }
+  
+  .send-btn {
+    background-color: #000; /* Black button */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .send-btn:hover {
+    background-color: #333; /* Darker on hover */
+    color: white;
+  }
+
+  .faq-question {
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .faq-answer {
+    padding: 10px;
+    margin-top: 5px;
+    border-left: 3px solid #8B4513;
+    background-color: #f9f9f9;
+    width: 80%;
+  }
+  
+  .faq-item {
+    margin-bottom: 10px;
+  }
+
+  .faq-table {
+    margin-top: 2rem;
+    width: 80%;
+    border-collapse: collapse;
+  }
+  
+  .faq-question-row,
+  .faq-answer-row {
+    cursor: pointer;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .faq-question-row:hover,
+  .faq-answer-row:hover {
+    background-color: #ececec;
+  }
+  
+  .faq-question-row td {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .faq-answer-row td {
+    padding: 12px;
+    font-size: 14px;
+    color: #000;
+  }
+  
+  .faq-answer-row {
+    background-color: #fff;
+  }
+
+  .contact-link {
+    font-size: 14px;
+    margin-top: 20px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  

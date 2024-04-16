@@ -7,12 +7,13 @@ import BrandForm from "../../components/Form/BrandForm";
 import { Modal } from "antd";
 const CreateBrand = () => {
   const [brands, setBrands] = useState([]);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(""); 
   const [phone, setPhone] = useState("");
   const [photo, setPhoto] = useState("");
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
+  const [userId, setUserId] = useState("")
   //handle Form
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +21,7 @@ const CreateBrand = () => {
     productData.append("name", name);
     productData.append("phone", phone);
     productData.append("photo", photo);
+    productData.append("userId", userId);
     try {
       const { data } = await axios.post("/api/v1/brand/create-brand", 
         productData);
@@ -108,6 +110,8 @@ const CreateBrand = () => {
                 setPhone={setPhone}
                 photo={photo}
                 setPhoto={setPhoto}
+                userId={userId}
+                setUserId = {setUserId}
               />
             </div>
             <div className="w-75">

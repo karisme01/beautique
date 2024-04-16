@@ -81,7 +81,7 @@ const Search = () => {
           <h6>
             {values?.results.length < 1
               ? "No Products Found"
-              : `Found ${values?.results.length}`}
+              : `${values?.results.length} results found `}
           </h6>
           </div>
           <div className="row">

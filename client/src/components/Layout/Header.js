@@ -10,10 +10,12 @@ import { useWish } from '../../context/wish';
 import { Badge } from 'antd';
 import { CiHeart } from "react-icons/ci";
 import { GiShoppingCart } from "react-icons/gi";
+import { useReserve } from '../../context/reserve';
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
   const [cart] = useCart();
+  const [reserve] = useReserve()
   const [wish] = useWish();
   const categories = useCategory();
 
@@ -45,11 +47,11 @@ const Header = () => {
                 Categories
               </Link>
               <ul className="dropdown-menu" aria-labelledby="categoriesDropdown">
-                <li>
+                {/* <li>
                   <Link to="/categories" className="dropdown-item">
                     All Categories
                   </Link>
-                </li>
+                </li> */}
                 {categories?.map((category) => (
                   <li key={category._id}>
                     <Link to={`/category/${category.slug}`} className="dropdown-item">
@@ -65,15 +67,35 @@ const Header = () => {
               </NavLink>
             </li> */}
             <li className="nav-item">
-              <NavLink exact to="/for-you" className="nav-link" style={{color: '#3F250B' }}>
-                FOR YOU
-              </NavLink>
-            </li>
-            <li className="nav-item">
               <NavLink exact to="/cloud-brands" className="nav-link" style={{color: '#3F250B'}}>
                 CLOUD BRANDS
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink 
+                to="/for-you" 
+                className={`nav-link ${!auth.user ? 'disabled-link' : ''}`} 
+                style={{ color: !auth.user ? '#A9A9A9' : '#3F250B', pointerEvents: !auth.user ? 'none' : 'auto' }}
+                onClick={(e) => !auth.user && e.preventDefault()}>
+                FOR YOU
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink 
+                to="/ask" 
+                className={`nav-link ${!auth.user ? 'disabled-link' : ''}`} 
+                style={{ color: !auth.user ? '#A9A9A9' : '#3F250B', pointerEvents: !auth.user ? 'none' : 'auto' }}
+                onClick={(e) => !auth.user && e.preventDefault()}>
+                ASK
+              </NavLink>
+            </li>
+
+            
+            {/* <li className="nav-item">
+              <NavLink exact to="/chat" className="nav-link" style={{color: '#3F250B'}}>
+                CHAT
+              </NavLink>
+            </li> */}
           </ul>
           <div className="d-flex align-items-center">
             <SearchInput />
@@ -85,8 +107,10 @@ const Header = () => {
                   </a>
                   <ul className="dropdown-menu">
                     <li>
-                      <NavLink to={`/dashboard/${auth.user.role === 1 ? 'admin' : 'user/profile'}`} className="dropdown-item">
-                        Dashboard
+                      <NavLink 
+                        to={`/dashboard/${auth.user.role === 1 ? 'admin' : auth.user.role === 2 ? 'brand/profileBrand' : 'user/profile'}`} 
+                        className="dropdown-item">
+                            Dashboard
                       </NavLink>
                     </li>
                     <li>
@@ -119,7 +143,7 @@ const Header = () => {
               </li>
               <li className="nav-item" style={{marginLeft: '10px', marginRight: '-30px'}}>
                 <NavLink to="/cart" className="nav-link" activeClassName="active">
-                  <Badge count={cart.length} showZero style={{backgroundColor: '#CC0033'}}>
+                  <Badge count={cart.length + reserve.length} showZero style={{backgroundColor: '#CC0033'}}>
                     <GiShoppingCart style={{fontSize: '35px', marginBottom: '1px', marginTop: '-5px', color: '#3F250B'}}/>
                   </Badge>
                 </NavLink>

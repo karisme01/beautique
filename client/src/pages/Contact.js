@@ -1,14 +1,15 @@
 import React from "react";
 import Layout from "./../components/Layout/Layout";
 import { BiMailSend, BiPhoneCall, BiSupport } from "react-icons/bi";
+import contactPage from '../images/contactPage.jpeg'
 
 const Contact = () => {
   return (
     <Layout title={"Contact us"}>
       <div className="row contactus">
-        <div className="col-md-6">
+        <div className="col-md-6" style={{marginLeft: '10px', marginRight: '-20px'}}> 
           <img
-            src="client/src/images/05d456fda1cac5e1c2483d7c1d9eed98.jpeg"  // Update the image path as needed
+            src={contactPage}  // Update the image path as needed
             alt="Customer Support"
             style={{ width: "100%", height: 'auto' }}
           />
@@ -20,12 +21,13 @@ const Contact = () => {
               For any queries or information about our products, feel free to contact us anytime. We are available 24/7 for your support.
             </p>
             <p className="mt-3">
-              <BiMailSend /> : www.help@ecommerceapp.com
+              <BiMailSend /> : karisme@gmail.com
             </p>
             <p className="mt-3">
-              <BiPhoneCall /> : 012-3456789
+              <BiPhoneCall /> : +91 9875526063
             </p>
             <p className="mt-3">
+              {/* If you still want to keep the toll-free line, you can leave this, or else you can remove it if not needed */}
               <BiSupport /> : 1800-0000-0000 (Toll-Free)
             </p>
           </div>

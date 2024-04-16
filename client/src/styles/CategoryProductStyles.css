@@ -12,19 +12,21 @@
     transform-origin: center center; /* Adjust as needed */
     
   }
-  
+   
   
   .infoPanel {
-    width: 400px;
-    height: 100%; /* Adjust as per requirement */
+    width: 100%; /* Use full width on smaller screens */
+    max-width: 400px; /* But limit to 400px max on larger screens */
+    height: 100%;
     position: fixed;
     left: -400px; /* Hide by default */
     top: 0;
     background-color: #D5A696;
-    transition: left 0.3s ease-in-out; /* Smooth transition */
-    overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-right: 3px solid #553c2c;
+    z-index: 1000; /* Ensure it's above other content */
   }
   
   .infoPanel.show {
@@ -49,6 +51,36 @@
 
 .drop-down {
   width: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .infoPanel {
+    left: -100%; /* Hide completely on the left */
+  }
+  
+  .infoPanel.show {
+    left: 0; /* Cover the entire screen when shown */
+  }
+
+  /* Adjust container, row, and column sizing for mobile */
+  .container, .row, .col-md-9 {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Reduce the size of text, buttons, and other elements as needed */
+  h4, .btn, .btn-sizes button, .btn-options {
+    font-size: smaller; /* Adjust based on your design */
+  }
+
+  /* Make images responsive */
+  .product-image {
+    width: 100%; /* Make images take full width of their container */
+    height: auto; /* Adjust height automatically */
+  }
+
+  /* Add any additional styles for mobile layout adjustments */
 }
 
 

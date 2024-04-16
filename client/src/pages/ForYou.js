@@ -9,17 +9,13 @@ import { useCart } from '../context/cart';
 import { useWish } from '../context/wish';
 import { GiShoppingCart } from "react-icons/gi";
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Checkbox, Radio } from 'antd';
-import {Colors} from '../components/Filters/Colors.js';
-import {Prices} from '../components/Filters/Prices.js';
-import {SleeveLength} from '../components/Filters/SleeveLength.js';
-import {Sizes} from '../components/Filters/Sizes.js';
-import { Materials } from "../components/Filters/Materials.js";
-import { Occasions } from "../components/Filters/Occasions.js";
 import { BsQuestionCircle } from "react-icons/bs";
 import { IoFilter } from "react-icons/io5";
 import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx'
-import {Modal} from 'antd'
+import {Modal, Button, DatePicker} from 'antd'
+import StarRating from '../components/Designs/Stars.js'
+import moment from 'moment';
+import { useReserve } from '../context/reserve';
 
 
 const ForYou = () => {
@@ -28,23 +24,20 @@ const ForYou = () => {
   const [prevProduct, setPrevProduct] = useState(null);
   const [productLikes, setProductLikes] = useState({});
   const [cart, setCart] = useCart()
+  const [reserve, setReserve] = useReserve()
   const [wish, setWish] = useWish()
   const productDetailRef = useRef(null);
   const [expand, setExpand] = useState(false)
   const [liked, setLiked] = useState(false) 
-  const [showPanel, setShowPanel] = useState(false);
-  const [radio, setRadio] = useState([]);
-  const [filterColor, setFilterColor] = useState([]);
-  const [filterSleeve, setFilterSleeve] = useState([]);
-  const [filterSize, setFilterSize] = useState([]);
-  const [filterMaterial, setFilterMaterial] = useState([]);
-  const [filterOccasion, setFilterOccasion] = useState([]);
-  const [filterRent, setFilterRent] = useState(true);
-  const [filterCategory, setFilterCategory] = useState([]);
+  const [showReviews, setShowReviews] = useState(false);
   const [categories, setCategories] = useState([])
   const [selectedSize, setSelectedSize] = useState(""); 
   const [purchaseType, setPurchaseType] = useState('0');
   const [showModal, setShowModal] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
 
 
   const navigate = useNavigate()
@@ -52,11 +45,66 @@ const ForYou = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
+
+  const showModal2 = () => {
+    setIsModalVisible(true);
+  };
   
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const calculateReturnDate = () => {
+    if (!selectedDate) return ''; // No selected date
+    const duration = purchaseType === '1' ? 3 : 7; // '1' for 3 days, else assume 7 days
+    const returnDate = moment(selectedDate).add(duration, 'days').format('YYYY-MM-DD');
+    return `${returnDate}`;
+  };
+
+  const isProductInReserve = (product, selectedSize, selectedType) => {
+    return reserve.some(reserveItem => 
+      reserveItem[0]._id === product._id && reserveItem[1] === selectedSize && reserveItem[2] === selectedType
+    );
+  };
+
+  const addToReserve = (product, selectedSize, purchaseType, date) => {
+    if (!agreedToTerms) {
+      toast.error("You must agree to the Terms & Conditions to proceed.");
+      return;
+    }
+    if (!selectedSize) {
+      toast.error('Select the size');
+      return
+    }
+    if (purchaseType != '1' && purchaseType != '2') {
+      toast.error('Select the purchase type');
+      return
+    }
+    if (!date) {
+      toast.error('Select the reservation date');
+      return
+    }
+    if (!isProductInReserve(product, selectedSize, purchaseType)) {
+      setReserve([...reserve, [product, selectedSize, purchaseType, 0, 1, date]]);
+      localStorage.setItem("reserve", JSON.stringify([...reserve, [product, selectedSize, purchaseType, 0, 1, date]]));
+      toast.success('Item added to reserve');
+      setIsModalVisible(false)
+    }
+    // }else {
+    //   const newReserve = reserve.filter(reserveItem => 
+    //     !(reserveItem[0]._id === product._id && 
+    //       reserveItem[1] === selectedSize && 
+    //       reserveItem[2] === purchaseType));
+    //   setReserve(newReserve);
+    //   localStorage.setItem("reserve", JSON.stringify(newReserve));
+    //   toast.success('Item removed from reserve');
+    //   setIsModalVisible(false)
+    // }
+  }
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
@@ -68,6 +116,19 @@ const ForYou = () => {
       toast.error("Something went wrong in getting catgeory");
     }
   };
+
+  const [reviews, setReviews] = useState([
+    { author: "Alice Johnson", content: "Absolutely love this! Exceeded all my expectations, would definitely recommend!" },
+    { author: "Mark Benson", content: "Not what I expected based on the description. It's okay, but I probably wouldn't buy again." },
+    { author: "Cindy Smith", content: "Perfect for my needs, looks exactly like the picture. Five stars!" },
+    { author: "David Green", content: "Meh, it's alright. Nothing to write home about. You get what you pay for." },
+    { author: "Emily Carter", content: "Stunning! I've received so many compliments. Will be purchasing more for gifts." },
+    { author: "Gregory White", content: "The quality is top-notch. I was surprised by how well-made it is for the price." },
+    { author: "Hannah Lee", content: "Arrived late and was smaller than I expected. It's cute but not quite what I wanted." },
+    { author: "Ian Matthews", content: "Incredible value for the money. It has become a staple in my daily routine." },
+    { author: "Jenny Olsen", content: "Color was a bit off from the photos. Still a good purchase, but keep that in mind." },
+    { author: "Kyle Cho", content: "I had high hopes, but it fell short. The material feels cheap and not very durable." },
+]);
 
   const handleSizeSelection = (size) => {
     setSelectedSize(size);
@@ -171,8 +232,8 @@ const ForYou = () => {
     <Layout>
       <div>
 
-      <div style={{marginTop: '81px', marginBottom: '-78px', marginLeft: '1383px'}}>
-          <BsQuestionCircle style={{marginLeft: '-10px', marginRight: '10px', fontSize: '45px', cursor: 'pointer'}} onClick={handleOpenModal}/>
+      <div style={{marginTop: '50px', marginBottom: '-38px', marginLeft: '1383px'}}>
+          <BsQuestionCircle style={{marginLeft: '-10px', marginRight: '10px', fontSize: '35px', cursor: 'pointer'}} onClick={handleOpenModal}/>
           
       </div>
 
@@ -388,9 +449,9 @@ const ForYou = () => {
     </div> */}
         
 
-        <h1 className='text-center' style={{marginTop: '30px', fontWeight: 'bold', letterSpacing: '4px'}}>
+        <h4 className='text-center' style={{marginTop: '10px', fontWeight: 'bold', letterSpacing: '4px'}}>
           FOR YOU FROM US
-        </h1>
+        </h4>
 
 
         <RightOnlyCarousel 
@@ -406,7 +467,7 @@ const ForYou = () => {
             <img key={index} 
             src={`/api/v1/product/product-photo/${product?._id}`} 
             alt={`Product ${index}`}
-            className='carousel-image'
+            className='carousel-image' 
             style={{cursor: 'pointer'}}
             />
           ))}
@@ -428,38 +489,41 @@ const ForYou = () => {
                 style={{ height: '600px', width: '400px', objectFit: 'cover'}}
               />
 
-              <div classname="text-center" style={{width: '610px', height: '350px', marginTop: '30px', 
-                borderWidth: '20px', backgroundColor: '#efefef', marginLeft: '0px'}}>
-                <h1 style={{fontSize: '23px', padding: '20px', fontWeight: 'bold'}}>
-                Take it on lease and enjoy luxury while saving thousands with easy returns and services.
-                </h1>
-                <p style={{fontSize: '15px', padding: '25px', marginTop: '-30px', color: 'grey'}}>
-                  Experience the luxury of a diverse wardrobe with Karisme Collections' 4-day and 7-day clothing options. 
-                  Say goodbye to buyer's remorse. Embrace a movement that champions confidence, ambition, and eco-conscious living. 
-                </p>
-
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <button style={{marginLeft: '100px', height: '50px', width: '200px', color: 'white', backgroundColor: 'black'}}>
-                    Check leasing policy
-                  </button>
-                  <button style={{marginLeft: '10px', height: '50px', width: '200px', color: 'white', backgroundColor: 'black'}}>
-                    Check return policy
-                  </button>
-                </div>
-                  <div style={{fontSize: '15px', marginLeft: '200px'}}>
-                    <p style={{marginTop: '20px', textDecoration: 'underline'}}>Reserve event leasing here</p>
+            <div style={{marginBottom: '-20px', display: 'flex', flexDirection: 'row'}}>
+              <button onClick={() => setShowReviews(!showReviews)} style={{margin: '20px 0', 
+                padding: '10px 20px', cursor: 'pointer', borderWidth: '0px'}}>
+                {showReviews ? 'Hide Reviews' : 'See Reviews'}
+              </button>
+            </div>    
+            {
+          showReviews && (
+            <div className='reviews' style={{marginTop: '20px', marginBottom: '20px'}}>
+              <div className="reviews-container">
+                {reviews.map((review, index) => (
+                  <div key={index} className="review-item">
+                    <p style={{marginBottom: '2px'}}><strong>{review.author}:</strong></p>
+                    <div style={{flexDirection:'row', marginTop: '2px'}}>
+                      <StarRating rating={3} />
+                    </div>
+                    <p>{review.content}</p>
                   </div>
+                ))}
               </div>
+            </div>
+          )
+        }
+
+              
             </div>
     
             {/* three extra pictures */}
-            <div className='col-md-6' style={{marginLeft: '-360px'}}>
+            <div className='col-md-6' style={{marginLeft: '-360px', marginTop: '-13px'}}>
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '500px', marginLeft: '70px'}}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <img
                           src={`/api/v1/product/product-photo/${activeProduct?._id}`}
                           alt="Small Image 1"
-                          style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
+                          style={{ height: '305px', width: '200px', marginBottom: '0px', cursor: 'pointer'}}
                           className='product-image'
                       />
                       {/* <img
@@ -471,7 +535,7 @@ const ForYou = () => {
                       <img
                           src={`/api/v1/product/product-photo/${activeProduct?._id}`}
                           alt="Small Image 3"
-                          style={{ height: '295px', width: '200px', marginBottom: '6px', cursor: 'pointer' }}
+                          style={{ height: '295px', width: '200px', marginBottom: '10px', cursor: 'pointer', marginTop: '5px'}}
                           className='product-image'
                       />
                   </div>
@@ -479,15 +543,175 @@ const ForYou = () => {
             </div>
     
     
-            <div className='col-md-6' style={{ marginLeft: '730px', marginTop: '-980px' }}>
+            <div className='col-md-6' style={{ marginLeft: '730px', marginTop: showReviews ? '-1033px' : '-693px' }}>
               {/* video */}
-              <div>
+              {/* <div>
                 <video width="100%" height="auto" controls style={{ marginBottom: '20px' }}>
                   <source src={video} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
+              </div> */}
+              <div classname="text-center" style={{width: '610px', height: '350px', marginTop: '30px', 
+                borderWidth: '20px', backgroundColor: '#efefef', marginLeft: '0px', marginBottom: '20px'}}>
+                <h1 style={{fontSize: '23px', padding: '20px', fontWeight: 'bold'}}>
+                Take it on lease and enjoy luxury while saving thousands with easy returns and services.
+                </h1>
+                <p style={{fontSize: '15px', padding: '25px', marginTop: '-30px', color: 'grey'}}>
+                  Experience the luxury of a diverse wardrobe with Karisme Collections' 4-day and 7-day clothing options. 
+                  Say goodbye to buyer's remorse. Embrace a movement that champions confidence, ambition, and eco-conscious living. 
+                </p>
+
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <button onClick={() => navigate('/Policy')} style={{marginLeft: '100px', height: '50px', width: '200px', 
+                    color: 'white', backgroundColor: 'black', cursor: 'pointer'}}>
+                    Check leasing policy
+                  </button>
+                  <button onClick={() => navigate('/Policy')} style={{marginLeft: '10px', height: '50px', width: '200px', color: 'white', 
+                    backgroundColor: 'black', cursor: 'pointer', position: 'relative', zIndex: 10}}>
+                    Check return policy
+                  </button>
+                </div>
+                  <div style={{fontSize: '15px', marginLeft: '200px'}}>
+                    <p style={{marginTop: '20px', textDecoration: 'underline', cursor: 'pointer'}} onClick={showModal2}>Reserve event leasing here</p>
+                  </div>
               </div>
-    
+              
+              <Modal
+            title="Reserve product leasing"
+            open={isModalVisible}
+            onCancel={handleCancel}
+            centered
+            // onOk={handleOk}
+            footer={[
+              <Button
+                key="add"
+                onClick={() => {
+                  addToReserve(activeProduct, selectedSize, purchaseType, selectedDate); 
+                }}
+                style={{ 
+                  width: 'auto', 
+                  marginRight: '10px', 
+                  fontSize: '17px', 
+                  borderRadius: '7px', 
+                  height: '40px', // Increased height
+                  backgroundColor: '#8B4513', // Brown color
+                  color: 'white', 
+                  border: 'none', 
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
+                  transition: 'background-color 0.3s', // Smooth transition for hover effect
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
+              >
+                Add to Cart
+              </Button>,
+              <Button
+                key="close"
+                onClick={() => setIsModalVisible(false)}
+                style={{ 
+                  width: '40px', 
+                  marginRight: '10px', 
+                  fontSize: '17px', 
+                  borderRadius: '7px', 
+                  height: '40px', // Increased height
+                  backgroundColor: 'white', 
+                  color: '#8B4513', // Brown text color
+                  borderWidth: '1px',
+                  borderColor: '#8B4513', // Brown border
+                  transition: 'border-color 0.3s', // Smooth transition for hover effect
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = '#5C4033')} // Original brown color
+              >
+                X
+              </Button>
+            ]}
+          > 
+            <div className='btn-sizes' style={{marginLeft: '30px', marginBottom: '20px'}}>
+                {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    style={{
+                      width: '60px',
+                      padding: '15px',
+                      margin: '10px',
+                      borderRadius: '20px',
+                      background: selectedSize === size ? '#4E362B' : '#fff',
+                      color: selectedSize === size ? '#fff' : '#000',
+                      border: '1px solid #000',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            <div className='flex-row' style={{marginBottom: '-25px', marginRight: '-60px'}}>
+                <button className='btn-options' style={{width: '230px', height: '80px', 
+                  marginRight: '10px', borderWidth: '0.5px', 
+                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
+                  background: purchaseType === '1' ? '#4E362B' : '#fff',
+                  color: purchaseType === '1' ? '#fff' : '#000',
+                  }} onClick={()=>setPurchaseType('1')}>
+                  <p style={{marginTop: '10px'}}>Lease for 4 days</p>
+                  <p>Price: {String(Math.round(0.3*activeProduct?.price / 10) * 10)}</p>
+                </button>
+                <button className='btn-options' style={{width: '230px', height: '80px', 
+                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
+                  background: purchaseType === '2' ? '#4E362B' : '#fff',
+                  color: purchaseType === '2' ? '#fff' : '#000',
+                  }} onClick={()=>setPurchaseType('2')}>
+                  <p style={{marginTop: '10px'}}>Lease for 7 days</p>
+                  <p>Price: {String(Math.round(0.4*activeProduct?.price / 10) * 10)}</p>
+                </button>
+              </div>
+
+              <div style={{marginTop: '40px', marginLeft: '5px', fontSize: '15px'}}>
+                <div>
+                  <p>Select reservation date:</p>
+                  <DatePicker style={{marginTop: '-20px', fontSize: '30px'}} 
+                    onChange={(date, dateString) => setSelectedDate(dateString)} 
+                    disabledDate={(current) => current && current < moment().startOf('day')}
+                  />
+                </div>
+                <div style={{fontSize: '13px', marginBottom: '-50px'}}>
+                  {purchaseType === '0' ? (
+                    <p>*Please purchase a leasing type.</p>
+                  ) : (
+                    <p>*Your are expected to return the item by {calculateReturnDate()}.</p>
+                  )}
+                </div>
+                <div style={{ marginTop: '70px', textAlign: 'left', fontSize: '12px' }}>
+                  <div style={{ height: '150px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                    <p><strong>Terms & Conditions</strong></p>
+                    <p>For a clothing rental store, the terms and conditions might include key points such as rental duration, return policies, damage fees, and cancellation terms. For instance, you could state that items must be returned in their original condition within a specified number of days post-rental, 
+                      outline any fees for damages beyond normal wear and tear, detail the process and potential costs for cancellations, and specify any cleaning or care instructions that renters must follow. It's also crucial to address liability issues, 
+                      ensuring customers understand their responsibilities while the items are in their possession.</p>
+                  </div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={() => setAgreedToTerms(!agreedToTerms)}
+                      style={{ marginRight: '5px'}}
+                    />
+                    I agree to the Terms & Conditions
+                  </label>
+                </div>
+
+              </div>
+
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              marginBottom: '20px', 
+              padding: '20px', 
+            }}>
+            </div>
+      </Modal>
               <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
                 <h1>{activeProduct?.name}</h1>
                 <p style={{ marginBottom: '10px', fontSize: '16px' }}>
@@ -544,7 +768,7 @@ const ForYou = () => {
               background: purchaseType === '1' ? '#4A2B2B' : '#fff',
               color: purchaseType === '1' ? '#fff' : '#000',
               }} onClick={()=>handlePurchaseSelection('1')}>
-              <p>Lease for 3 days</p>
+              <p>Lease for 4 days</p>
               <p>Price: {String(Math.round(0.3*activeProduct?.price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
@@ -557,7 +781,7 @@ const ForYou = () => {
             </button>
           </div>
 
-              <div style={{display: 'flex', flexDirection: 'row'}}>
+              <div style={{display: 'flex', flexDirection: 'row', marginTop: '-20px', marginBottom: '30px'}}>
               <button
               className='btn-cart'
               onClick={() => {
