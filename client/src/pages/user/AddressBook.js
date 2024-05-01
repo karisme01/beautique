@@ -72,31 +72,40 @@ const AddressBook = () => {
 
   return (
     <Layout title="Address Book">
-      <div className='container-fluid p-3 m-3'>
+      <div className='container p-3 m-3'>
         <div className='row'>
           <div className='col-md-3'>
             <UserMenu />
           </div>
           <div className='col-md-9'>
-            <h2>Your Addresses</h2>
-            {loading ? <p>Loading addresses...</p> : addresses.map((address, index) => (
-              <div key={index} className="card mb-3" style={{ width: '80%', display: 'flex', flexDirection: 'row', backgroundColor: '#efefef'}}>
-                <div className="card-body" style={{ padding: '10px'}}>
-                  <p style={{ margin: '4px 0' }}><strong>Street:</strong> {address.street}</p>
-                  <p style={{ margin: '4px 0' }}><strong>City:</strong> {address.city}</p>
-                  <p style={{ margin: '4px 0' }}><strong>State:</strong> {address.state}</p>
-                  <p style={{ margin: '4px 0' }}><strong>Zip Code:</strong> {address.zipCode}</p>
+            <div className='address-layout'>
+              {loading ? <p>Loading addresses...</p> : 
+              addresses.map((address, index) => (
+                <div key={index} className="card mb-3" style={{ width: '100%', display: 'flex', flexDirection: 'row', 
+                    backgroundColor: '#efefef', height: '60%', borderRadius: '0px'}}>
+                  <div className="card-body" style={{ padding: '20px'}}>
+                    <p style={{ margin: '4px 0' }}><strong>Street:</strong> {address.street}</p>
+                    <p style={{ margin: '4px 0' }}><strong>City:</strong> {address.city}</p>
+                    <p style={{ margin: '4px 0' }}><strong>State:</strong> {address.state}</p>
+                    <p style={{ margin: '4px 0' }}><strong>Zip Code:</strong> {address.zipCode}</p>
+                  </div>
+                  <div style={{marginRight: '5px', marginTop: '10px'}}>
+                    <Button onClick={() => editAddress(index)} style={{ marginRight: 8 }}><CiEdit style={{fontSize: '25px'}}/></Button>
+                  </div>
                 </div>
-                <div style={{marginRight: '5px', marginTop: '10px'}}>
-                  <Button onClick={() => editAddress(index)} style={{ marginRight: 8 }}><CiEdit style={{fontSize: '25px'}}/></Button>
-                </div>
+              ))}
+              <div className='btn-container'>
+                <Button style={{fontSize: '15px', backgroundColor: '#2a2727', color: 'white', height: '50px', width: '50%'}} 
+                  onClick={() => { setShowAddAddressForm(true); setEditingIndex(null); form.resetFields(); }}>
+                  <div style={{fontWeight: 'bold'}}>
+                    ADD ADDRESS
+                  </div>
+                </Button>
               </div>
-            ))}
-            <Button style={{fontSize: '15px', backgroundColor: '#2a2727', color: 'white', height: '50px'}} onClick={() => { setShowAddAddressForm(true); setEditingIndex(null); form.resetFields(); }}>
-              <div style={{marginBottom: '0px', fontWeight: 'bold'}}>
-                ADD ADDRESS
               </div>
-            </Button>
+             </div>
+          </div>
+        </div>
             <Modal
               title={`${editingIndex !== null ? 'Edit' : 'Add New'} Address`}
               open={showAddAddressForm}
@@ -141,9 +150,6 @@ const AddressBook = () => {
                 </Form.Item>
               </Form>
             </Modal>
-          </div>
-        </div>
-      </div>
     </Layout>
   );
 };

@@ -3,11 +3,18 @@ import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/auth';
 import '../../styles/BrandMenu.css'
+import toast from 'react-hot-toast'
 
 const BrandMenu = () => {
   const [ordersInProduction, setOrdersInProduction] = useState(0);
   const [orders, setOrders] = useState([]);
-  const [auth] = useAuth(); // Fixed useAuth usage
+  const [auth, setAuth] = useAuth(); // Fixed useAuth usage
+
+  const handleLogout = () => {
+    setAuth({ user: null, token: '' });
+    localStorage.removeItem('auth');
+    toast.success('Logged out successfully');
+    };
 
   const fetchOrders = async () => {
     try {
@@ -59,6 +66,19 @@ const BrandMenu = () => {
                     to="/dashboard/brand/outreach" 
                     className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'}>
                     Outreach
+                </NavLink>
+                <NavLink 
+                    to="/dashboard/brand/analytics" 
+                    className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'}>
+                    Analytics
+                </NavLink>
+                <NavLink 
+                    to="/dashboard/brand/vids" 
+                    className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'}>
+                    Vids
+                </NavLink>
+                <NavLink to="/login" className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'} onClick={handleLogout}>
+                    Logout
                 </NavLink>
 
             </div>

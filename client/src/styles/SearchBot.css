@@ -439,3 +439,71 @@
   }
 }
 
+.sample-questions-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px 10px;
+  padding: 20px 0px;
+  margin: 0 auto;
+  width: 80%;
+  height: 100%;
+  margin-top: 2%;
+  margin-bottom: -2%;
+}
+
+.question-tile {
+  font-size: 14px;
+  color: 0e1111;
+  height: 70px;
+  padding: 8px;
+  background-color: #fff;
+  border: 0.5px solid #000;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin: 0;
+}
+
+
+.search-container-end {
+  bottom: 21%;
+  /* position: fixed; */
+  width: 100%;
+  padding: 30px;
+  /* background-color: #efefef;  */
+}
+
+.bottom-search-form {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.bottom-search-bar {
+  width: 60%; /* Adjust width as needed */
+  padding: 8px 16px;
+  border-radius: 16px; /* Rounded corners for the input */
+  border: 1px solid #000;
+  font-size: 16px; /* Larger font size for better readability */
+}
+
+.upload-button {
+  font-size: 25px;
+  margin-left: -45px;
+  background: none;
+  border: 0px;
+  cursor: pointer;
+}
+
+/* You may want to adjust the styling of the input and button to align them properly */
+.bottom-search-bar, .upload-button {
+  vertical-align: middle;
+}
+
+.text-search-bot {
+  letter-spacing: 0.8px;
+  font-size: 30px;
+  margin-top: 100px
+}

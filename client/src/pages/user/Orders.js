@@ -25,7 +25,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     setLoading(true); 
-    const userId = auth.user?._id; // Assuming you have the user's ID here
+    const userId = auth.user?._id;
     try {
       const { data } = await axios.get(`/api/v1/order/get-user-orders/${userId}`);
       let savings = 0;
@@ -121,27 +121,43 @@ const Orders = () => {
         extensionDays,
       });
       toast.success(`Extension updated successfully. Charges applied for ${additionalDays} additional days.`);
+      fetchOrders();
     } catch (error) {
       console.error("Error updating order extension:", error);
       toast.error("Failed to update order extension");
     }
     setExtendModalVisible(false);
   };
-  
-  
+
+  const handleReturnLease = async (item, newStatus) => {
+    try {
+      const response = await axios.patch('/api/v1/order/update-order-item-status', {
+        itemId: item._id,
+        newStatus: newStatus,
+      });
+      if(response.data) {
+        toast.success(`Status changed to ${newStatus} successfully`);
+        fetchOrders();  // Re-fetch orders to reflect the updated status
+      }
+    } catch (error) {
+      console.error("Error changing status:", error);
+      toast.error("Failed to change status");
+    }
+};
 
   const handleCancel = () => {
     setExtendModalVisible(false);
   };
+
   return (
     <Layout title="Your Orders">
-      <div className='container-fluid p-3 m-3'>
+      <div className='container p-3 m-3'>
         <div className='row'>
           <div className='col-md-3'>
             <UserMenu />
           </div>
-          <div className='col-md-9'>
-            <h1>All Orders</h1>
+          <div className='col-md-9 order-layout'>
+            {/* <h1>All Orders</h1> */}
             {loading ? (
               <p>Loading orders...</p>
             ) : orders?.length > 0 ? (
@@ -157,7 +173,7 @@ const Orders = () => {
                       <div><strong>Order Date</strong>: {new Date(order.createdAt).toISOString().split('T')[0]}</div>
                     </div>
                     {expandedOrderIds.includes(order._id) && (
-                      <table className="table table-orders">
+                      <table className="table table-orders" style={{width: '100%'}}>
                         <thead>
                           <tr>
                             <th>Product Details</th>
@@ -184,13 +200,26 @@ const Orders = () => {
                                 <div>{item.purchaseType === '0' ? 'Buy' : item.purchaseType === '1' ? '4-day lease' : '7-day lease'}</div>
                                 <div>{item.insured ? 'Insured' : 'Not Insured'}</div>
                                 <div>Order Item status: <strong>{item.status}</strong></div>
+                                {((item.purchaseType === '1' || item.purchaseType === '2') && item.status === 'Collected') && (
+                                    <div onClick={() => handleReturnLease(item, 'Lease Return Requested')} style={{ textDecoration: 'underline', cursor: 'pointer', fontWeight:'bold'}}>
+                                    Return Lease
+                                  </div>
+                                  
+                                )}
                                 <hr/>
+                                {(item.status === 'Production' || item.status === 'Ship Requested') && (
+                                    <div onClick={() => handleReturnLease(item, 'Cancelled')} className='mt-2' style={{ textDecoration: 'underline', cursor: 'pointer'}}>
+                                      Cancel Order Item</div>
+                                )}
+
                                 {item.reserved && (
-                                    <div>Reserved Date: <strong>{new Date(item.date).toISOString().split('T')[0]}</strong></div>
+                                    <div>
+                                      Reserved Date: <strong>{new Date(item.reserveDate).toISOString().split('T')[0]}</strong>
+                                    </div>
                                 )}
                                 {(item.purchaseType === '0' && item.status === 'Collected') && (
                                     <div className='mt-2' style={{ textDecoration: 'underline', cursor: 'pointer'}}
-                                    onClick={()=>handleReturnClick(item)}>Return item</div>
+                                    onClick={()=>handleReturnClick(item)}>Return purchase</div>
                                 )}
                                 {((item.purchaseType === '1' || item.purchaseType === '2') && !item.returned) && (
                                     <div className='mt-2' style={{ textDecoration: 'underline', cursor: 'pointer'}} onClick={()=>handleExtendClick(item)}>Extend Leasing</div>
@@ -205,7 +234,7 @@ const Orders = () => {
                                 {((item.purchaseType === '1' || item.purchaseType === '2') && item.status === 'Collected' && item.extension != 0) && (
                                   <div className='mt-2' style={{cursor: 'pointer'}}>
                                       Extended Lease end date: <strong>{
-                                          (() => {
+                                          (() => { 
                                               const returnDate = new Date(item.leaseReturnDate); // Convert leaseReturnDate to a Date object
                                               returnDate.setDate(returnDate.getDate() + item.extension); // Add extension days to the date
                                               return returnDate.toISOString().split('T')[0]; // Format the date to YYYY-MM-DD
@@ -277,9 +306,7 @@ const Orders = () => {
                       Return is applicable till: {moment(itemToReturn.collectedDate).add(1, 'months').format('YYYY-MM-DD')}
                     </p>
                   )}
-                </Modal>
-
-
+                </Modal> 
 
                 <div className="total-savings">
                   <FaMoneyBillWave className="total-savings-icon" />

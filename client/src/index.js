@@ -12,7 +12,6 @@ import { WishProvider } from './context/wish';
 import { ReserveProvider } from './context/reserve';
 
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
@@ -28,7 +27,6 @@ root.render(
       </WishProvider>
     </SearchProvider>
   </AuthProvider>
-  
 );
 
 // If you want to start measuring performance in your app, pass a function

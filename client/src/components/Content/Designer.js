@@ -17,7 +17,7 @@ const Designer = () => {
     <div>
        <div style={{marginBottom: '-70px'}}>
           <div className='row' style={{}}>
-            <h1 className='text-center' style={{color: 'black', marginLeft: '180px', marginTop: '30px', 
+            <h1 className='text-center' style={{color: 'black', marginLeft: '10px', marginTop: '30px', 
               fontWeight: 'bold', fontSize: '30px'}}>
               Meet our favourite designers <GiClover />
             </h1>

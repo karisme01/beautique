@@ -13,6 +13,7 @@ import HeartIconToggle from "../components/Designs/HeartIconToggle.jsx";
 import { GiShoppingCart } from "react-icons/gi";
 import { Modal , Button} from 'antd';
 import '../styles/SearchBot.css'
+import { MdFileUpload } from "react-icons/md";
 
 const SearchBot = () => {
   const [inputValue, setInputValue] = useState('');
@@ -89,7 +90,6 @@ const SearchBot = () => {
     "What to wear on a first date at a fancy restaurant?",
     "Appropriate attire for a job interview in the tech industry.",
     "Comfortable yet stylish outfits for long flights.",
-    "Chic ensemble options for a city break."
   ];
   
 
@@ -251,8 +251,47 @@ const SearchBot = () => {
     )
   }
   
+  // return (
+  //   <Layout>
+  //       <div>
+  //           <TopSlider items={[
+  //               { id: 1, content: "Free Delivery over Rs 4000" },
+  //               { id: 2, content: "Hassle-free return process" },
+  //               { id: 3, content: "Greater quality, lower price" }
+  //           ]}/>
+  //       </div>
+        
+  //     <div className='search-container-start'>
+  //       <h1 className='karisme-top-text'>KARISME</h1>
+  //       <form onSubmit={handleSubmit} className='top-search-form'>
+  //         <input
+  //           type="text"
+  //           value={inputValue} 
+  //           onChange={handleInputChange}
+  //           placeholder="What are you looking for?"
+  //           className='top-search-bar'
+  //         />
+  //       </form>
+  //     </div>
+  //       <div className='sample-questions-container'>
+  //           <div className='questions-wrap-1'>
+  //               <div className='questions-extra-div'>
+  //               {sampleQuestions.map((question, index) => (
+  //                     <div key={index} onClick={() => handleQuestionClick(question)} className='question-container'>
+  //                         <span>{question}</span>
+  //                         <FaSearch /> 
+  //                     </div>
+  //                 ))}
+  //               </div>
+  //           </div>
+  //       </div>
+  //   </Layout>
+  // );  
+  
   return (
     <Layout>
+        {/* Top Slider Section */}
+        <div style={{backgroundColor: '#f7f4f1'}}>
         <div>
             <TopSlider items={[
                 { id: 1, content: "Free Delivery over Rs 4000" },
@@ -260,42 +299,44 @@ const SearchBot = () => {
                 { id: 3, content: "Greater quality, lower price" }
             ]}/>
         </div>
-        
-      <div className='search-container-start'>
-        <h1 className='karisme-top-text'>KARISME</h1>
-        <form onSubmit={handleSubmit} className='top-search-form'>
-          <input
-            type="text"
-            value={inputValue} 
-            onChange={handleInputChange}
-            placeholder="What are you looking for?"
-            className='top-search-bar'
-          />
-          <div className='btn-options-container'>
-            {/* <button className='btn-random-search'>
-                Search random
-            </button> */}
-            {/* <button type="submit" className='btn-search'>
-                Search
-            </button> */}
-          </div>
-        </form>
-      </div>
+
+        <div className='text-center text-search-bot'>
+          <p>
+            How can we help you today?
+          </p>
+        </div>
+
+        {/* Sample Questions in a Grid Layout */}
         <div className='sample-questions-container'>
-            <div className='questions-wrap-1'>
-                <div className='questions-extra-div'>
-                {sampleQuestions.map((question, index) => (
-                      <div key={index} onClick={() => handleQuestionClick(question)} className='question-container'>
-                          <span>{question}</span>
-                          <FaSearch /> 
-                      </div>
-                  ))}
+            {sampleQuestions.map((question, index) => (
+                <div key={index} onClick={() => handleQuestionClick(question)} className='question-tile'>
+                    <span>{question}</span>
+                    <FaSearch />
                 </div>
-            </div>
+            ))}
+        </div>
+
+        {/* Search Input at the Bottom */}
+        
+        <div className='search-container-end'>
+            <form onSubmit={handleSubmit} className='bottom-search-form'>
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder="What are you looking for?"
+                    className='bottom-search-bar'
+                />
+                <button type="submit" className="upload-button" aria-label="Upload">
+                    <MdFileUpload />
+                </button>
+                {/* Additional buttons or icons can be added here if needed */}
+            </form>
+        </div>
         </div>
     </Layout>
-  );  
-  
+);
+
 };
 
 export default SearchBot;

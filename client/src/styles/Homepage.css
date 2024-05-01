@@ -191,3 +191,7 @@ body {
   border-radius: 50%;
 }
 
+.product-image {
+  padding: 10px;
+  border-radius: 10px;
+}

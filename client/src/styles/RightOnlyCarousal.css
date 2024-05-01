@@ -27,9 +27,9 @@
     position: relative;
 }
 
-.slider-buttons {
+.slider-buttons { 
     position: absolute;
-    bottom: 25px; /* Adjust this value as needed */
+    margin-top: 2%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;

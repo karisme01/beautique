@@ -47,6 +47,10 @@ import Collected from './pages/Admin/Collected';
 import ProcessingReturn from './pages/Admin/ProcessingReturn';
 import Returned from './pages/Admin/Returned';
 import Outreach from './pages/Brand/Outreach';
+import Analytics from './pages/Brand/Analytics';
+import Explore from './pages/Explore';
+import Vids from './pages/Brand/Vids';
+import Checkout from './pages/Checkout';
 
 
 function App() {
@@ -57,6 +61,7 @@ function App() {
         <Route path="/product/:slug" element = {<ProductDetails/>} />
         <Route path="/categories" element = {<Categories/>} />  
         <Route path="/cart" element = {<CartPage/>} />  
+        <Route path="/checkout" element = {<Checkout/>} />  
         <Route path="/wish" element = {<WishListPage/>} />  
         <Route path="/category/:slug" element = {<CategoryProduct/>} />
         <Route path="/cloud-brands" element = {<BrandList/>} />  
@@ -65,6 +70,7 @@ function App() {
         <Route path="/ask" element = {<SearchBot/>} />  
         <Route path="/cloud-brands/:slug" element = {<BrandProduct/>} />
         <Route path="/search" element = {<Search/>} />
+        <Route path="/explore" element = {<Explore/>} />
         
         <Route path="/dashboard" element = {<PrivateRoute/>}>
           <Route path="user" element={<Dashboard/>} />
@@ -100,6 +106,8 @@ function App() {
           <Route path="brand/products" element={<BrandProducts/>} />
           <Route path="brand/order-book" element={<OrderBook/>} />
           <Route path="brand/outreach" element={<Outreach/>} />
+          <Route path="brand/analytics" element={<Analytics/>} />
+          <Route path="brand/vids" element={<Vids/>} />
         </Route>
 
         <Route path="/register" element = {<Register/>} />

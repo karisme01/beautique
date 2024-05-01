@@ -43,7 +43,7 @@ const productSchema = new mongoose.Schema({
     },
     sleeve: {
         type: String
-    },
+    }, 
     material: {
         type: String
     },

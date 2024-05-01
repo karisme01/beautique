@@ -1,0 +1,28 @@
+.stat-card {
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+.brand-details {
+    padding: 20px;
+    margin-top: 1rem;
+}
+
+.trend-table {
+    width: 90%;
+    margin-bottom: 3rem;
+}
+
+  @media (max-width: 768px) {
+    .stat-card {
+      margin-bottom: 20px;
+    }
+  }
+  

@@ -1,5 +1,24 @@
 import mongoose from "mongoose";
 
+const addressSchema = new mongoose.Schema({
+    street: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    zipCode: {
+        type: String,
+        required: true 
+    },
+}, {_id: false});
+ 
 const orderItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +34,8 @@ const orderItemSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand', 
         required: true 
-    },
+    }, 
+    shipping_address: addressSchema,
     purchaseType: {
         type: String,
         required: true,
@@ -33,7 +53,7 @@ const orderItemSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    reservedDate: {
+    reserveDate: {
         type: Date,
     },
     collectedDate: {
@@ -49,7 +69,7 @@ const orderItemSchema = new mongoose.Schema({
         default: 0
     },  
     leaseReturned: {
-        type: Boolean
+        type: Boolean 
     },
     returned: {
         type: Boolean
@@ -57,6 +77,9 @@ const orderItemSchema = new mongoose.Schema({
     returnReason: {
         type: String,
         default: null
+    },
+    payment_method: {
+        type: String
     },
     status: String
 }, { timestamps: true }, { minimize: false });

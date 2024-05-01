@@ -1,17 +1,4 @@
-/* CategoryProductStyles.css */
 
-
-.product-image {
-    transition: transform 0.5s ease, filter 0.5s ease; /* Add filter to the transition for a smooth effect */
-    
-  }
-  
-  .product-image:hover {
-    transform: scale(1.03); 
-    filter: brightness(85%); /*Decrease brightness to darken the image, adjust percentage as needed*/
-    transform-origin: center center; /* Adjust as needed */
-    
-  }
    
   
   .infoPanel {
@@ -31,8 +18,17 @@
   
   .infoPanel.show {
     left: 0; /* Slide in */
+    
+    background-color: rgba(213, 166, 150, 0.85); /* Use rgba for transparency */
+    backdrop-filter: blur(7px); /* Apply blur effect */
   }
   
+  .category-videos-container {
+    border-radius: 20px;
+    background-color: #E5DCCB; /* Use rgba for transparency */
+    backdrop-filter: blur(7px); /* Apply blur effect */
+  }
+
   .closeBtn {
     position: absolute;
     top: 0;
@@ -78,9 +74,57 @@
   .product-image {
     width: 100%; /* Make images take full width of their container */
     height: auto; /* Adjust height automatically */
+    border-radius: 20px;
   }
 
   /* Add any additional styles for mobile layout adjustments */
 }
 
 
+/* .product-image-container {
+  position: relative; 
+}
+
+.product-brand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.product-image-container:hover .product-brand {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+ */
+
+
+ .product-image-container {
+  overflow: hidden; /* Prevents the image from overflowing the container */
+  display: block; /* Ensures the container takes the full width of its parent if not already defined */
+  position: relative; /* Useful for positioning elements inside it if needed */
+  border-radius: 20px; /* Applies a border radius to the container if desired */
+  cursor: pointer; /* Indicates the image can be interacted with */
+}
+
+.product-image {
+  width: 100%; /* Full width of its container */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out, filter 0.5s ease-in-out; /* Smooth transition for transform and filter effects */
+}
+
+.product-image:hover {
+  transform: scale(1.04); /* Enlarges the image on hover */
+}
+
+
+ 

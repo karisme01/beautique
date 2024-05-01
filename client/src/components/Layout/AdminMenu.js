@@ -1,7 +1,15 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { useAuth } from '../../context/auth'
 
 const AdminMenu = () => {
+    const [auth, setAuth] = useAuth();
+    const handleLogout = () => {
+        setAuth({ user: null, token: '' });
+        localStorage.removeItem('auth');
+        toast.success('Logged out successfully');
+        };
   return (
     <>
         <div className='text-center'>
@@ -46,6 +54,9 @@ const AdminMenu = () => {
                     to="/dashboard/admin/real-time-order-items" 
                     className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'}>
                     Real Time Order Items
+                </NavLink>
+                <NavLink to="/login" className={({ isActive }) => isActive ? 'list-group-item list-group-item-action active-link' : 'list-group-item list-group-item-action'} onClick={handleLogout}>
+                    Logout
                 </NavLink>
                 {/* <NavLink 
                     to="/dashboard/admin/real-time-order-items-production" 

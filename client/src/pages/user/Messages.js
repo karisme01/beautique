@@ -71,12 +71,12 @@ const faqData = [
   
     return (
       <Layout title={'User Dashboard'}>
-        <div className='container-fluid m-3 p-3'>
+        <div className='container m-3 p-3'>
           <div className='row'>
             <div className='col-lg-3 col-md-4 col-sm-12'>
               <UserMenu />
             </div>
-            <div className='col-lg-9 col-md-8 col-sm-12'>
+            <div className='col-lg-9 col-md-8 col-sm-12 message-layout'>
               <form onSubmit={handleSubmit} className="message-form">
                 <div className="form-group">
                   <label htmlFor="messageText" className="form-label">Message:</label>

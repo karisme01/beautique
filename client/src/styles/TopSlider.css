@@ -3,7 +3,7 @@
     width: 100%;
     display: flex;
     white-space: nowrap; /* Prevents wrapping of segments */
-    background-color: #4A2B2B;
+    background-color: #2F181B;
   }
   
   .slider-segment {

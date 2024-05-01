@@ -22,6 +22,9 @@ import TopSlider from "../components/Designs/TopSlider.js";
 import { Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import HeartIconToggle from "../components/Designs/HeartIconToggle.jsx";
+import Slider2 from '../components/Designs/Slider2.js';
+import {sliderItems1} from '../components/Content/SliderItem1.js';
+import Slider1 from "../components/Designs/Slider1.js";
 
 
 
@@ -43,11 +46,11 @@ const CategoryProduct = () => {
   const [filterMaterial, setFilterMaterial] = useState([]);
   const [filterOccasion, setFilterOccasion] = useState([]);
   const [filterRent, setFilterRent] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false) 
   const [selectedSize, setSelectedSize] = useState()
   const [selectedType, setSelectedType] = useState('0')
   const [selectedProductForCart, setSelectedProductForCart] = useState(null);
-  const [sortOption, setSortOption] = useState('newArrivals');
+  const [sortOption, setSortOption] = useState('new Arrivals');
   const [productCount, setProductCount] = useState()
   const [productImage, setProductImage] = useState('');
 
@@ -85,7 +88,7 @@ const CategoryProduct = () => {
         console.log('no filters now')
         setPage(1)
         getProductsByCat();
-      }
+      } 
     }
   }, [filterPrice.length, filterColor.length, filterSleeve.length, filterSize.length, 
         filterMaterial.length, filterOccasion.length, params?.slug]);
@@ -112,7 +115,7 @@ const CategoryProduct = () => {
       console.log(error);
     }
   };
-
+ 
 
   const addToCart = (product, selectedSize, selectedType) => {
     if (!selectedSize || selectedType == undefined) {
@@ -166,12 +169,20 @@ const CategoryProduct = () => {
 
   return (
     <Layout>
-      <TopSlider items={[
+      {/* <TopSlider items={[
     { id: 1, content: "Free Delivery over Rs 4000" },
     { id: 2, content: "Hassle-free return process" },
     { id: 3, content: "Greater quality, lower price" }
-  ]} />
+  ]} /> */}
       <div className="container category mt-3">
+
+      <div className='category-videos-container'>
+      <div className='col-md-9' style={{ textAlign: 'center', marginTop: '70px', marginBottom: '-100px' }}>
+          <div className='' style={{marginRight: '-302px', marginTop: '-30px'}}>
+            <Slider1 items={sliderItems1} height={'400px'}/>
+          </div>
+        </div>
+        </div>
       
       <div style={{marginLeft: '1081px', marginTop: '150px', marginBottom: '-120px'}}>
         <Dropdown trigger={['click']} overlay={sortMenu}>
@@ -369,7 +380,7 @@ const CategoryProduct = () => {
         footer={[
           <Button
             key="add"
-            onClick={() => {
+            onClick={() => { 
               addToCart(selectedProductForCart, selectedSize, selectedType);
               setIsModalOpen(false); 
             }}
@@ -385,6 +396,7 @@ const CategoryProduct = () => {
               fontWeight: 'bold',
               boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
               transition: 'background-color 0.3s', // Smooth transition for hover effect
+              
             }}
             onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
             onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
@@ -443,19 +455,21 @@ const CategoryProduct = () => {
               <p>Price: {selectedProductForCart?.price}</p>
             </button>
             <button className='btn-options' style={{width: '140px', height: '100px', 
-              marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
+             marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: selectedType === '1' ? '#4E362B' : '#fff',
-              color: selectedType === '1' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('1')}>
+              color: selectedProductForCart?.rent ? (selectedType === '1' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('1')} disabled={!selectedProductForCart?.rent}>
               <p>Half-weekly cycle</p>
               <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '140px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: selectedType === '2' ? '#4E362B' : '#fff',
-              color: selectedType === '2' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('2')}>
+              color: selectedProductForCart?.rent ? (selectedType === '2' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('2')} disabled={!selectedProductForCart?.rent}>
               <p>Full-weekly cycle</p>
               <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
             </button>
@@ -474,15 +488,15 @@ const CategoryProduct = () => {
         }}>
         </div>
       </Modal>
-        
+         
     
-        <div>
-        <h4 className="text-center body" style={{fontSize: '40px', marginTop: '-30px', marginBottom: '30px',color: '#3F250B', 
+        {/* <div>
+        <h4 className="text-center body" style={{fontSize: '40px', marginTop: '30px', marginBottom: '50px',color: '#3F250B', 
           fontWeight: 'bold'}}>{category?.name}</h4>
-        </div>
+        </div> */}
         
         <div className="row">
-      <div className="col-md-9 offset-1">
+      <div className="col-md-9 offset-1" style={{marginTop: '80px'}}>
         <div className="d-flex flex-wrap justify-content-start p-3" style={{marginLeft: '-165px', marginRight: '-350px', padding: '0px'}}>
           {products.length === 0 ? (
             <div style={{ textAlign: 'center', width: '100%' }}>
@@ -491,13 +505,23 @@ const CategoryProduct = () => {
           ) : (
             products.map((p) => (
               <div key={p._id}>
-                <img
+                <div key={p._id} className="product-image-container">
+                  <img
+                    src={`/api/v1/product/product-photo/${p._id}`}
+                    className="product-image"
+                    alt={p.name}
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                  />
+                  {/* <div className="product-brand">{p.brand.name}</div> */}
+                </div>
+                {/* <img
                   src={`/api/v1/product/product-photo/${p._id}`}
                   alt={p.name}
                   style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
                   onClick={() => navigate(`/product/${p.slug}`)}
                   className="product-image "
                 />
+                <div className="product-brand">{p.brand.name}</div> */}
                 <div>
                   <div>
                     <h5 style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>

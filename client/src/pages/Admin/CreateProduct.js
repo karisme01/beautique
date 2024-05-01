@@ -26,6 +26,7 @@ const CreateProduct = () => {
   const [sleeve, setSleeve] = useState("");
   const [material, setMaterial] = useState("");
   const [brand, setBrand] = useState("");
+
   
 
   //get all category
@@ -74,7 +75,6 @@ const CreateProduct = () => {
       productData.append("material", material);
       productData.append("brand", brand);
       productData.append("rent", rent);
-
 
       const { data } = axios.post(
         "/api/v1/product/create-product",
@@ -130,6 +130,7 @@ const CreateProduct = () => {
                   />
                 </label>
               </div>
+
               <div className="mb-3">
                 {photo && (
                   <div className="text-center">
@@ -142,6 +143,7 @@ const CreateProduct = () => {
                   </div>
                 )}
               </div>
+              
               <div className="mb-3">
                 <input
                   type="text"

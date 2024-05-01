@@ -2,7 +2,7 @@
 import React from 'react';
 import Card from './Card'; // Import the Card component
 
-const Slider1 = ({ items, height }) => (
+const Slider1 = ({ items, height}) => (
   <div style={{
     overflowX: 'scroll',
     display: 'flex',

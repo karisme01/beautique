@@ -254,3 +254,33 @@ export const updateProfileController = async (req, res) => {
     }
 };
 
+
+export const addUserAddressController = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const newAddress = req.body.address; 
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+        user.address.push(newAddress);
+        await user.save();
+        res.status(200).send({ message: "Address added successfully", user });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "An error occurred while updating user address" });
+    }
+}
+
+export const getUserAddressesController = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const user = await userModel.findById(userId).populate("address")
+        const addresses = user?.address
+        res.json(addresses)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "An error occurred while getting user addresses" });
+    }
+}
+

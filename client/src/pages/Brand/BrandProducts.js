@@ -41,13 +41,13 @@ const BrandProducts = () => {
 
   return (
     <Layout>
-      <div className='container-fluid m-3 p-3'>
+      <div className='container m-3 p-3'>
         <div className='row'>
           <div className='col-md-3'>
             <BrandMenu/>
           </div>
-          <div className='col-md-9'>
-            <div className='card w-75 p-3'>
+          <div className='col-md-9 p-4 mt-3'>
+            <div className='card w-75 p-3 border-0'>
               <h4>Products</h4>
               {products?.length > 0 ? (
                 <table className="table">

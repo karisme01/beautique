@@ -1,3 +1,19 @@
 .white-row {
     background-color: #FFF; /* White */
 }
+ 
+/* RealTimeOrder.css */
+.table-smaller-font th, 
+.table-smaller-font td {
+  font-size: 1.0rem;  /* Smaller font size */
+  padding: 4px 8px;   /* Reduced padding to decrease row height */
+}
+
+.table-smaller-font thead th {
+  height: 30px;  /* Adjust as needed for header rows */
+}
+
+.table-smaller-font tbody tr {
+  height: 40px;  /* Smaller height for body rows */
+}
+

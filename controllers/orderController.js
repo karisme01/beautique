@@ -5,7 +5,7 @@ import brandModel from "../models/brandModel.js";
 
 export const createOrderController = async (req, res) => {
     try {
-        const { user, items } = req.body;
+        const { user, items } = req.body; 
         const userObject = await userModel.findById(user);
         if (!userObject) {
             return res.status(404).json({ error: 'User not found' }); // Use 404 for "Not Found"
@@ -121,7 +121,7 @@ export const getOrdersController = async (req, res) => {
         console.error(error); // It's good practice to log the error for debugging purposes
         res.status(500).json({ error: 'Failed to retrieve orders' });
     }
-} 
+}  
 
 export const getOrderItembyBrandController = async (req, res) => {
     try {
@@ -260,3 +260,4 @@ export const updateReturnItemUserController = async (req, res) => {
         res.status(500).send({ message: 'Failed to update return', error });
     }
 }
+

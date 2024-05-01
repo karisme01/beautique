@@ -16,7 +16,7 @@ import cors from "cors"
 
 dotenv.config()
 
-// database
+// database 
 connectDB()
 
 const app = express()

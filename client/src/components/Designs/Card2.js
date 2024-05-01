@@ -1,6 +1,6 @@
 // Card.js
 const Card2 = ({ title, content, image, onClick }) => (
-    <div onClick={onClick} className='shadow-lg' style={{
+    <div onClick={onClick} className='shadow' style={{
       height: '300px',
       minWidth: '300px', // Adjusted width
       margin: '10px',
@@ -15,7 +15,7 @@ const Card2 = ({ title, content, image, onClick }) => (
       objectFit: 'cover',
     
     }} />
-      <p>{title}</p>
+      {/* <p>{title}</p> */}
       <div >
       {/* <p className="text-center">{content}</p> */}
       </div>

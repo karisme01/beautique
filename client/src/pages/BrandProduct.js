@@ -174,7 +174,7 @@ const BrandProduct = () => {
       </button>
 
       <div className={`infoPanel ${showPanel ? 'show' : ''}`}>
-        <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'360px', marginTop: '20px'}}></button>
+        <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'320px', marginTop: '20px'}}></button>
 
         <div className="filter-container mt-5 bg-white" style={{ marginTop: '100px', padding: '20px', 
             borderRadius: '10px',marginLeft: '15px', marginRight: '20px', marginBottom: '-20px', borderColor: '#553c2c' }}>
@@ -382,16 +382,18 @@ const BrandProduct = () => {
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: selectedType === '1' ? '#4E362B' : '#fff',
-              color: selectedType === '1' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('1')}>
+              color: selectedProductForCart?.rent ? (selectedType === '1' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('1')} disabled={!selectedProductForCart?.rent}>
               <p>Half-weekly cycle</p>
               <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
-            </button>
+            </button>  
             <button className='btn-options' style={{width: '140px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: selectedType === '2' ? '#4E362B' : '#fff',
-              color: selectedType === '2' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('2')}>
+              color: selectedProductForCart?.rent ? (selectedType === '2' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('2')} disabled={!selectedProductForCart?.rent}>
               <p>Full-weekly cycle</p>
               <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
             </button>
@@ -417,13 +419,16 @@ const BrandProduct = () => {
             <div className="d-flex flex-wrap p-3" style={{marginLeft: '-165px', marginRight: '-350px', padding: '0px'}}>
               {products?.map((p) => (
                 <div key={p._id}>
-                  <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    alt={p.name}
-                    style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
-                    onClick={() => navigate(`/product/${p.slug}`)}
-                    className="product-image "
-                  />
+                  <div key={p._id} className="product-image-container">
+                    <img
+                      src={`/api/v1/product/product-photo/${p._id}`}
+                      className="product-image"
+                      alt={p.name}
+                      style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    />
+                    <div className="product-brand">{p.brand.name}</div>
+                </div>
                   <div >
                     <div>
                       <h5  style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>

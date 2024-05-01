@@ -15,6 +15,9 @@ const orderSchema = new mongoose.Schema({
     }],
     status: {
         type: String
+    },
+    payment_method: {
+        type: String
     }
 }, { timestamps: true });
 

@@ -1,0 +1,21 @@
+.top-text {
+  margin-top: 2%;
+  font-size: 150%;
+  font-weight: bold;
+  letter-spacing: 0.3rem;
+}
+
+.pay-btn-container {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.pay-btn {
+  padding: 3%;
+  width: 60%;
+  color: #fff;
+  background-color: #65081f;
+  border: none;
+  font-size: 100%;
+  box-shadow:color(from color srgb r g b);
+}

@@ -140,15 +140,15 @@ const RecordOrder = () => {
 
   return (
     <Layout title={'Dashboard - All Orders'}>
-      <div className='container-fluid m-3 p-3'>
+      <div className='container m-3 p-3'>
         <div className='row'>
           <div className='col-md-3'>
             <BrandMenu />
           </div>
-          <div className='col-md-9' style={{marginTop: '24px'}}>
+          <div className='col-md-9 p-4 mt-3'>
             {!selectedCustomer && (
               <>
-                <form onSubmit={handleCustomerSearchSubmit} className='mb-3'>
+                <form onSubmit={handleCustomerSearchSubmit} className='mb-3 border-0'>
                   <div className='row'>
                     <div className='col-sm-8'>
                       <div className='input-group'>

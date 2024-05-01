@@ -79,9 +79,8 @@ const RealTimeOrder = () => {
             <AdminMenu />
           </div>
           <div className='col-md-9' style={{ width: '900px'}}>
-            <h1>Orders</h1>
             {/* Listing orders in a table */}
-              <table className="table table-striped">
+              <table className="table table-smaller-font">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -99,15 +98,7 @@ const RealTimeOrder = () => {
                         <td style={{cursor: 'pointer'}}>{order._id}</td>
                         <td style={{cursor: 'pointer'}}>{order.userName ? order.userName : 'User not found'}</td>
                         <td>
-                        {/* <select
-                            value={order.status}
-                            onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <option value="Production">Production</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Collected">Collected</option>
-                        </select> */}
+
                         <strong>{order.status}</strong>
                         </td>
                         <td style={{cursor: 'pointer'}}>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</td>
@@ -115,7 +106,7 @@ const RealTimeOrder = () => {
                     {expandedOrderId === order._id && (
                         <tr>
                         <td colSpan="4">
-                          <table className="table">
+                          <table className="table table-smaller-font">
                             <thead>
                               <tr>
                                 <th>Product ID</th>

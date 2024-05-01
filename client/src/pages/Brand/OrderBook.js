@@ -50,14 +50,29 @@ const OrderBook = () => {
         switch (status) {
           case 'Production':
             return '#FFC1C3'; // Light warm red color code
+          case 'Ship Requested':
+            return '#FAC22D'
           case 'Shipped':
-            return '#90EE90'; // Light green color code
+            return '#EEDC9A'; // Light yellow color code
           case 'Collected':
             return '#90EE90'; // Light green color code
-          case 'Processing Return':
-            return "#A47CB8"
+          case 'Lease Return Requested':
+            return '#19D1C0' 
           case 'Reverse Shipped':
             return "#B6834E"
+          case 'Washing':
+            return '#E09DFA'
+          case 'Reverse Shipped 2':
+            return '#F3F972'
+          case 'Reverse Colleted':
+            return '#ABF972'
+          case 'Cancelled':
+            return '#8E2DEE'
+          case 'Processing Return':
+            return "#A47CB8"
+          case 'Returned':
+            return '#8CAAA5'
+          
           default:
             return 'none'; // No background color
         }
@@ -66,14 +81,14 @@ const OrderBook = () => {
 
   return (
     <Layout>
-      <div className='container-fluid m-3 p-3'>
+      <div className='container m-3 p-3'>
         <div className='row'>
           <div className='col-md-3'>
             <BrandMenu/>
           </div>
-        <div className='col-md-9' style={{ width: '900px'}}>
+        <div className='col-md-9 p-4 mt-3' style={{ width: '900px'}}>
             {/* Listing orders in a table */}
-              <table className="table table-striped">
+              <table className="table table-striped table-smaller-font">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -100,7 +115,7 @@ const OrderBook = () => {
                             style={{cursor: order.status != 'Production' ? 'not-allowed' : 'pointer', }}
                         >
                             <option value="Production">Production</option>
-                            <option value="Shipped">Shipped</option>
+                            <option value="Ship Requested">Request Ship</option>
                         </select>
                         </td>
                         <td style={{cursor: 'pointer'}}>{new Date(order.createdAt).toLocaleDateString()}</td>

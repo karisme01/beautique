@@ -45,6 +45,7 @@ const HomePage = () => {
   const [selectedSlide, setSelectedSlide] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
+  const [videoItems, setVideoItems] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -58,6 +59,14 @@ const HomePage = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    axios.get('/api/v1/product/get-videos')
+        .then(response => {
+            setVideoItems(response.data);
+        })
+        .catch(error => console.log('Error fetching video data:', error));
+}, []);
   
   const handlePhotoChange = (e) => {
     setFormData((prevState) => ({
@@ -94,6 +103,7 @@ const HomePage = () => {
       const newCartItem = [product, selectedSize, selectedType, 0, 1]; 
       setCart([...cart, newCartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, newCartItem]));
+      setIsCartPressed(false)
       toast.success('Item added to cart');
     }
   };
@@ -229,7 +239,7 @@ const HomePage = () => {
       <div className={`row body ${isModalOpen ? 'blur-effect' : ''}`}>
       <div className='row body' style={{marginLeft: '7px'}}>
 
-      <TopSlider items={topSliderItems}/>
+      {/* <TopSlider items={topSliderItems}/> */}
 
       <div className="top-section" style={{ display: 'flex', marginTop: '20px', marginBottom: '20px', gap: '10px' }}>
         <div style={{ flex: 7 }}>
@@ -241,7 +251,7 @@ const HomePage = () => {
           <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
           <div style={{ marginBottom: '20px' }}>
             <h2 style={{ textAlign: 'center', margin: '0', fontSize: '24px', fontWeight: 'bold' }}>Apply to participate in 'Outfit of the Week' contest</h2>
-          </div>
+          </div> 
             <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
               <label htmlFor="name" style={{ marginBottom: '5px' }}>Name</label>
               <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da' }} />
@@ -270,8 +280,7 @@ const HomePage = () => {
           <Button
             key="add"
             onClick={() => {
-              addToCart(selectedProductForCart, selectedSize, selectedType);
-              setIsCartPressed(false); 
+              addToCart(selectedProductForCart, selectedSize, selectedType);; 
             }}
             style={{ 
               width: 'auto', 
@@ -346,16 +355,18 @@ const HomePage = () => {
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: selectedType === '1' ? '#4E362B' : '#fff',
-              color: selectedType === '1' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('1')}>
+              color: selectedProductForCart?.rent ? (selectedType === '1' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('1')} disabled={!selectedProductForCart?.rent}>
               <p>Lease for 3 days</p>
               <p>Price: {String(Math.round(0.3*selectedProductForCart?.price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '140px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
-              background: selectedType === '2' ? '#4E362B' : '#fff',
-              color: selectedType === '2' ? '#fff' : '#000',
-              }} onClick={()=>setSelectedType('2')}>
+              background: selectedType === '2' ? '#42362B' : '#fff',
+              color: selectedProductForCart?.rent ? (selectedType === '2' ? '#fff' : '#000') : '#666666',
+              cursor: selectedProductForCart?.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>setSelectedType('2')} disabled={!selectedProductForCart?.rent}>
               <p>Lease for 7 days</p>
               <p>Price: {String(Math.round(0.4*selectedProductForCart?.price / 10) * 10)}</p>
             </button>
@@ -365,8 +376,6 @@ const HomePage = () => {
           </div>
           </div>
       </Modal>
-
-
 
         <div className='col-md-9' style={{marginTop:'30px'}}>
           <div style={{marginLeft: '-120px', marginBottom: '-40px'}}> 
@@ -379,18 +388,21 @@ const HomePage = () => {
           <div className="d-flex flex-wrap p-3" style={{marginLeft: '20px', marginRight: '-350px', padding: '0px'}}>
               {products?.map((p) => (
                 <div key={p._id}>
-                  <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    alt={p.name}
-                    style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px', padding: '5px'}}
-                    onClick={() => navigate(`/product/${p.slug}`)}
-                    className="product-image "
-                  />
+                  <div key={p._id} className="product-image-container">
+                    <img
+                      src={`/api/v1/product/product-photo/${p._id}`}
+                      className="product-image"
+                      alt={p.name}
+                      style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px'}}
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    />
+                    {/* <div className="product-brand">{p.brand.name}</div> */}
+                </div>
                   <div >
                     <div>
                       <h5  style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
-                      <h5 style={{marginBottom: '-5px', fontSize:'14px', marginLeft: '8px', marginTop: '1px'}}>
-                        {p.price.toLocaleString("en-US", {
+                      <h5 style={{marginBottom: '-5px', fontSize:'12px', marginLeft: '8px', marginTop: '1px', color: 'grey'}}>
+                        Retail | {p.price.toLocaleString("en-US", {
                           style: "currency",
                           currency: "INR",
                         })}
@@ -423,24 +435,29 @@ const HomePage = () => {
                   </div>
                 </div>
                 
-              ))}
-            </div>  
+              ))} 
             
-          
-          {/* line for designers */}
-          
+        </div>
+        </div>
+
+        <hr />
+
+        {/* new section */}
+
+        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '50px', marginBottom: '-10px' }}>
+          <div className='' style={{marginRight: '-302px', marginTop: '-30px'}}>
+            <Slider1 items={sliderItems1} height={'400px'}/>
+          </div>
+        </div>  
+         
+        <div>
           <Designer/>
         </div>
 
 
-
-        {/* </div> */}
-        <div style={{height:'50px'}}></div>
-
-        {/* new section */}
-        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '100px', marginBottom: '-40px' }}>
+        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '140px', marginBottom: '-40px' }}>
           <div className='' style={{marginRight: '-302px', marginTop: '-30px'}}>
-            <Slider1 items={sliderItems1} height={'400px'}/>
+            <Slider1 items={videoItems} height={'400px'}/>
           </div>
         </div>
 
@@ -471,26 +488,13 @@ const HomePage = () => {
         </Modal>
 
 
-        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '50px', marginBottom: '10px' }}>
+        {/* <div className='col-md-9' style={{ textAlign: 'center', marginTop: '50px', marginBottom: '10px' }}>
           <div className='' style={{marginRight: '-302px', marginTop: '-30px'}}>
             <Slider1 items={sliderItems1} height={'300px'}/>
           </div>
-        </div>
+        </div> */}
 
 
-        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '-10px' }}>
-          <h3 style={{marginLeft: '-760px', marginBottom: '-30px', marginTop: '0px', fontSize: '30px'}}>Celebrity Spotlight</h3>
-          <div className='' style={{marginRight: '-300px'}}>
-          <Slider2 items={sliderCelebrities} onSlideClick={(slide, index) => handleSlideClick(slide, index, sliderCelebrities)}/>
-          </div>
-        </div>
-
-        <div className='col-md-9' style={{ textAlign: 'center', marginTop: '10px' }}>
-          <h3 style={{marginLeft: '-870px', marginBottom: '-30px', marginTop: '30px', fontSize: '30px'}}>Celebrities</h3>
-          <div className='' style={{marginRight: '-300px'}}>
-            <Slider2 items={sliderItems2} onSlideClick={(slide, index) => handleSlideClick(slide, index, sliderItems2)}/>
-          </div>
-        </div>
       </div>
       </div>
     </Layout>

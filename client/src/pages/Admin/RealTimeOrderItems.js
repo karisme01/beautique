@@ -4,6 +4,7 @@ import { useAuth } from '../../context/auth'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import AdminMenu from '../../components/Layout/AdminMenu'
+import '../../styles/RealTimeOrder.css'
 
 const RealTimeOrderItem = () => {
   const [auth] = useAuth();
@@ -58,14 +59,29 @@ const fetchOrders = async () => {
         switch (status) {
           case 'Production':
             return '#FFC1C3'; // Light warm red color code
+          case 'Ship Requested':
+            return '#FAC22D'
           case 'Shipped':
             return '#EEDC9A'; // Light yellow color code
           case 'Collected':
             return '#90EE90'; // Light green color code
-          case 'Processing Return':
-            return "#A47CB8"
+          case 'Lease Return Requested':
+            return '#19D1C0'
           case 'Reverse Shipped':
-            return "#B6834E" 
+            return "#B6834E"
+          case 'Washing':
+            return '#E09DFA'
+          case 'Reverse Shipped 2':
+            return '#F3F972'
+          case 'Reverse Colleted':
+            return '#ABF972'
+          case 'Cancelled':
+            return '#8E2DEE'
+          case 'Processing Return':  
+            return "#A47CB8"
+          case 'Returned':
+            return '#8CAAA5'
+          
           default:
             return 'none'; // No background color
         }
@@ -91,7 +107,7 @@ const fetchOrders = async () => {
       </ul>
 
             {/* Listing orders in a table */}
-              <table className="table table-striped">
+              <table className="table table-striped table-smaller-font">
                 <thead>
                   <tr>
                     <th>Order Item ID</th>

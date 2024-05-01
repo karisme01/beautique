@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
-import { createProductController, deleteProductController, getCuratedProductsController, getOpenAISearchController, getProductController, getSingleProductController, getSingleProductIdController, productBrandController, productCategoryController, productCountController, 
+import { createProductController, deleteProductController, getCuratedProductsController, getOpenAISearchController, getProductController, getProductVideoController, getSingleProductController, getSingleProductIdController, getVideosController, productBrandController, productCategoryController, productCountController, 
 productFiltersBrandController, productFiltersCategoryController, productFiltersController, productListController, productPhotoController, relatedProductController, searchProductController, updateProductController } from "../controllers/productController.js";
 import formidable from 'express-formidable'
 
@@ -23,6 +23,9 @@ router.get('/get-product-id/:id', getSingleProductIdController)
 
 //get photo
 router.get('/product-photo/:pid', productPhotoController)
+
+//get video
+router.get('/product-video/:pid', getProductVideoController)
 
 //delete product
 router.delete('/delete-product/:pid', deleteProductController)
@@ -59,6 +62,9 @@ router.get('/for-you-products', requireSignIn, getCuratedProductsController)
 
 //recommend products (openai)
 router.post('/recommend-products', requireSignIn, getOpenAISearchController)
+
+//product videos
+router.get('/get-videos', getVideosController)
 
 
 export default router;

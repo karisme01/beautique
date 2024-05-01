@@ -49,6 +49,12 @@ const ProductDetails = () => {
     { author: "Kyle Cho", content: "I had high hopes, but it fell short. The material feels cheap and not very durable." },
 ]);
 
+  useEffect(() => {
+    if (product) {
+      window.scrollTo(0, 0);
+    }
+  }, [product]);
+  
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -362,17 +368,19 @@ const ProductDetails = () => {
                 <button className='btn-options' style={{width: '230px', height: '80px', 
                   marginRight: '10px', borderWidth: '0.5px', 
                   marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
-                  background: purchaseType === '1' ? '#4E362B' : '#fff',
-                  color: purchaseType === '1' ? '#fff' : '#000',
-                  }} onClick={()=>setPurchaseType('1')}>
+                  background: purchaseType === '1' ? '#332211' : '#fff',
+                  color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
+                  cursor: product.rent ? 'pointer' : 'not-allowed'
+                  }} onClick={()=>setPurchaseType('1')} disabled={!product.rent}>
                   <p style={{marginTop: '10px'}}>Half-weekly cycle</p>
                   <p>Price: {String(Math.round(0.3*product?.price / 10) * 10)}</p>
                 </button>
                 <button className='btn-options' style={{width: '230px', height: '80px', 
                   marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
-                  background: purchaseType === '2' ? '#4E362B' : '#fff',
-                  color: purchaseType === '2' ? '#fff' : '#000',
-                  }} onClick={()=>setPurchaseType('2')}>
+                  background: purchaseType === '2' ? '#332211' : '#fff',
+                  color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
+                  cursor: product.rent ? 'pointer' : 'not-allowed'
+                  }} onClick={()=>setPurchaseType('2')} disabled={!product.rent}>
                   <p style={{marginTop: '10px'}}>Full-weekly cycle</p>
                   <p>Price: {String(Math.round(0.4*product?.price / 10) * 10)}</p>
                 </button>
@@ -480,20 +488,23 @@ const ProductDetails = () => {
               <p>Buy</p>
               <p>Price: {product?.price}</p>
             </button>
-            <button className='btn-options' style={{width: '200px', height: '100px', 
+            <button className='btn-options' 
+              style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: purchaseType === '1' ? '#332211' : '#fff',
-              color: purchaseType === '1' ? '#fff' : '#000',
-              }} onClick={()=>handlePurchaseSelection('1')}>
+              color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
+              cursor: product.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>handlePurchaseSelection('1')} disabled={!product.rent}>
               <p>Half-weekly cycle</p>
               <p>Price: {String(Math.round(0.3*price / 10) * 10)}</p>
             </button>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
               background: purchaseType === '2' ? '#332211' : '#fff',
-              color: purchaseType === '2' ? '#fff' : '#000',
-              }} onClick={()=>handlePurchaseSelection('2')}>
+              color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
+              cursor: product.rent ? 'pointer' : 'not-allowed'
+              }} onClick={()=>handlePurchaseSelection('2')} disabled={!product.rent}>
               <p>Full-weekly cycle</p>
               <p>Price: {String(Math.round(0.4*price / 10) * 10)}</p>
             </button>

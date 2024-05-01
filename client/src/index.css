@@ -19,8 +19,18 @@
   line-height: 26px;
   text-transform: uppercase;
   box-shadow: 0 8px 6px -6px grey;
-  background-color: white; /* Navbar background */
+  background-color: white; 
   border-bottom: 0.3px solid #3F250B; /* Dark brown border */
+  position: fixed; 
+  width: 100%;
+  top: 0;
+  z-index: 10; /* Ensure navbar is above other content */
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-hidden {
+  transform: translateY(-100%); /* Move the navbar out of view */
+  transition: transform 0.3s ease-in-out;
 }
 
 .active {
@@ -42,12 +52,19 @@
   color: white;
   padding: 25px;
   background: linear-gradient(to bottom, #2F181B, #170402); /* From burgundy to brown */
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer h4 {
+  text-shadow: 1px 1px 2px black;
 }
 
 .footer a {
   text-decoration: none;
-  color: white;
+  color: #f8f8f8; /* Lighter shade for better visibility */
   padding: 10px;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
 }
 
 .footer a:hover {
@@ -76,6 +93,7 @@
   border: 1px solid #800020; /* Burgundy border */
 }
 
+
 .pnf-btn {
   color: black;
   border: 1px solid black;
@@ -99,6 +117,7 @@
 .nav-link:hover, .nav-link:focus {
   color: #800020; /* Burgundy text on hover */
   background-color: rgba(128, 0, 32, 0.1); /* Light burgundy background on hover */
+  border-radius: 15px;
 }
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item:active {
   color: #800020 !important; /* Burgundy text for hover/focus/active dropdown items */
@@ -174,3 +193,16 @@
     display: block; /* Might need adjustments based on your specific implementation */
   }
 }
+
+.table-smaller-font tr th,
+.table-smaller-font tr td {
+  font-size: 0.8rem; /* Smaller font size */
+  height: 25px; /* Smaller row height */
+}
+
+.table-smaller-font tr th {
+  height: 30px; /* Slightly taller header row */
+}
+
+
+

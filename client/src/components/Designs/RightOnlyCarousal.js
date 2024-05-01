@@ -10,12 +10,12 @@ const RightOnlyCarousel = ({ children, onActiveSlideChange, onExpandPress, onLik
     const settings = {
         // dots: true,
         infinite: false,
-        speed: 500,
+        speed: 500,  
         centerMode: true,
         centerPadding: '37%', // Adjust as needed
         slidesToShow: 1,
         slidesToScroll: 1,
-        draggable: false,
+        draggable: false, 
         swipeToSlide: false,
         nextArrow: <SampleNextArrow />,
         prevArrow: null,
@@ -57,7 +57,7 @@ const RightOnlyCarousel = ({ children, onActiveSlideChange, onExpandPress, onLik
     }
     
     const debounce = (func, delay) => {
-        let inDebounce;
+        let inDebounce; 
         return function() {
           const context = this;
           const args = arguments;
@@ -91,7 +91,7 @@ const RightOnlyCarousel = ({ children, onActiveSlideChange, onExpandPress, onLik
             <Slider ref={sliderRef} {...settings}>
                 {children}
             </Slider>
-            <div className="slider-buttons" style={{marginTop: '50px', borderRadius: '10px'}}>
+            <div className="slider-buttons" style={{borderRadius: '10px'}}>
                 <button className="not-like-button" onClick={debouncedHandleNextHate} style={{fontSize: '24px'}}>✖ </button>
                 <button className="expand-button" onClick={handleExpandPress}style={{fontSize: '21px', marginLeft: '10px'}}>↓</button>
                 <button className="like-button" onClick={debouncedHandleNextWish} style={{fontSize: '21px',marginLeft: '10px'}}>♥</button>

@@ -33,7 +33,7 @@ const SearchInput = () => {
           placeholder="Search"
           aria-label="Search"
           value={values.keyword}
-          style={{height: '40px', width: '250px', borderRadius: '20px'}}
+          style={{height: '40px', width: '700px', borderRadius: '20px', borderWidth: '1px', borderColor: '#000'}}
           onChange={(e) => setValues({ ...values, keyword: e.target.value })}
         />
         <button className="btn btn-outline" type="submit">

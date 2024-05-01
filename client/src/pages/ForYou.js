@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import Layout from '../components/Layout/Layout'
+import Layout from '../components/Layout/Layout' 
 import RightOnlyCarousel from '../components/Designs/RightOnlyCarousal'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -23,14 +23,14 @@ const ForYou = () => {
   const [activeProduct, setActiveProduct] = useState(null);
   const [prevProduct, setPrevProduct] = useState(null);
   const [productLikes, setProductLikes] = useState({});
-  const [cart, setCart] = useCart()
+  const [cart, setCart] = useCart() 
   const [reserve, setReserve] = useReserve()
   const [wish, setWish] = useWish()
   const productDetailRef = useRef(null);
   const [expand, setExpand] = useState(false)
   const [liked, setLiked] = useState(false) 
   const [showReviews, setShowReviews] = useState(false);
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState([]) 
   const [selectedSize, setSelectedSize] = useState(""); 
   const [purchaseType, setPurchaseType] = useState('0');
   const [showModal, setShowModal] = useState(false);
@@ -239,18 +239,18 @@ const ForYou = () => {
 
       <Modal
         title={
-          <div style={{ fontSize: '24px', color: '#8B5A42' }}>Discover Your Style</div>
+          <div style={{ fontSize: '24px', color: '#2F181B' }}>Discover Your Style</div>
         }
         open={showModal}
         onCancel={handleCloseModal}
         footer={[
           <button onClick={handleCloseModal} style={{
-            background: '#8B5A42',
+            background: '#2F181B',
             color: 'white',
             padding: '10px 30px',
             border: 'none',
             cursor: 'pointer',
-            borderRadius: '5px',
+            borderRadius: '0px',
             fontSize: '16px',
             fontWeight: 'bold',
           }}>
@@ -260,7 +260,7 @@ const ForYou = () => {
         style={{ maxWidth: '600px'}}
         // bodyStyle={{ backgroundColor: '#F5F5DC' }}
       >
-        <div style={{fontSize: '16px', lineHeight: '1.5', color: '#555', padding: '20px', backgroundColor: 'cream', borderRadius: '10px', border: '2px solid #D3B8AE'}}>
+        <div style={{fontSize: '16px', lineHeight: '1.5', color: '#555', padding: '20px', backgroundColor: 'cream', borderRadius: '0px', border: '2px solid #2F181B'}}>
           <p style={{marginBottom: '8px'}}>Welcome to your personalized clothing recommendation journey!</p>
           <p style={{marginBottom: '15px'}}>As you explore, your interactions will help us tailor suggestions just for you:</p>
           <ul>
@@ -284,176 +284,11 @@ const ForYou = () => {
         </div>
       </Modal>
 
-
-
-
-
-    {/* <div className="App" style={{marginTop: '85px', marginBottom: '-85px', marginLeft: '-50px'}}>
-      <button style={{marginLeft: '100px', borderRadius: '30px', width: '130px', 
-          height: '38px', backgroundColor: 'black', borderWidth: '1px', borderColor: 'white'}} onClick={() => setShowPanel(!showPanel)}>
-        <div style={{flexDirection: 'row'}}>
-          <IoFilter style={{marginLeft: '-10px', marginRight: '10px'}}/>
-          All Filters
-        </div>
-      </button>
-
-      <div className={`infoPanel ${showPanel ? 'show' : ''}`}>
-        <button type="button" class="btn-close" onClick={() => setShowPanel(false)} style={{marginLeft:'360px', marginTop: '20px'}}></button>
-
-        <div className="filter-container mt-5 bg-white" style={{ marginTop: '100px', padding: '20px', 
-            borderRadius: '10px',marginLeft: '15px', marginRight: '20px', marginBottom: '-20px', color: 'black',borderColor: '#553c2c' }}>
-            <h4 className='text-center' style={{marginLeft: '-260px', fontSize: '18px', fontWeight:'bold'}}>Price</h4>
-            <div className='d-flex flex-column' style={{marginLeft: '5px'}}>
-              <Radio.Group onChange={e => setRadio(e.target.value)}>
-                {Prices?.map(p => (
-                  <div key={p._id}>
-                    <Radio value={p.array}>{p.name}</Radio>
-                  </div>
-                ))}
-              </Radio.Group>
-            </div>
-          </div>
-
-
-          <div className="filter-container bg-white" style={{ marginTop: '30px', padding: '20px', 
-               borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c' }}>
-            <h4 className='text-center' style={{marginLeft: '-230px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Category</h4>
-            
-            <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterCategory(checkedValues)}
-              value={filterCategory}
-            >
-              {categories?.map(c => (
-                <div key={c._id} className="mb-1" style={{width: '80%', marginRight: '-20px'}}> 
-                  <Checkbox value={c.name}>
-                    {c.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-
-
-          <div className="filter-container bg-white" style={{ marginTop: '10px', padding: '20px', 
-               borderRadius: '10px',marginLeft: '15px', marginRight: '20px'}}>
-            <h4 className='text-center' style={{marginLeft: '-260px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Color</h4>
-            
-            <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterColor(checkedValues)}
-              value={filterColor}
-            >
-              {Colors?.map(c => (
-                <div key={c._id} className="mb-1" style={{width: '40%', marginRight: '-20px'}}>
-                  <Checkbox value={c.name}>
-                    {c.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-
-
-          <div className="filter-container bg-white" style={{ marginTop: '10px', padding: '20px', 
-          borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c' }}>
-            <h4 className='text-center' style={{marginLeft: '-190px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Sleeve Length</h4>
-          <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterSleeve(checkedValues)}
-              value={filterSleeve}
-            >
-              {SleeveLength?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '100%', marginRight: '30px'}}> 
-                  <Checkbox value={s.name}>
-                    {s.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-
-          <div className="filter-container bg-white" style={{ marginTop: '10px', padding: '20px', 
-          borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '30px' }}>
-            <h4 className='text-center' style={{marginLeft: '-260px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Sizes</h4>
-          <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterSize(checkedValues)}
-              value={filterSize}
-            >
-              {Sizes?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
-                  <Checkbox value={s.name}>
-                    {s.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-
-          <div className="filter-container bg-white" style={{ marginTop: '-20px', padding: '20px', 
-          borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '10px' }}>
-            <h4 className='text-center' style={{marginLeft: '-240px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Material</h4>
-          <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterMaterial(checkedValues)}
-              value={filterMaterial}
-            >
-              {Materials?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
-                  <Checkbox value={s.name}>
-                    {s.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-
-          <div className="filter-container bg-white" style={{ marginTop: '0px', padding: '20px', 
-          borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '10px' }}>
-            <h4 className='text-center' style={{marginLeft: '-230px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Occasion</h4>
-          <div className='d-flex flex-column align-items-start' style={{marginLeft: '5px'}}>
-            <Checkbox.Group
-              onChange={(checkedValues) => setFilterOccasion(checkedValues)}
-              value={filterOccasion}
-            >
-              {Occasions?.map(s => (
-                <div key={s._id} className="mb-1" style={{width: '30%', marginRight: '30px'}}> 
-                  <Checkbox value={s.name}>
-                    {s.name}
-                  </Checkbox>
-                </div>
-              ))}
-            </Checkbox.Group>
-          </div>
-          </div>
-        
-          <div className="filter-container bg-white" style={{ marginTop: '0px', padding: '20px', 
-          borderRadius: '10px',marginLeft: '15px', marginRight: '20px', borderColor: '#553c2c', marginBottom: '10px' }}>
-            <h4 className='text-center' style={{marginLeft: '-190px', fontSize: '18px', color: 'black', fontWeight:'bold'}}>Purchase Type</h4>
-            <Checkbox 
-                onChange={(e) => setFilterRent(e.target.checked)}
-                value={filterRent}
-              >
-                One Time Ownership
-              </Checkbox>
-          </div>
-
-        
-      </div>
-    </div> */}
-        
-
         <h4 className='text-center' style={{marginTop: '10px', fontWeight: 'bold', letterSpacing: '4px'}}>
           FOR YOU FROM US
         </h4>
 
-
+        <div style={{marginBottom: '200px'}}>
         <RightOnlyCarousel 
             onActiveSlideChange={(index) => {
               setActiveProduct(products[index]);
@@ -472,9 +307,8 @@ const ForYou = () => {
             />
           ))}
         </RightOnlyCarousel>
-
+        </div>
         
-
         {/* product detail section */}
 
         <div className='product-detail' ref={productDetailRef}style={{marginBottom: '50px'}}>
@@ -592,7 +426,7 @@ const ForYou = () => {
                   width: 'auto', 
                   marginRight: '10px', 
                   fontSize: '17px', 
-                  borderRadius: '7px', 
+                  borderRadius: '0px', 
                   height: '40px', // Increased height
                   backgroundColor: '#8B4513', // Brown color
                   color: 'white', 
@@ -613,7 +447,7 @@ const ForYou = () => {
                   width: '40px', 
                   marginRight: '10px', 
                   fontSize: '17px', 
-                  borderRadius: '7px', 
+                  borderRadius: '0px', 
                   height: '40px', // Increased height
                   backgroundColor: 'white', 
                   color: '#8B4513', // Brown text color

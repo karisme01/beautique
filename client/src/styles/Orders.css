@@ -92,7 +92,7 @@
   width: 80%;
   background-color: #CDE7C0;  /* Green background for positivity */
   color: black;               /* White text for contrast */
-  border-radius: 5px;
+  border-radius: 0px;
   font-size: 20px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.2); /* Subtle shadow for depth */
 }
@@ -159,3 +159,22 @@
 .purchase-details {
   font-size: 0.8rem;
 }
+
+.order-layout {
+  padding: 40px;
+  width: 75%;
+}
+
+.address-layout {
+  padding: 40px;
+  width: 75%;
+  overflow-y: auto;
+}
+
+.btn-container {
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+

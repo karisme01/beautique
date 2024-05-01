@@ -1,9 +1,10 @@
 import express from "express";
 import {isAdmin, isBrand, requireSignIn} from './../middlewares/authMiddleware.js'
-import { brandController, brandPhotoController, createBrandController, createRequestController, deleteBrandController, findBrandsAndProductsByUserId, searchUserBrandController, singleBrandController, updateBrandController } from "../controllers/brandController.js";
+import { brandController, brandPhotoController, createBrandController, createRequestController, deleteBrandController, findBrandsAndProductsByUserId, getBrandDetailsController, getProductTrendsController, uploadVideoController, searchUserBrandController, singleBrandController, updateBrandController, getProductsbyBrandController, getVideosByBrandController } from "../controllers/brandController.js";
 import formidable from 'express-formidable'
-import { productBrandController } from "../controllers/productController.js";
-
+import multer from 'multer';
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const router = express.Router()
 
@@ -42,3 +43,19 @@ router.post('/create-ad-request', requireSignIn, isBrand, createRequestControlle
 
 //get-brand-products
 router.get('/get-brand-products/:userId', requireSignIn, isBrand, findBrandsAndProductsByUserId)
+
+//get-brand-details
+router.get('/get-brand-details/:userId', requireSignIn, isBrand, getBrandDetailsController)
+
+//get-product-trends
+router.get('/get-product-trends/', requireSignIn, isBrand, getProductTrendsController)
+
+//upload brand product baby
+router.put('/upload-video/:id', upload.single('file'), uploadVideoController);
+
+//get products by brands
+// router.get('/get-brand-products/:id', isBrand, getProductsbyBrandController)
+
+//get-brand-videos
+router.get('/get-brand-videos/:id', requireSignIn, isBrand, getVideosByBrandController)
+

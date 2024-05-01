@@ -11,6 +11,5 @@ export const sliderItems1 = [
     { title: '#Embracing antique', content: 'This is the first card', video: video },
     { title: '#Less is more', content: 'This is the first card', video: video2 },
     { title: '#Expert Opinion', content: 'This is the first card', video: video4 },
-    
     // Add as many cards as you like
   ];

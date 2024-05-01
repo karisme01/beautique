@@ -6,20 +6,25 @@ import fs from 'fs';
 import userModel from "../models/userModel.js";
 import OpenAI from "openai";
 import natural from 'natural';
+import videoModel from "../models/videoModel.js";
 
-const openai = new OpenAI({
-    apiKey: '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'
-});
+// const openai = new OpenAI({
+//     apiKey: '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'
+// });
 
 export const createProductController = async (req, res) => {
     try {
         const {name, slug, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} = req.fields;
-        const {photo} = req.files;
+        const {photo, video} = req.files;
 
         const products = new productModel({...req.fields, slug: slugify(name), reviews: []});
         if (photo) {
             products.photo.data = fs.readFileSync(photo.path);
             products.photo.contentType = photo.type;
+        } 
+        if (video) {
+            products.video.data = fs.readFileSync(video.path);
+            products.video.contentType = video.type;
         }
         const properties = {
             red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
@@ -81,7 +86,7 @@ export const getProductController = async (req, res) => {
     try {
         const products = await productModel
             .find({})
-            .populate('category')
+            .populate('category brand')
             .select("-photo")
             .sort({createdAt: -1}) 
         res.status(200).send({
@@ -165,6 +170,30 @@ export const productPhotoController = async (req, res) => {
     }
 }
 
+//get-video
+export const getProductVideoController = async (req, res) => {
+    try {
+        const product = await productModel.findById(req.params.pid).select("video");
+        if (product.video && product.video.data) {
+            res.set('Content-Type', product.video.contentType);
+            return res.status(200).send(product.video.data);
+        } else {
+            return res.status(404).send({
+                success: false,
+                message: 'No video found for this product'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error,
+            message: 'Error while getting product video'
+        });
+    }
+};
+
+
 export const deleteProductController = async (req, res) => {
     try {
         await productModel.findByIdAndDelete(req.params.pid).select("-photo")
@@ -186,7 +215,7 @@ export const updateProductController = async (req, res) => {
     try {
         const { name, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} =
         req.fields;
-      const { photo } = req.files;
+      const { photo, video } = req.files;
       //alidation
       switch (true) {
         case !name:
@@ -214,6 +243,11 @@ export const updateProductController = async (req, res) => {
         products.photo.data = fs.readFileSync(photo.path);
         products.photo.contentType = photo.type;
       }
+
+      if (video) {
+        products.video.data = fs.readFileSync(video.path);
+        products.video.contentType = video.type;
+    }
       const properties = {
         red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
         indowesternwear: 0, kurtistunics: 0, sari: 0,
@@ -277,7 +311,7 @@ export const productFiltersController = async (req, res) => {
         let args = {};
         if (checked.length > 0) args.category = checked;
         if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-        const products = await productModel.find(args);
+        const products = await productModel.find(args).populate("category brand");;
         res.status(200).send({
         success: true,
         products,
@@ -347,7 +381,7 @@ export const productFiltersCategoryController = async (req, res) => {
             }));
         }
         
-        const products = await productModel.find(args);
+        const products = await productModel.find(args).populate('brand');
         console.log(args)
         console.log('hii')
         console.log(products)
@@ -396,7 +430,7 @@ export const productFiltersBrandController = async (req, res) => {
             }));
         }
 
-        const products = await productModel.find(args);
+        const products = await productModel.find(args).populate("category brand");;
         console.log(products)
         res.status(200).send({
             success: true,
@@ -442,8 +476,9 @@ export const productListController = async (req, res) => {
         .find({})
         .select("-photo")
         .skip((page - 1) * perPage)
-        .limit(perPage)
-        .sort({ createdAt: -1 });
+        .limit(perPage) 
+        .sort({ createdAt: -1 })
+        .populate("category brand");;
       res.status(200).send({
         success: true,
         products,
@@ -502,7 +537,7 @@ export const searchProductController = async (req, res) => {
                 // Uncomment and adjust if needed
                 // {"brand.name": {$regex: stemmedKeyword, $options: 'i'}}, 
             ]
-        }).select('-photo');
+        }).select('-photo').populate("category brand");;
 
         res.json(results);
     } catch (error) {   
@@ -529,7 +564,7 @@ export const relatedProductController = async (req, res) => {
         })
         .select("-photo")
         .limit(5)
-        .populate("category");
+        .populate("category brand");
         res.status(200).send({
         success: true,
         products,
@@ -547,7 +582,7 @@ export const relatedProductController = async (req, res) => {
 //productCategoryController
 export const productCategoryController = async (req, res) => {
     try {
-        const perPage = 20;
+        const perPage = 15;
         const page = req.params.page ? req.params.page : 1;
         const category = await categoryModel.findOne({ slug: req.params.slug });
         const sortOption = req.query.sort;
@@ -567,7 +602,7 @@ export const productCategoryController = async (req, res) => {
             .skip((page - 1) * perPage)
             .limit(perPage)
             .sort(sortCriteria)
-            .populate("category");
+            .populate("category brand");
         res.status(200).send({
           success: true,
           category,
@@ -772,6 +807,45 @@ export const getOpenAISearchController = async (req, res) => {
         res.status(500).send({ message: "An error occurred while getting openAI search" });
     }
 }
+
+
+// export const getVideosController = async (req, res) => {
+//     try {
+//         const videos = await videoModel.find({}).populate({ path: 'productId', select: 'name description'});
+//         const formattedVideos = videos.map(video => ({
+//             name: video.productId.name,
+//             description: video.productId.description,
+//             video: {
+//                 data: video.video.data.toString('base64'), 
+//                 contentType: video.video.contentType
+//             }
+//         }));
+
+//         res.status(200).json(formattedVideos);
+//     } catch (error) { 
+//         console.log(error);
+//         res.status(500).json({ message: "An error occurred while getting videos" });
+//     }
+// };
+
+
+export const getVideosController = async (req, res) => {
+    try {
+        const videos = await videoModel.find({}).populate({ path: 'productId', select: 'name description'});
+        const SliderItems1 = videos.map(video => ({
+            title: video.productId.name,
+            content: video.productId.description,
+            video: `data:${video.video.contentType};base64,${video.video.data.toString('base64')}`
+        }));
+
+        res.status(200).json(SliderItems1);
+    } catch (error) { 
+        console.log(error);
+        res.status(500).json({ message: "An error occurred while getting videos" });
+    }
+};
+
+
 
 
 

@@ -206,35 +206,35 @@ const CartPage = () => {
   };
 
   const moveToWishlist = (p, sizeToRemove, typeToRemove, insuredRemove, quantityRemove) => {
-    const updatedCart = cart.filter(([product, size, selectedType, insured, quantity]) => {
-      return !(product._id === p._id && size === sizeToRemove && selectedType === typeToRemove 
-          && insured === insuredRemove && quantity === quantityRemove);
-    });
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
     const isInWishList = isProductInWishList(p);
     if (isInWishList) {
       toast.success('Item already there in wishlist');
     } else {
       const newWish = [...wish, p];
       setWish(newWish);
+      const updatedCart = cart.filter(([product, size, selectedType, insured, quantity]) => {
+        return !(product._id === p._id && size === sizeToRemove && selectedType === typeToRemove 
+            && insured === insuredRemove && quantity === quantityRemove);
+      });
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
       localStorage.setItem("wish", JSON.stringify(newWish));
       toast.success('Item moved to wishlist');
     }
   }
 
   const moveToWishlistReserve = (p, sizeToRemove, typeToRemove, insuredRemove, quantityRemove) => {
-    const updatedReserve = reserve.filter(([product, size, selectedType, insured, quantity]) => {
-      return !(product._id === p._id && size === sizeToRemove && selectedType === typeToRemove 
-          && insured === insuredRemove && quantity === quantityRemove);
-    });
-    setReserve(updatedReserve);
-    localStorage.setItem("reserve", JSON.stringify(updatedReserve));
     const isInWishList = isProductInWishList(p);
     if (isInWishList) {
       toast.success('Item already there in wishlist');
     } else {
       const newWish = [...wish, p];
+      const updatedReserve = reserve.filter(([product, size, selectedType, insured, quantity]) => {
+        return !(product._id === p._id && size === sizeToRemove && selectedType === typeToRemove 
+            && insured === insuredRemove && quantity === quantityRemove);
+      });
+      setReserve(updatedReserve);
+      localStorage.setItem("reserve", JSON.stringify(updatedReserve));
       setWish(newWish);
       localStorage.setItem("wish", JSON.stringify(newWish));
       toast.success('Item moved to wishlist');
@@ -250,14 +250,14 @@ const CartPage = () => {
             <h1 className="text-center bg-light p-2 mb-1">
               {!auth?.user ? "Hello Guest" : `Hello ${auth?.user?.name}`}
               <p className="text-center">
-              {cart.length ? `You Have ${cart.length} items in your cart` : "Your Cart Is Empty"}
+              {cart.length || reserve.length? `You Have ${cart.length + reserve.length} items in your cart` : "Your Cart Is Empty"}
               </p> 
             </h1>
           </div>
         </div>
 
         <div style={{marginLeft: '1032px', marginTop: '30px', marginBottom: '-20px'}}>
-          <button className="shadow-lg" onClick={() => createOrder()}
+          <button className="shadow-lg" onClick={() => navigate('/checkout')}
             style={{
               backgroundColor: '#65081f', color: 'white', padding: '10px 20px', fontSize: '16px', 
               border: 'none', cursor: 'pointer', 
@@ -380,7 +380,7 @@ const CartPage = () => {
                           <div className="insurance-info" style={{ fontSize: '0.8rem', color: '#666' }}>
                             <strong>*Note:</strong> Insuring the items with Rs{( type === '1' ? 0.03 * product.price * quantity : 
                               0.04 * product.price * quantity)} will ensure that if the item is damaged, 
-                            Karisme will incur 50% of the cost, which is {0.5*product.price}
+                            Karisme will incur 50% of the cost.
                           </div>
                         </td>
                       </tr>
@@ -393,7 +393,7 @@ const CartPage = () => {
           </div>
         </div>
 
-
+      {reserve && reserve.length > 0 && (
         <div className="list-container" style={{ marginLeft: '50px', marginRight: '40px', marginTop: '0px'}}>
           <div style={{marginLeft: '130px', fontSize: '25px'}}>RESERVATIONS</div>
           <div className="row">
@@ -494,7 +494,7 @@ const CartPage = () => {
                           <br/>
 
                           <div style={{fontSize: '14px', marginTop: '-14px', cursor: 'pointer'}} 
-                            onClick={()=>moveToWishlist(product, size, type, insuredBoolean, quantity)}>
+                            onClick={()=>moveToWishlistReserve(product, size, type, insuredBoolean, quantity)}>
                             <CiHeart style={{fontSize: '20px'}}/> <h7>Move to wishlist</h7>
                           </div>
                         </td>
@@ -512,7 +512,7 @@ const CartPage = () => {
                           <div className="insurance-info" style={{ fontSize: '0.8rem', color: '#666' }}>
                             <strong>*Note:</strong> Insuring the items with Rs{( type === '1' ? 0.03 * product.price * quantity : 
                               0.04 * product.price * quantity)} will ensure that if the item is damaged, 
-                            Karisme will incur 50% of the cost, which is {0.5*product.price}
+                            Karisme will incur 50% of the cost.
                           </div>
                         </td>
                       </tr>
@@ -541,6 +541,8 @@ const CartPage = () => {
             </div>
           </div>
         </div>
+      )}
+
 
       </div>
     </Layout>

@@ -1,5 +1,5 @@
 import express from "express"
-import { registerController, loginController, testController, forgotPasswordController, updateProfileController, updatePreferencesController} from "../controllers/authController.js"
+import { registerController, loginController, testController, forgotPasswordController, updateProfileController, updatePreferencesController, addUserAddressController, getUserAddressesController} from "../controllers/authController.js"
 import { isAdmin, isBrand, isUser, requireSignIn } from "../middlewares/authMiddleware.js"
 
 
@@ -39,6 +39,14 @@ router.put('/profile', requireSignIn, updateProfileController)
 
 //UPDATE PREFERNCES
 router.put('/preferences', requireSignIn, updatePreferencesController)
+
+//GET USER ADDRESSES
+router.get('/get-addresses/:id', requireSignIn, getUserAddressesController)
+
+//UPDATE USER ADDRESS
+router.post('/add-address/:id', requireSignIn, addUserAddressController)
+
+
 
 
 
