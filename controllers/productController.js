@@ -8,9 +8,6 @@ import OpenAI from "openai";
 import natural from 'natural';
 import videoModel from "../models/videoModel.js";
 
-// const openai = new OpenAI({
-//     apiKey: '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'
-// });
 
 export const createProductController = async (req, res) => {
     try {
