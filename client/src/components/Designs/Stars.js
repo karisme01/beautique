@@ -10,7 +10,7 @@ const StarRating = ({ rating }) => {
   return (
     <div>
       {[...Array(fullStars)].map((star, index) => (
-        <FontAwesomeIcon key={`full-${index}`} icon={faStar} style={{ color: '#d5a294', fontSize: '14px' }} />
+        <FontAwesomeIcon key={`full-${index}`} icon={faStar} style={{ color: '#FFC000', fontSize: '14px' }} />
       ))}
       {halfStar && <FontAwesomeIcon icon={faStarHalfAlt} style={{ color: '#ffc107' }} />}
       {[...Array(emptyStars)].map((star, index) => (

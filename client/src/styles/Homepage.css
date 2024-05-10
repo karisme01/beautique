@@ -78,6 +78,12 @@ body {
     padding: 0 10px;
   }
   
+  .top-section {
+    overflow-x: auto;
+    padding: 30px;
+    width: 100%;
+  }
+  
   /* Style the card image */
   .home-page .card img {
     height: 200px;
@@ -152,8 +158,8 @@ body {
    
 
   .card:hover .card-img-top {
-    transform: scale(1.04); 
-    filter: brightness(75%); 
+    transform: scale(1.01); 
+    filter: brightness(95%); 
   }
   
   .card:hover .card-body {
@@ -161,12 +167,12 @@ body {
   }
 
   .card-img-top {
+    margin-top: 0.8rem;
     transition: transform 0.5s ease, filter 0.5s ease; /* Add filter to the transition for a smooth effect */
   }
 
 .card-img-top:hover {
-  transform: scale(1.03); 
-  filter: brightness(75%); 
+  transform: scale(1.01);  
 }
   
 .carousal-slide {
@@ -194,4 +200,131 @@ body {
 .product-image {
   padding: 10px;
   border-radius: 10px;
+}
+
+.brands-container {
+  padding: 60px; /* Add padding to the container */
+  padding-bottom: 20px;
+  padding-top: 360px;
+  padding-right: 40px;
+}
+
+.brand-cards {
+  overflow-y: hidden;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping of cards */
+}
+
+.post-container {
+}
+.trends-text {
+  padding: 25px;
+  padding-bottom: 0px;
+}
+
+.horizontal-scroll {
+  margin-top: -20px;
+  display: flex;
+  overflow-x: auto;
+  gap: 15px; /* Adjust gap between posts */
+  padding-top: 0px;
+  padding: 25px;
+  border-radius: 0px;
+  scrollbar-width: thin; /* Optional: makes scrollbar less obtrusive */
+}
+
+.post-card {
+  min-width: 240px; /* Ensure each post has some minimum width */
+  flex-shrink: 0; /* Prevents flex items from shrinking */
+  background-color: white; /* Example background color */
+  padding-top: 0px;
+  border: none;
+  cursor: pointer;
+  z-index: 3;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.post-card p {
+  font-size: 0.8rem;
+}
+
+.top {
+  /* background-image: linear-gradient(to bottom, transparent, rgba(255,255,255,1)), url('../images/temp2.jpeg'); */
+  background-image: 
+    linear-gradient(to bottom, transparent,   rgba(255, 255, 255)), 
+    linear-gradient(to bottom, #492201, rgba(165, 42, 42, 0), transparent,rgba(165, 42, 42, 0.8)),
+    linear-gradient(to right, #492201, rgba(165, 42, 42, 0), transparent 100%), 
+    linear-gradient(to right, #000, transparent), 
+    linear-gradient(to left, #492201, rgba(165, 42, 42, 0), transparent 100%),
+
+    url('../images/temp2.jpeg');
+  
+  background-size: cover;
+  background-position: center;
+  height: 450px; /* Adjust height as needed */
+}
+
+
+.post-text-container-top {
+  background-color: #800020;
+  color: white;
+  text-align: center;
+  padding: 6px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+
+.post-text-container-bottom {
+  background-color: #fff;
+  color: black;
+  text-align: center;
+  padding: 6px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+
+.top-poster-text {
+  padding-left: 60px; 
+  padding-top: 100px;
+}
+
+
+.brand-content {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: center; /* Align items vertically in the center */
+  align-items: flex-start; /* Align items to the left */
+  height: 100%; /* Take up full height of the parent */
+  padding-left: 20px; 
+}
+
+.brand-name {
+  font-size: 70px;
+  color: #fff;
+  margin-bottom: 20px;
+  letter-spacing: 4px;
+  font-weight: bold;
+}
+
+.aesthetic-button {
+  width: 200px;
+  height: 60px;
+  background-color: #4E362B;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  opacity: 0.8;
+}
+
+.aesthetic-button:hover {
+  background-color: #3F250B;
 }

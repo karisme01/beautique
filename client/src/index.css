@@ -16,10 +16,10 @@
 .navbar {
   font-family: 'Poppins', sans-serif;
   font-size: 17px;
-  line-height: 26px;
+  line-height: 20px;
   text-transform: uppercase;
   box-shadow: 0 8px 6px -6px grey;
-  background-color: white; 
+  background-color: #fff; 
   border-bottom: 0.3px solid #3F250B; /* Dark brown border */
   position: fixed; 
   width: 100%;
@@ -123,6 +123,7 @@
   color: #800020 !important; /* Burgundy text for hover/focus/active dropdown items */
   background-color: rgba(128, 0, 32, 0.1) !important; /* Optional: Light burgundy background for hover/focus/active dropdown items */
 }
+
 
 .navbar a, .navbar a:link, .navbar a:visited {
   color: #3F250B; /* Dark brown text */

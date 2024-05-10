@@ -7,22 +7,23 @@ import userModel from "../models/userModel.js";
 import OpenAI from "openai";
 import natural from 'natural';
 import videoModel from "../models/videoModel.js";
+import postModel from "../models/postModel.js";
 
+// const openai = new OpenAI({
+//     apiKey: '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'
+// });
 
 export const createProductController = async (req, res) => {
     try {
         const {name, slug, description, occasion, sleeve, price, category, quantity, shipping, color, material, brand} = req.fields;
-        const {photo, video} = req.files;
+        const {photo} = req.files;
 
         const products = new productModel({...req.fields, slug: slugify(name), reviews: []});
         if (photo) {
             products.photo.data = fs.readFileSync(photo.path);
             products.photo.contentType = photo.type;
         } 
-        if (video) {
-            products.video.data = fs.readFileSync(video.path);
-            products.video.contentType = video.type;
-        }
+
         const properties = {
             red: 0, yellow: 0, green: 0, gold: 0, white: 0, black: 0, blue: 0, brown: 0,
             indowesternwear: 0, kurtistunics: 0, sari: 0,
@@ -61,6 +62,16 @@ export const createProductController = async (req, res) => {
     
 
         await products.save();
+        const post = new postModel({
+            image: {
+                data: fs.readFileSync(photo.path), 
+                contentType: photo.type
+            },
+            link: `/product/${products.slug}`,
+            caption: 'Check out this new product!',
+        });
+
+        await post.save();
         res.status(201).send({
             success: true,
             message: "Product Created Successfully",
@@ -467,7 +478,7 @@ export const productCountController = async (req, res) => {
 //product list controller
 export const productListController = async (req, res) => {
     try {
-      const perPage = 10;
+      const perPage = 8;
       const page = req.params.page ? req.params.page : 1;
       const products = await productModel
         .find({})

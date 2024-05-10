@@ -37,7 +37,7 @@
     background: transparent;
     font-size: 24px;
     cursor: pointer;
-  }
+  } 
 
   /* Add this CSS to your CategoryProductStyles.css or a global stylesheet */
 .ant-checkbox-checked .ant-checkbox-inner {
@@ -74,7 +74,7 @@
   .product-image {
     width: 100%; /* Make images take full width of their container */
     height: auto; /* Adjust height automatically */
-    border-radius: 20px;
+    border-radius: 0px;
   }
 
   /* Add any additional styles for mobile layout adjustments */
@@ -111,7 +111,7 @@
   overflow: hidden; /* Prevents the image from overflowing the container */
   display: block; /* Ensures the container takes the full width of its parent if not already defined */
   position: relative; /* Useful for positioning elements inside it if needed */
-  border-radius: 20px; /* Applies a border radius to the container if desired */
+  border-radius: 0px; /* Applies a border radius to the container if desired */
   cursor: pointer; /* Indicates the image can be interacted with */
 }
 
@@ -120,11 +120,13 @@
   height: auto; /* Maintain aspect ratio */
   object-fit: cover;
   transition: transform 0.4s ease-in-out, filter 0.5s ease-in-out; /* Smooth transition for transform and filter effects */
+  border-radius: 0px;
 }
 
 .product-image:hover {
-  transform: scale(1.04); /* Enlarges the image on hover */
+  transform: scale(1.02); /* Enlarges the image on hover */
 }
 
 
  
+

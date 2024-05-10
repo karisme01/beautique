@@ -252,7 +252,7 @@ const CategoryProduct = () => {
                 {Prices?.map(s => (
                   <div key={s._id} className="mb-1" style={{width: '100%', marginRight: '30px'}}> {/* Add a margin-bottom for spacing and width control */}
                     <Checkbox value={s.array}>
-                      {s.name}
+                      {s?.name}
                     </Checkbox>
                   </div>
                 ))}
@@ -509,7 +509,7 @@ const CategoryProduct = () => {
                   <img
                     src={`/api/v1/product/product-photo/${p._id}`}
                     className="product-image"
-                    alt={p.name}
+                    alt={p?.name}
                     onClick={() => navigate(`/product/${p.slug}`)}
                   />
                   {/* <div className="product-brand">{p.brand.name}</div> */}
@@ -524,14 +524,16 @@ const CategoryProduct = () => {
                 <div className="product-brand">{p.brand.name}</div> */}
                 <div>
                   <div>
-                    <h5 style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
-                    <h5 style={{marginBottom: '-5px', fontSize:'16px', marginLeft: '8px', marginTop: '-1px'}}>
+                    <h5 style={{fontSize:'16px', marginBottom: '5px', marginTop: '5px', 
+                      marginLeft: '8px', textTransform: 'uppercase', letterSpacing: '1px'}}>{p.brand?.name}</h5>
+                    <h5 style={{fontSize:'14px', marginBottom: '7px', marginTop: '0px', marginLeft: '8px'}}>{p?.name}</h5>
+                    <h5 style={{marginBottom: '5px', fontSize:'15px', marginLeft: '8px', marginTop: '-1px'}}>
                       {p.price.toLocaleString("en-US", {
                         style: "currency",
                         currency: "INR",
                       })}
                     </h5>
-                    <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
+                    <div style={{fontSize: '25px', marginLeft: '175px', marginTop:'-70px', marginBottom: '66px'}}>
                       <HeartIconToggle
                         isFilled={isProductInWishList(p)}
                         onToggle={() => {
@@ -549,7 +551,7 @@ const CategoryProduct = () => {
                         }}
                       />
                       <GiShoppingCart 
-                        style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px'}}
+                        style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px', marginLeft: '8px'}}
                         onClick={() => {
                           handleCartIconClick(p);
                         }}
@@ -565,18 +567,17 @@ const CategoryProduct = () => {
       </div>
 </div>
 
-
         {/* Load more button */}
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px', marginTop: '20px'}}>
           <div style={{flexGrow: 1, height: '2px', backgroundColor: '#553c2c', margin: '0 20px'}}></div>
           <button 
             style={{padding: '10px 20px', cursor: 'pointer', borderRadius: '20px', display: 'flex', 
-              alignItems: 'center', justifyContent: 'center', backgroundColor: '#ebe8de', borderWidth: '0.5px'}}
+              alignItems: 'center', justifyContent: 'center', backgroundColor: '#efefef', borderWidth: '0.5px'}}
             onClick={(e) => {
               e.preventDefault();
               setPage(page + 1);
             }}>
-            <div style={{}}>
+            <div>
               More results  
             </div>
           </button>

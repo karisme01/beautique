@@ -24,6 +24,7 @@ import {sliderCelebrities} from '../components/Content/SliderCelebrities.js'
 import {Modal, Button} from 'antd';
 import Designer from '../components/Content/Designer.js';
 import HeartIconToggle from '../components/Designs/HeartIconToggle.jsx';
+import BrandCard from '../components/Designs/BrandCard.js';
 
 
 const HomePage = () => {
@@ -46,6 +47,8 @@ const HomePage = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [videoItems, setVideoItems] = useState([]);
+  const [brands, setBrands] = useState([]) 
+  const [posts, setPosts] = useState([]) 
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -61,12 +64,33 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    axios.get('/api/v1/product/get-videos')
-        .then(response => {
-            setVideoItems(response.data);
-        })
-        .catch(error => console.log('Error fetching video data:', error));
-}, []);
+    let isMounted = true; // Flag to check if the component is mounted
+
+    const fetchData = async () => {
+        if (!isMounted) return; // Do nothing if the component has been unmounted
+
+        try {
+            const videoResponse = await axios.get('/api/v1/product/get-videos');
+            const brandResponse = await axios.get('/api/v1/brand/get-brand');
+            const postsResponse = await axios.get('/api/v1/brand/get-posts');
+
+            if (isMounted) { // Only update state if component is still mounted
+                setVideoItems(videoResponse.data);
+                setBrands(brandResponse.data.brand);
+                setPosts(postsResponse.data);
+            }
+        } catch (error) {
+            console.log('Error fetching data:', error);
+        }
+    };
+
+    if (!posts.length || !brands.length || !videoItems.length) {
+        fetchData();
+    }
+
+    return () => { isMounted = false }; // Cleanup function to set isMounted false when the component unmounts
+}, []); // Empty dependency array ensures this effect only runs once after the initial render
+
   
   const handlePhotoChange = (e) => {
     setFormData((prevState) => ({
@@ -237,38 +261,46 @@ const HomePage = () => {
   return (
     <Layout title={'Karisme'}>
       <div className={`row body ${isModalOpen ? 'blur-effect' : ''}`}>
-      <div className='row body' style={{marginLeft: '7px'}}>
+      <div className='row body' style={{marginLeft: '0px', marginRight: '0px'}}>
 
       {/* <TopSlider items={topSliderItems}/> */}
+      
+      {/* <div style={{width: '800px'}}>
+        <img src={backgroundImage} style={{objectFit: 'contain', width: '800px'}}/>
+      </div> */}
+      {/* <div style={{height: '350px'}}></div> */}
+      
+      {/* <div className='top-poster'>
+          <img src={backgroundImage} alt="Background" />
+          <h1>Your Heading Text</h1>
+      </div> */}
 
-      <div className="top-section" style={{ display: 'flex', marginTop: '20px', marginBottom: '20px', gap: '10px' }}>
-        <div style={{ flex: 7 }}>
-          <img src={backgroundImage} alt="Background" style={{ width: '100%', height: 'auto', borderRadius: '8px', objectFit: 'cover' }} />
+      {/* <div className="top-section" style={{ display: 'flex'}}>
+      </div> */}
+
+      <div className='top'>
+        <div style={{height: '350px'}}>
+          <div className='top-poster-text'>
+            <h1 className="brand-name">Relive the brown theme</h1>
+            <button className="aesthetic-button">Explore Now</button>
+          </div>
         </div>
-
-        <div style={{ flex: 1, padding: '20px', backgroundColor: '#f5ebe7', borderRadius: '8px', 
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: '20px'}}>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-          <div style={{ marginBottom: '20px' }}>
-            <h2 style={{ textAlign: 'center', margin: '0', fontSize: '24px', fontWeight: 'bold' }}>Apply to participate in 'Outfit of the Week' contest</h2>
+        <div className='p-4 post-container'>
+          <h4 className='trends-text'>Latest trends for you</h4>
+          <div className="horizontal-scroll">
+            {posts.map(post => (
+              <div key={post._id} className="post-card" onClick={() => navigate(`${post.link}`)}>
+                {/* <div className='post-text-container-top'>
+                  PRODUCT LAUNCH
+                </div> */}
+                <img src={`/api/v1/brand/get-post-image/${post._id}`} style={{ width: '100%', height: '320px', objectFit: 'cover'}} />
+                {/* <p className='text-center'>{post.caption}</p> */}
+                <div className='post-text-container-bottom'>
+                  AdyStyles
+                </div>
+              </div>
+            ))}
           </div> 
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
-              <label htmlFor="name" style={{ marginBottom: '5px' }}>Name</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
-              <label htmlFor="phoneNumber" style={{ marginBottom: '5px' }}>Phone Number</label>
-              <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '15px' }}>
-              <label htmlFor="photoUpload" style={{ marginBottom: '5px' }}>Upload Photo</label>
-              <input type="file" id="photoUpload" onChange={handlePhotoChange} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ced4da', cursor: 'pointer' }} />
-            </div>
-            <button type="submit" style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', 
-              backgroundColor: '#000', color: 'white', cursor: 'pointer', fontWeight: 'bold', textTransform: 'uppercase' }}>
-              Apply
-            </button>
-          </form>
         </div>
       </div>
 
@@ -376,11 +408,20 @@ const HomePage = () => {
           </div>
           </div>
       </Modal>
+      
+        <div className="brands-container">
+          <h4 className='p-1'>Suggested for you</h4>
+            <div className='brand-cards'>
+              {brands.map(brand => (
+                <BrandCard key={brand._id} brand={brand} />
+              ))}
+            </div>
+        </div>
 
-        <div className='col-md-9' style={{marginTop:'30px'}}>
+        <div className='col-md-9' style={{marginTop:'60px'}}>
           <div style={{marginLeft: '-120px', marginBottom: '-40px'}}> 
             <h1 className='text-center body' style={{color: '#3F250B', marginLeft: '500px', fontWeight: 'bold', fontSize: '30px'}}>
-              Our top 10 this week <IoMdTrendingUp style={{ marginLeft: '-10px' }} />
+              Our top this week <IoMdTrendingUp style={{ marginLeft: '-10px' }} />
             </h1>
             <div className='mt-4'></div>
           </div>
@@ -388,27 +429,29 @@ const HomePage = () => {
           <div className="d-flex flex-wrap p-3" style={{marginLeft: '20px', marginRight: '-350px', padding: '0px'}}>
               {products?.map((p) => (
                 <div key={p._id}>
-                  <div key={p._id} className="product-image-container">
+                  <div key={p._id} className="product-image-container m-2">
                     <img
                       src={`/api/v1/product/product-photo/${p._id}`}
                       className="product-image"
                       alt={p.name}
-                      style={{height: '350px', width:'270px', cursor:'pointer', marginTop: '10px'}}
+                      style={{height: '425px', width:'320px', cursor:'pointer', marginTop: '10px'}}
                       onClick={() => navigate(`/product/${p.slug}`)}
                     />
                     {/* <div className="product-brand">{p.brand.name}</div> */}
                 </div>
                   <div >
                     <div>
-                      <h5  style={{fontSize:'14px', marginBottom: '0px', marginTop: '0px', marginLeft: '8px'}}>{p.name}</h5>
-                      <h5 style={{marginBottom: '-5px', fontSize:'12px', marginLeft: '8px', marginTop: '1px', color: 'grey'}}>
-                        Retail | {p.price.toLocaleString("en-US", {
+                      <h5 style={{fontSize:'16px', marginBottom: '5px', marginTop: '5px', 
+                        marginLeft: '14px', textTransform: 'uppercase', letterSpacing: '1px'}}>{p.brand?.name}</h5>
+                      <h5 style={{fontSize:'14px', marginBottom: '7px', marginTop: '0px', marginLeft: '14px'}}>{p?.name}</h5>
+                      <h5 style={{marginBottom: '5px', fontSize:'15px', marginLeft: '14px', marginTop: '-1px'}}>
+                        {p.price.toLocaleString("en-US", {
                           style: "currency",
                           currency: "INR",
                         })}
                       </h5>
                       
-                      <div style={{fontSize: '25px', marginLeft: '190px', marginTop:'-40px', marginBottom: '16px'}}>
+                      <div style={{fontSize: '25px', marginLeft: '230px', marginTop:'-70px', marginBottom: '26px'}}>
                         <HeartIconToggle
                             isFilled={isProductInWishList(p)}
                             onToggle={() => {
@@ -425,7 +468,7 @@ const HomePage = () => {
                             }
                           }}/>
 
-                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px' }} 
+                        <GiShoppingCart style={{fontSize: '40px', color: 'black', cursor: 'pointer', padding:'2px', marginTop: '0px', marginLeft: '10px'}} 
                           onClick={() => {
                             handleCartIconClick(p)
                             }}

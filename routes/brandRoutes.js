@@ -1,6 +1,6 @@
 import express from "express";
 import {isAdmin, isBrand, requireSignIn} from './../middlewares/authMiddleware.js'
-import { brandController, brandPhotoController, createBrandController, createRequestController, deleteBrandController, findBrandsAndProductsByUserId, getBrandDetailsController, getProductTrendsController, uploadVideoController, searchUserBrandController, singleBrandController, updateBrandController, getProductsbyBrandController, getVideosByBrandController } from "../controllers/brandController.js";
+import { brandController, brandPhotoController, createBrandController, createRequestController, deleteBrandController, findBrandsAndProductsByUserId, getBrandDetailsController, getProductTrendsController, uploadVideoController, searchUserBrandController, singleBrandController, updateBrandController, getProductsbyBrandController, getVideosByBrandController, updateFollowingController, getPostsController, postPhotoController } from "../controllers/brandController.js";
 import formidable from 'express-formidable'
 import multer from 'multer';
 const storage = multer.memoryStorage();
@@ -58,4 +58,13 @@ router.put('/upload-video/:id', upload.single('file'), uploadVideoController);
 
 //get-brand-videos
 router.get('/get-brand-videos/:id', requireSignIn, isBrand, getVideosByBrandController)
+
+//update follower status
+router.post('/update-following/:id', requireSignIn, updateFollowingController)
+
+//get-posts
+router.get('/get-posts', getPostsController)
+
+//get-post-image
+router.get('/get-post-image/:pid', postPhotoController)
 

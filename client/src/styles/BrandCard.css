@@ -1,0 +1,109 @@
+.brand-card {
+  width: 17%; /* Set the width of each card */
+  height: 340px;
+  margin-right: 25px; /* Add margin between cards */
+  display: inline-block; /* Make cards display horizontally */
+  vertical-align: top; /* Align cards to the top */
+  background: linear-gradient(
+    to bottom,
+    rgba(213, 166, 150, 0.5),
+    rgba(213, 166, 150, 0.5),
+    rgba(213, 166, 150, 0.5),
+    rgba(213, 166, 150, 0.5),
+    rgba(213, 166, 150, 0.5),
+    rgba(255, 255, 255, 1)
+  ); /* Gradient from color to white */
+  backdrop-filter:  blur(70px);
+  border-radius: 8px;
+} 
+
+.brand-card-inner {
+  border: 1px solid #ccc; /* Add border to the card */
+  border-radius: 8px; /* Add border-radius for rounded corners */
+  height: 100%; /* Expand inner content to fill the card */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack logo and details vertically */
+  justify-content: space-between; /* Space logo and details evenly */
+  align-items: center; 
+  border-bottom: 0px;
+  /* border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-style: dashed; */
+}
+
+.brand-logo img {
+  width: 100%; /* Set width for the brand logo */
+  height: 240px; /* Set height for the brand logo */
+  object-fit: cover;
+  border-radius: 8px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  cursor: pointer;
+  transition: filter 0.3s ease; /* Add transition for smooth effect */
+}
+
+.brand-logo img:hover {
+  filter: brightness(25%); /* Darken the image on hover */
+}
+
+.brand-logo {
+  object-fit: cover;
+  padding: 0%;
+  width: 100%;
+}
+.brand-details {
+  width: 100%;
+}
+.brand-details p {
+  margin-top: -25px;
+  margin-left: -10px;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+}
+.brand-link {
+  margin-left: 60px;
+}
+
+.follow-btn {
+  font-size: 15px;
+  margin-left: -10px;
+  margin-top: -10px;
+  height: 40px;
+}
+
+.follow-btn {
+  background-color: #fff; /* Dark black */
+  color: #800020; /* White */
+  border-radius: 15px;
+  border-color: #800020;
+  border-width: 3px;
+}
+
+.follow-btn.following {
+  background-color: #fff; /* Light black */
+  color: #000; /* White */
+  border-color: #000;
+  border-width: 3px;
+}
+
+.follow-btn :hover{
+  background-color: #fff; /* Dark black */
+  color: #000; /* White */
+}
+
+.follow-btn.following :hover {
+  background-color: #fff; /* Light black */
+  color: #000; /* White */
+}
+
+.follow-links {
+  display: flex;
+  flex-direction: row;
+}
+
+.tick-icon {
+  margin-left: 10px;
+}
+
+
+

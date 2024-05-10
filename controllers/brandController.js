@@ -7,6 +7,7 @@ import productModel from "../models/productModel.js";
 import requestModel from "../models/requestModel.js";
 import orderItemModel from '../models/orderItemModel.js'
 import videoModel from "../models/videoModel.js";
+import postModel from "../models/postModel.js";
 
 
 export const createBrandController = async (req, res) => {
@@ -23,12 +24,22 @@ export const createBrandController = async (req, res) => {
                 message: 'Brand already exists'
             })
         }
-        const brand = await new brandModel({name, slug:slugify(name), phone: phone, userId: userId}).save()
+        const brand = await new brandModel({name, slug:slugify(name), phone: phone, userId: userId, followers: []}).save()
         if (photo) {
             console.log('photo is true')
             brand.photo.data = fs.readFileSync(photo.path)
             brand.photo.contentType = photo.type
         }
+        const post = new postModel({
+            image: {
+                data: fs.readFileSync(photo.path), 
+                contentType: photo.type
+            },
+            link: `/cloud-brands/${brand.slug}`,
+            caption: 'New brand added. Check it out!',
+        });
+
+        await post.save();
         await brand.save();
         res.status(201).send({
             success: true,
@@ -70,7 +81,7 @@ export const updateBrandController = async (req, res) => {
 //getAll brands
 export const brandController = async (req, res) => {
     try {
-        const brand = await brandModel.find({})
+        const brand = await brandModel.find({}).select("-photo")
         res.status(200).send({
             success: true,
             message: 'All Brands List',
@@ -358,5 +369,58 @@ export const getVideosByBrandController = async (req, res) => {
     } catch (error) {
         console.error(error); // It's good practice to log the error for debugging purposes
         res.status(500).json({ error: 'Failed to retrieve brand videos' });
+    }
+}
+
+export const updateFollowingController = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const {brandId} = req.body
+        const user = await userModel.findById(userId)
+        const brand = await brandModel.findById(brandId) 
+        const isFollowing = user.following.includes(brandId);
+        
+        if (isFollowing) {
+            user.following.pull(brandId);
+            brand.followers.pull(userId);
+        } else {
+            user.following.push(brandId);
+            brand.followers.push(userId);
+        }
+
+        await user.save();
+        await brand.save();
+        res.status(200).json({ message: 'Follow status updated successfully' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to change following status for users' });
+    }
+}
+
+export const getPostsController = async (req, res) => {
+    try {
+        const posts = await postModel.find({}).select("-image")
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to get posts' });
+    }
+}
+
+export const postPhotoController = async (req, res) => {
+    try {
+        const post = await postModel.findById(req.params.pid).select("image")
+        if (post.image.data) {
+            res.set('Content-type', post.image.contentType)
+            return res.status(200).send(post.image.data)
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            error, 
+            message: 'error while getting product photo'
+        })
     }
 }

@@ -21,7 +21,8 @@ const brandSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users', // This should match the name you gave your user model
         required: true // Only if every brand must be associated with a user
-    }
+    }, 
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     // incharge: {
     //     type: String,
     //     required: true

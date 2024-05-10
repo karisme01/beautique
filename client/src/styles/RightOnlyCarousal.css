@@ -14,13 +14,14 @@
 }
 /* Dim all slides */
 .right-only .slick-slide {
-    opacity: 0.15; /* Lower opacity for dimming effect */
+    opacity: 0.2; /* Lower opacity for dimming effect */
     transition: opacity 0.1s ease; /* Smooth transition for the dimming effect */
 }
 
 /* Highlight the center slide */
 .right-only .slick-center {
     opacity: 1; /* Full opacity for the centered slide */
+    transform: scale(1.0); /* Adjust scale as needed */
     
 }
 .right-only .carousel-container {
@@ -94,4 +95,9 @@
 .not-like-button:hover {
     background-color: red; /* Change to red on hover */
     opacity: 0.6; /* Full opacity on hover */
+}
+
+/* Ensure smooth scaling transition */
+.right-only .slick-slide .slide-item {
+    transition: transform 0.9s ease, opacity 0.5s ease;
 }

@@ -27,9 +27,59 @@
     overflow-x: hidden; /* Hides horizontal overflow */
     padding: 10px;
     border: 0.01px solid #ccc; 
+    border-radius: 20px;
   }
   
   .review-item {
     margin-bottom: 20px;
     font-size: 14px;
   }
+
+  .details-content {
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+  }
+  
+  .details-content.open {
+    margin-top: 1rem;
+    max-height: 100px; /* Adjust as necessary */
+    opacity: 0.75;
+  }
+  
+  .details-content p {
+    margin-top: 4px; /* Reduce the top margin as needed */
+    margin-bottom: 4px; /* Reduce the bottom margin as needed */
+  }
+
+  .review-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 55px;
+    gap: 25px; /* Adds space between boxes */
+  }
+  
+  .review-box {
+    width: 350px; /* Adjust based on your preference */
+    padding: 10px;
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f7f4f1; /* Light background */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    flex: none; /* Prevents the boxes from growing or shrinking */
+  }
+  
+  .review-container::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .review-container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
+  
+  .review-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
+  

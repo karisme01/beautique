@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
         of: Number 
     }, 
     seenProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Products' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Brand' }],
 }, {timestamps: true})
 
 export default mongoose.model('users', userSchema)

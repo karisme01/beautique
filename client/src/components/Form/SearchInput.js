@@ -33,11 +33,11 @@ const SearchInput = () => {
           placeholder="Search"
           aria-label="Search"
           value={values.keyword}
-          style={{height: '40px', width: '700px', borderRadius: '20px', borderWidth: '1px', borderColor: '#000'}}
+          style={{height: '40px', width: '400px', borderRadius: '20px', borderWidth: '1px', borderColor: '#000'}}
           onChange={(e) => setValues({ ...values, keyword: e.target.value })}
         />
         <button className="btn btn-outline" type="submit">
-          <CiSearch style={{fontSize: '25px', marginLeft: '-10px'}}/>
+          <CiSearch style={{fontSize: '25px', marginLeft: '-10px'}} onClick={handleSubmit}/>
         </button>
       </form>
     </div>

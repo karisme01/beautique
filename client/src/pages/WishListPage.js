@@ -258,10 +258,7 @@ const WishListPage = () => {
               ))}
             </div>
         </div>
-
-
         </Layout>
-
 )}
 
 export default WishListPage;

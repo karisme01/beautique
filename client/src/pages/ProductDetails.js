@@ -32,10 +32,12 @@ const ProductDetails = () => {
   const [price, setPrice] = useState()
   const [selectedImage, setSelectedImage] = useState(null);
   const [productImages, setProductImages] = useState([]);
-  const [showReviews, setShowReviews] = useState(false);
+  const [showReviews, setShowReviews] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [itemDetailsPressed, setItemDetailsPressed] = useState(false)
+  const [deliveryDetailsPressed, setDeliveryDetailsPressed] = useState(false)
   const [reviews, setReviews] = useState([
     { author: "Alice Johnson", content: "Absolutely love this! Exceeded all my expectations, would definitely recommend!" },
     { author: "Mark Benson", content: "Not what I expected based on the description. It's okay, but I probably wouldn't buy again." },
@@ -198,6 +200,10 @@ const ProductDetails = () => {
     setSelectedSize(size);
   };
 
+  const toggleItemDetails = () => {
+    setItemDetailsPressed(!itemDetailsPressed);
+  };
+
   if (!product._id) {
     return <Layout>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -207,8 +213,6 @@ const ProductDetails = () => {
   }
 
   
-  
-
   return (
     <Layout>
       <TopSlider items={topSliderItems}/>
@@ -218,40 +222,13 @@ const ProductDetails = () => {
             src={selectedImage}
             className="card-img-top" 
             alt={product?.name}
-            style={{ height: '600px', width: '400px', objectFit: 'cover', cursor: 'pointer'}}
+            style={{ height: '790px', width: '500px', objectFit: 'cover', cursor: 'pointer'}}
           />
-
-          <div style={{marginBottom: '-20px', display: 'flex', flexDirection: 'row'}}>
-            <button onClick={() => setShowReviews(!showReviews)} style={{margin: '20px 0', 
-              padding: '10px 20px', cursor: 'pointer', borderWidth: '0px'}}>
-              {showReviews ? 'Hide Reviews' : 'See Reviews'}
-            </button>
-          </div>
-
-          {
-          showReviews && (
-            <div className='reviews' style={{marginTop: '20px'}}>
-              <div className="reviews-container">
-                {reviews.map((review, index) => (
-                  <div key={index} className="review-item">
-                    <p style={{marginBottom: '2px'}}><strong>{review.author}:</strong></p>
-                    <div style={{flexDirection:'row', marginTop: '2px'}}>
-                      <StarRating rating={3} />
-                    </div>
-                    <p>{review.content}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        }
-
-
         </div>
 
         {/* three extra pictures */}
-        <div className='extra col-md-6' style={{marginLeft: '-360px', overflowY: 'scroll', 
-            height: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '300px'}}>
+        <div className='extra col-md-6' style={{marginLeft: '-260px', overflowY: 'scroll', 
+            height: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '300px'}}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '500px', marginLeft: '70px'}}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {productImages.map((image, index) => (
@@ -260,7 +237,7 @@ const ProductDetails = () => {
                       src={image}
                       alt={`Product ${index}`}
                       onClick={() => handleImageClick(image)}
-                      style={{ height: '285px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
+                      style={{ height: '235px', width: '200px', marginBottom: '6px', cursor: 'pointer'}}
                       className='product-image'
                     />
                   ))}
@@ -269,202 +246,37 @@ const ProductDetails = () => {
         </div>
 
 
-        <div className='col-md-6' style={{ marginLeft: '730px', marginTop: showReviews ? '-1013px' : '-693px' }}>
-          <div classname="text-center" style={{width: '610px', height: '300px', marginTop: '30px', 
-            borderWidth: '20px', backgroundColor: '#efefef', marginLeft: '20px', marginBottom: '15px'}}>
-              <h1 style={{fontSize: '20px', padding: '20px', fontWeight: 'bold'}}>
-              Take it on lease and enjoy luxury while saving thousands with easy returns and services.
-              </h1>
-              <p style={{fontSize: '13px', padding: '25px', marginTop: '-30px', color: 'grey'}}>
-                Experience the luxury of a diverse wardrobe with Karisme Collections' 4-day and 7-day clothing options. 
-                Say goodbye to buyer's remorse. Embrace a movement that champions confidence, ambition, and eco-conscious living. 
-              </p>
-
-              <div style={{display: 'flex', flexDirection: 'row', marginTop: '-20px'}}>
-                <button onClick={() => navigate('/Policy')} style={{marginLeft: '100px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
-                  Check leasing policy
-                </button>
-                <button onClick={() => navigate('/Policy')} style={{marginLeft: '10px', height: '40px', width: '200px', color: 'white', backgroundColor: 'black'}}>
-                  Check return policy
-                </button>
-              </div>
-              <div style={{fontSize: '15px', marginLeft: '200px'}}>
-                <p style={{marginTop: '20px', textDecoration: 'underline', cursor: 'pointer'}} onClick={showModal}> Reserve event leasing here</p>
-              </div>
-          </div>
-
-          <Modal
-            title="Reserve product leasing"
-            open={isModalVisible}
-            onCancel={handleCancel}
-            // onOk={handleOk}
-            footer={[
-              <Button
-                key="add"
-                onClick={() => {
-                  addToReserve(product, selectedSize, purchaseType, selectedDate); 
-                }}
-                style={{ 
-                  width: 'auto', 
-                  marginRight: '10px', 
-                  fontSize: '17px', 
-                  borderRadius: '7px', 
-                  height: '40px', // Increased height
-                  backgroundColor: '#8B4513', // Brown color
-                  color: 'white', 
-                  border: 'none', 
-                  fontWeight: 'bold',
-                  boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)', // Added shadow
-                  transition: 'background-color 0.3s', // Smooth transition for hover effect
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4E362B')} // Darker brown on hover
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5C4033')} // Original brown color
-              >
-                Add to Cart
-              </Button>,
-              <Button
-                key="close"
-                onClick={() => setIsModalVisible(false)}
-                style={{ 
-                  width: '40px', 
-                  marginRight: '10px', 
-                  fontSize: '17px', 
-                  borderRadius: '7px', 
-                  height: '40px', // Increased height
-                  backgroundColor: 'white', 
-                  color: '#8B4513', // Brown text color
-                  borderWidth: '1px',
-                  borderColor: '#8B4513', // Brown border
-                  transition: 'border-color 0.3s', // Smooth transition for hover effect
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.borderColor = '#4E362B')} // Darker brown on hover
-                onMouseOut={(e) => (e.currentTarget.style.borderColor = '#5C4033')} // Original brown color
-              >
-                X
-              </Button>
-            ]}
-          > 
-            <div className='btn-sizes' style={{marginLeft: '30px', marginBottom: '20px'}}>
-                {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    style={{
-                      width: '60px',
-                      padding: '15px',
-                      margin: '10px',
-                      borderRadius: '20px',
-                      background: selectedSize === size ? '#4E362B' : '#fff',
-                      color: selectedSize === size ? '#fff' : '#000',
-                      border: '1px solid #000',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            <div className='flex-row' style={{marginBottom: '-25px', marginRight: '-60px'}}>
-                <button className='btn-options' style={{width: '230px', height: '80px', 
-                  marginRight: '10px', borderWidth: '0.5px', 
-                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
-                  background: purchaseType === '1' ? '#332211' : '#fff',
-                  color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
-                  cursor: product.rent ? 'pointer' : 'not-allowed'
-                  }} onClick={()=>setPurchaseType('1')} disabled={!product.rent}>
-                  <p style={{marginTop: '10px'}}>Half-weekly cycle</p>
-                  <p>Price: {String(Math.round(0.3*product?.price / 10) * 10)}</p>
-                </button>
-                <button className='btn-options' style={{width: '230px', height: '80px', 
-                  marginRight: '10px', borderRadius: '1%', borderWidth: '0.5px', 
-                  background: purchaseType === '2' ? '#332211' : '#fff',
-                  color: product.rent ? (purchaseType === '1' ? '#fff' : '#000') : '#666666',
-                  cursor: product.rent ? 'pointer' : 'not-allowed'
-                  }} onClick={()=>setPurchaseType('2')} disabled={!product.rent}>
-                  <p style={{marginTop: '10px'}}>Full-weekly cycle</p>
-                  <p>Price: {String(Math.round(0.4*product?.price / 10) * 10)}</p>
-                </button>
-              </div>
-
-              <div style={{marginTop: '40px', marginLeft: '5px', fontSize: '15px'}}>
-                <div>
-                  <p>Select reservation date:</p>
-                  <DatePicker style={{marginTop: '-20px', fontSize: '30px'}} 
-                    onChange={(date, dateString) => setSelectedDate(dateString)} 
-                    disabledDate={(current) => current && current < moment().startOf('day')}
-                  />
-                </div>
-                <div style={{fontSize: '13px', marginBottom: '-50px'}}>
-                  {purchaseType === '0' ? (
-                    <p>*Please purchase a leasing type.</p>
-                  ) : (
-                    <p>*Your are expected to return the item by {calculateReturnDate()}.</p>
-                  )}
-                </div>
-                <div style={{ marginTop: '70px', textAlign: 'left', fontSize: '12px' }}>
-                  <div style={{ height: '150px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                    <p><strong>Terms & Conditions</strong></p>
-                    <p>For a clothing rental store, the terms and conditions might include key points such as rental duration, return policies, damage fees, and cancellation terms. For instance, you could state that items must be returned in their original condition within a specified number of days post-rental, 
-                      outline any fees for damages beyond normal wear and tear, detail the process and potential costs for cancellations, and specify any cleaning or care instructions that renters must follow. It's also crucial to address liability issues, 
-                      ensuring customers understand their responsibilities while the items are in their possession.</p>
-                  </div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={agreedToTerms}
-                      onChange={() => setAgreedToTerms(!agreedToTerms)}
-                      style={{ marginRight: '5px'}}
-                    />
-                    I agree to the Terms & Conditions
-                  </label>
-                </div>
-
-              </div>
-
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginBottom: '20px', 
-              padding: '20px', 
-            }}>
-            </div>
-
-            
-      </Modal>
-          {/* video */}
-          {/* <div> 
-            <video width="100%" height="auto" controls style={{ marginBottom: '20px' }}>
-              <source src={video} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-          </div> */}
-
+        <div className='col-md-6' style={{ marginLeft: '810px', marginTop: showReviews ? '-793px' : '-793px' , paddingLeft: '50px'}}>
           <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <h1>{product?.name}</h1>
               {/* <StarRating rating={product.rating || 3} /> */}
             </div>
-            <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Description:</strong> {product?.description}
+            <p style={{ marginBottom: '10px', fontSize: '16px', letterSpacing: '1.2px'}}>
+              {product?.description}
             </p>
-            <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Price:</strong> Rs {product?.price}
-            </p>
-            <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Occasion:</strong> {product?.occasion}
-            </p>
-            <p style={{ marginBottom: '10px', fontSize: '16px' }}>
-              <strong>Category:</strong> {product?.category?.name}
-            </p>
-
+            <hr/>
+            <div>
+            <div className='column'>
+                <p className='mt-4' style={{fontSize: '18px', color: 'darkred'}}>
+                  Only 4 left in stock! You don't want to be late
+                </p>
+                <p style={{ marginBottom: '10px', fontSize: '36px', color: 'darkgreen', marginRight: '15px', marginTop: '-20px'}}>
+                  Rs {product?.price}
+                </p>
+              </div>
+            </div>
+            <hr/>
+              <p style={{ marginBottom: '10px', fontSize: '16px' }}>
+                <strong>CATEGORY:</strong> {product?.category?.name}
+              </p>
             <div className='btn-sizes' style={{marginLeft: '-10px', marginBottom: '20px'}}>
             {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
               <button
                 key={size}
                 onClick={() => handleSizeSelection(size)}
                 style={{
-                  width: '60px',
+                  width: '65px',
                   padding: '15px',
                   margin: '10px',
                   borderRadius: '20px',
@@ -479,6 +291,7 @@ const ProductDetails = () => {
             ))}
           </div>
 
+          {product && product.rent && 
           <div className='flex-row' style={{marginBottom: '20px', marginRight: '-60px'}}>
             <button className='btn-options' style={{width: '200px', height: '100px', 
               marginRight: '10px', borderRadius: '5%', borderWidth: '0.5px', 
@@ -509,6 +322,7 @@ const ProductDetails = () => {
               <p>Price: {String(Math.round(0.4*price / 10) * 10)}</p>
             </button>
           </div>
+          }
             
             <div style={{display: 'flex', flexDirection: 'row'}}>
             <button
@@ -572,19 +386,50 @@ const ProductDetails = () => {
                 <span><HeartIconToggle style={{ fontSize: '30px' }}/></span>
               </div>
             </button>
-
-
             </div>
-
+            <hr/>
+            <p style={{ marginBottom: '5px', fontSize: '16px', cursor: 'pointer'}} onClick={() => setItemDetailsPressed(!itemDetailsPressed)}>
+              <strong>ITEM DETAILS</strong> 
+            </p>
+            <div className={`details-content ${itemDetailsPressed ? 'open' : ''}`}>
+              {product.material}, No scope of allergy
+            </div>
+            <hr/>
+            <p style={{ marginBottom: '10px', fontSize: '16px', cursor: 'pointer'}}>
+              <strong>STYLIST COMMENTS</strong> 
+            </p>
+            <hr/>
+            <p style={{ marginBottom: '10px', fontSize: '16px', cursor: 'pointer'}} onClick={() => setDeliveryDetailsPressed(!deliveryDetailsPressed)}>
+              <strong>DELIVERY AND RETURNS</strong> 
+            </p>
+            <div className={`details-content ${deliveryDetailsPressed ? 'open' : ''}`}>
+              <p>7-10 days delivery</p>
+              <p>Return & Exchange valid till 1 month since purchase</p>
+              <p>Rs 60 delivery cost</p>
+            </div>
+            <hr/>
+            <p style={{ marginBottom: '10px', fontSize: '16px', cursor: 'pointer'}}>
+              <strong>ORIGIN</strong> 
+            </p>
+            <hr/>
           </div>
         </div>
-
       </div>
 
-      <hr/>
+      <div className='review-container'>
+        {reviews.map((review, index) => (
+          <div key={index} className="review-box">
+            <p style={{marginBottom: '2px'}}><strong>{review.author}:</strong></p>
+            <div style={{flexDirection:'row', marginTop: '2px'}}>
+              <StarRating rating={3} /> {/* Assuming each review shows a static 3-star rating for now */}
+            </div>
+            <p>{review.content}</p>
+          </div>
+        ))}
+      </div>
       {/* similar products */}
       <div className=' container' style={{marginRight: '120px'}}>
-        <h6 style={{marginLeft: '25px', fontSize: '28px', marginTop: '20px', marginBottom: '-20px'}}>Similar products</h6>
+        <h6 style={{marginLeft: '25px', fontSize: '28px', marginTop: '60px', marginBottom: '-20px'}}>YOU MIGHT ALSO LIKE THESE</h6>
         {relatedProducts.length < 1 && (<p className="text-center">No Similar Products found</p>)}
         <div className="d-flex flex-wrap p-3" style={{marginLeft: '20px', margin: '5px', width: '2000px'}}>
               {relatedProducts?.map((p) => (

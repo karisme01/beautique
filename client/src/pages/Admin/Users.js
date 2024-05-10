@@ -30,12 +30,12 @@ const Users = () => {
 
   return (
     <Layout title={'Dashboard - All Users'}>
-      <div className='container-fluid m-3 p-3'>
+      <div className='container m-3 p-3'>
         <div className='row'>
           <div className='col-md-3'>
             <AdminMenu />
           </div>
-          <div className='col-md-9' style={{width: '1000px'}}>
+          <div className='col-md-9' style={{width: '60%'}}>
             <h1>Users</h1>
             <input
               type="text"
@@ -47,12 +47,11 @@ const Users = () => {
             {/* Listing users in a table */}
             <div>
               {users.length > 0 ? (
-                <table className="table table-striped">
+                <table className="table table-striped" style={{width: '100%'}}>
                   <thead>
                     <tr>
                       <th>Name</th>
                       <th>Email</th>
-                      <th>Address</th>
                       <th>Contact</th>
                     </tr>
                   </thead>
@@ -61,7 +60,6 @@ const Users = () => {
                       <tr key={user._id}>
                         <td>{user.name}</td>
                         <td>{user.email}</td>
-                        <td>{typeof user.address === 'object' ? Object.values(user.address).join(', ') : user.address}</td>
                         <td>{user.phone}</td>
                       </tr>
                     ))}

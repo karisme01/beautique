@@ -74,7 +74,8 @@ const Header = () => {
   
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light ${!isVisible && 'navbar-hidden'}`}>
+    
+    <nav className={`navbar navbar-expand-lg navbar-light ${!isVisible && 'navbar-hidden'}`}> 
       <div className="container">
       <Link to="/" className="navbar-brand" style={{ fontSize: '38px', color: '#3F250B' }}>
         <GiAbstract003 /> Karisme
@@ -110,7 +111,7 @@ const Header = () => {
               </ul>
             </li>
             
-            {/* <li className="nav-item">
+            <li className="nav-item m-2">
               <NavLink 
                 to="/for-you" 
                 className={`nav-link ${!auth.user ? 'disabled-link' : ''}`} 
@@ -119,12 +120,12 @@ const Header = () => {
                 FOR YOU
               </NavLink>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink exact to="/cloud-brands" className="nav-link" style={{color: '#3F250B'}}>
                 CLOUD BRANDS
               </NavLink>
-            </li> */}
-            
+            </li>
+             */}
             {/* <li className="nav-item">
               <NavLink 
                 to="/ask" 
@@ -140,7 +141,7 @@ const Header = () => {
             <SearchInput />
             <ul className="navbar-nav ms-3 mt-1">
               {auth.user ? (
-                <li>
+                <li className='nav-item m-2'>
                 <NavLink 
                   to={`/dashboard/${auth.user.role === 1 ? 'admin' : auth.user.role === 2 ? 'brand/profileBrand' : 'user/profile'}`} 
                   className="nav-link">
@@ -149,26 +150,26 @@ const Header = () => {
               </li>
               ) : (
                 <>
-                  <li className="nav-item">
+                  <li className='nav-item m-2'>
                     <NavLink to="/register" className="nav-link" activeClassName="active" style={{color: '#3F250B' }}>
                       Register
                     </NavLink>
                   </li>
-                  <li className="nav-item">
+                  <li className='nav-item m-2'>
                     <NavLink to="/login" className="nav-link" activeClassName="active" style={{color: '#3F250B' }}>
                       Login
                     </NavLink>
                   </li>
                 </>
               )}
-              <li className="nav-item">
+              <li className='nav-item m-2'>
                 <NavLink to="/wish" className="nav-link mt-1" activeClassName="active">
                   <Badge count={wish.length} showZero style={{backgroundColor: '#CC0033'}}>
                     <CiHeart style={{fontSize: '30px', marginBottom: '1px', marginTop: '-5px', color: '#3F250B'}}/>
                   </Badge>
                 </NavLink>
               </li>
-              <li className="nav-item" style={{marginLeft: '10px', marginRight: '-30px'}}>
+              <li className='nav-item m-2' style={{marginLeft: '10px', marginRight: '-30px'}}>
                 <NavLink to="/cart" className="nav-link mt-1" activeClassName="active">
                   <Badge count={cart.length + reserve.length} showZero style={{backgroundColor: '#CC0033'}}>
                     <GiShoppingCart style={{fontSize: '35px', marginBottom: '1px', marginTop: '-5px', color: '#3F250B'}}/>
